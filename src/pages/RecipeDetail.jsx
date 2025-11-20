@@ -38,6 +38,10 @@ const RecipeDetail = () => {
     toggleFavorite(id);
   };
 
+  const handlePrint = () => {
+     window.open(`/print/${recipe.id}`, '_blank');
+  };
+
   return (
     <div className="min-h-screen bg-gray-50 py-8">
       <div className="container mx-auto px-4">
@@ -61,6 +65,14 @@ const RecipeDetail = () => {
               }}
             />
             <div className="absolute top-4 right-4 flex space-x-2">
+              {/* Print Button */}
+             <button
+                onClick={handlePrint}
+                className="bg-white rounded-full p-3 shadow-lg hover:bg-gray-100 transition-colors"
+                title="Print Recipe"
+              >
+                <span className="text-2xl">🖨️</span>
+              </button>
               <button
                 onClick={handleToggleFavorite}
                 className="bg-white rounded-full p-3 shadow-lg hover:bg-gray-100 transition-colors"
