@@ -33,7 +33,7 @@ const PrintRecipe = () => {
         </div>
       </div>
 
-      <h1 className="text-3xl font-semibold text-red-700 mb-4 text-center">
+      <h1 className="text-3xl font-bold mb-4 text-center">
         {recipe.title}
       </h1>
 
@@ -73,7 +73,7 @@ const PrintRecipe = () => {
 
         {/* INGREDIENTS */}
         <div>
-          <h2 className="text-xl font-semibold text-red-700 mb-3 border-b pb-1">
+          <h2 className="text-xl font-bold mb-3 border-b pb-1">
             Ingredients & Prep
           </h2>
 
@@ -88,7 +88,7 @@ const PrintRecipe = () => {
 
         {/* METHOD */}
         <div>
-          <h2 className="text-xl font-semibold text-red-700 mb-3 border-b pb-1">
+          <h2 className="text-xl font-bold  mb-3 border-b pb-1">
             Method
           </h2>
 
