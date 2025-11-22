@@ -162,6 +162,15 @@ export const AppProvider = ({ children }) => {
     return filtered;
   };
 
+  const saveMealPlan = (mealPlan) => {
+    localStorage.setItem('mealPlan', JSON.stringify(mealPlan));
+  };
+
+  const getMealPlan = () => {
+    const mealPlan = localStorage.getItem('mealPlan');
+    return mealPlan ? JSON.parse(mealPlan) : null;
+  };
+
   const value = {
     // State
     recipes,
@@ -180,6 +189,9 @@ export const AppProvider = ({ children }) => {
     getFavoriteRecipes,
     // Settings functions
     updateSettings,
+    // MealPlanner function
+    saveMealPlan,
+    getMealPlan,
   };
 
   return <AppContext.Provider value={value}>{children}</AppContext.Provider>;

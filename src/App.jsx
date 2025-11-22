@@ -6,6 +6,7 @@ import BrowseRecipes from './pages/BrowseRecipes';
 import RecipeDetail from './pages/RecipeDetail';
 import AddEditRecipe from './pages/AddEditRecipe';
 import Favorites from './pages/Favorites';
+import MealPlanner from './pages/MealPlanner';
 import About from './pages/About';
 import PrintRecipe from './pages/PrintRecipe';
 
@@ -26,6 +27,7 @@ function App() {
                   <Route path="/add" element={<AddEditRecipe />} />
                   <Route path="/edit/:id" element={<AddEditRecipe />} />
                   <Route path="/favorites" element={<Favorites />} />
+                  <Route path="/meal-planner" element={<MealPlanner />} />
                   <Route path="/about" element={<About />} />
                 </Routes>
               </>
