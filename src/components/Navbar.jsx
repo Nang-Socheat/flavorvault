@@ -8,6 +8,7 @@ const Navbar = () => {
     { path: '/recipes', label: 'Browse' },
     { path: '/favorites', label: 'Favorites' },
     { path: '/add', label: 'Add Recipe' },
+    { path: '/meal-planner', label: 'Meal Planner' },
     { path: '/about', label: 'About' },
   ];
 
