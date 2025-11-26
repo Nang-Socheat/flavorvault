@@ -9,6 +9,16 @@ const RecipeDetail = () => {
   const recipe = getRecipeById(id);
   const isRecipeFavorite = isFavorite(id);
 
+  const handleBack = () => {
+    // Check if there's history to go back to, otherwise go to recipes
+    if (window.history.state && window.history.state.idx > 0) {
+      navigate(-1);
+    } else {
+      // If no history, go to recipes page as fallback
+      navigate('/recipes');
+    }
+  };
+
   if (!recipe) {
     return (
       <div className="container mx-auto px-4 py-12 text-center">
@@ -47,12 +57,12 @@ const RecipeDetail = () => {
       <div className="container mx-auto px-4">
         {/* Back Button */}
         <button
-          onClick={() => navigate(-1)}
+          onClick={handleBack}
           className="mb-6 text-blue-600 hover:text-blue-800 font-medium flex items-center"
         >
           ← Back
         </button>
-
+        
         <div className="bg-white rounded-lg shadow-lg overflow-hidden">
           {/* Image Header */}
           <div className="relative h-96 bg-gray-200">

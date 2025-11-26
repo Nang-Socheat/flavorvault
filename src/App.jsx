@@ -9,7 +9,7 @@ import Favorites from './pages/Favorites';
 import MealPlanner from './pages/MealPlanner';
 import About from './pages/About';
 import PrintRecipe from './pages/PrintRecipe';
-
+import PrintMealPlan from './pages/PrintMealPlan';
 function App() {
   return (
     <AppProvider>
@@ -17,6 +17,7 @@ function App() {
         <div className="min-h-screen bg-gray-50">
         <Routes>
             <Route path="/print/:id" element={<PrintRecipe />} />
+            <Route path="/print-meal-plan/:day" element={<PrintMealPlan />} />
             <Route path="*" element={
               <>
                 <Navbar />
