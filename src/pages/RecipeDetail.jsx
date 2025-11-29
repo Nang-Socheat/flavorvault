@@ -71,7 +71,13 @@ const RecipeDetail = () => {
               alt={recipe.title}
               className="w-full h-full object-cover"
               onError={(e) => {
-                e.target.src = 'https://via.placeholder.com/1200x400?text=No+Image';
+                // Prevent infinite loop by checking if already set to placeholder
+                if (e.target.src !== 'https://via.placeholder.com/1200x400?text=No+Image') {
+                  e.target.src = 'https://via.placeholder.com/1200x400?text=No+Image';
+                } else {
+                  // If placeholder also fails, use a data URL as final fallback
+                  e.target.src = 'data:image/svg+xml,%3Csvg xmlns="http://www.w3.org/2000/svg" width="1200" height="400"%3E%3Crect width="1200" height="400" fill="%23e5e7eb"/%3E%3Ctext x="50%25" y="50%25" text-anchor="middle" dy=".3em" fill="%239ca3af" font-family="system-ui" font-size="24"%3ENo Image%3C/text%3E%3C/svg%3E';
+                }
               }}
             />
             <div className="absolute top-4 right-4 flex space-x-2">

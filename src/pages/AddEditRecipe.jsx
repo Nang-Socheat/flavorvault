@@ -1,49 +1,54 @@
-import { useState, useEffect } from 'react';
+import { useState } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 import { useApp } from '../context/AppContext';
+import Ingredient2 from '../assets/Ingredient2.jpg';
 
 const AddEditRecipe = () => {
   const { id } = useParams();
   const navigate = useNavigate();
-  const { addRecipe, updateRecipe, getRecipeById } = useApp();
+  const { addRecipe, updateRecipe, getRecipeById, recipes } = useApp();
+
+  // Get all existing categories from recipes
+  const existingCategories = [...new Set(recipes.map(r => r.category))].sort();
 
   const isEditMode = Boolean(id);
-  const existingRecipe = isEditMode ? getRecipeById(id) : null;
 
-  const [formData, setFormData] = useState({
-    title: '',
-    description: '',
-    image: '',
-    prepTime: '',
-    cookTime: '',
-    servings: '',
-    difficulty: 'Easy',
-    category: 'Italian',
-    ingredients: [''],
-    instructions: [''],
-    tags: '',
+  // Initialize form data with lazy initializer to avoid setState in effect
+  const [formData, setFormData] = useState(() => {
+    if (id) {
+      const existingRecipe = getRecipeById(id);
+      if (existingRecipe) {
+        return {
+          title: existingRecipe.title,
+          description: existingRecipe.description,
+          image: existingRecipe.image || '',
+          prepTime: existingRecipe.prepTime.toString(),
+          cookTime: existingRecipe.cookTime.toString(),
+          servings: existingRecipe.servings.toString(),
+          difficulty: existingRecipe.difficulty,
+          category: existingRecipe.category,
+          ingredients: existingRecipe.ingredients,
+          instructions: existingRecipe.instructions,
+          tags: existingRecipe.tags ? existingRecipe.tags.join(', ') : '',
+        };
+      }
+    }
+    return {
+      title: '',
+      description: '',
+      image: '',
+      prepTime: '',
+      cookTime: '',
+      servings: '',
+      difficulty: 'Easy',
+      category: 'Italian',
+      ingredients: [''],
+      instructions: [''],
+      tags: '',
+    };
   });
 
   const [errors, setErrors] = useState({});
-
-  // Load existing recipe data in edit mode (useEffect for side effects)
-  useEffect(() => {
-    if (isEditMode && existingRecipe) {
-      setFormData({
-        title: existingRecipe.title,
-        description: existingRecipe.description,
-        image: existingRecipe.image || '',
-        prepTime: existingRecipe.prepTime.toString(),
-        cookTime: existingRecipe.cookTime.toString(),
-        servings: existingRecipe.servings.toString(),
-        difficulty: existingRecipe.difficulty,
-        category: existingRecipe.category,
-        ingredients: existingRecipe.ingredients,
-        instructions: existingRecipe.instructions,
-        tags: existingRecipe.tags ? existingRecipe.tags.join(', ') : '',
-      });
-    }
-  }, [isEditMode, existingRecipe]);
 
   const handleInputChange = (e) => {
     const { name, value } = e.target;
@@ -130,20 +135,35 @@ const AddEditRecipe = () => {
   };
 
   return (
-    <div className="container mx-auto px-4 py-8">
-      <div className="max-w-3xl mx-auto">
-        {/* Header */}
-        <div className="mb-8">
-          <h1 className="text-4xl font-bold text-gray-800 mb-2">
-            {isEditMode ? 'Edit Recipe' : 'Add New Recipe'}
-          </h1>
-          <p className="text-gray-600">
-            {isEditMode ? 'Update your recipe details' : 'Create a new recipe to add to your collection'}
-          </p>
-        </div>
+    <div className="min-h-screen bg-gradient-to-br from-blue-50 via-purple-50 to-pink-50">
+      <div className="container mx-auto px-4 py-6 md:py-8">
+        <div className="max-w-3xl mx-auto">
+          {/* Header */}
+          <div className="mb-6 md:mb-8 bg-white/80 backdrop-blur-sm rounded-2xl shadow-lg p-6 transform transition-all duration-300 hover:shadow-xl">
+            <h1 className="text-3xl md:text-4xl font-bold bg-gradient-to-r from-blue-600 to-purple-600 bg-clip-text text-transparent mb-2 animate-[fadeInUp_0.6s_ease-out]">
+              {isEditMode ? 'Edit Recipe ✏️' : 'Add New Recipe 🍳'}
+            </h1>
+            <p className="text-sm md:text-base text-gray-600">
+              {isEditMode ? 'Update your recipe details' : 'Create a new recipe to add to your collection'}
+            </p>
+          </div>
+
+          {/* Decorative Image Banner */}
+          <div className="mb-6 overflow-hidden rounded-2xl shadow-xl relative h-32 md:h-40">
+            <img
+              src={Ingredient2}
+              alt="Fresh ingredients"
+              className="w-full h-full object-cover"
+            />
+            <div className="absolute inset-0 bg-gradient-to-r from-blue-900/70 via-blue-900/50 to-transparent flex items-center">
+              <div className="px-6 md:px-8">
+                <h2 className="text-lg md:text-xl font-bold text-white">Share Your Culinary Creation</h2>
+              </div>
+            </div>
+          </div>
 
         {/* Form */}
-        <form onSubmit={handleSubmit} className="bg-white rounded-lg shadow-md p-8">
+        <form onSubmit={handleSubmit} className="bg-white rounded-lg shadow-md p-4 sm:p-6 md:p-8">
           {/* Title */}
           <div className="mb-6">
             <label className="block text-gray-700 font-semibold mb-2">
@@ -256,20 +276,23 @@ const AddEditRecipe = () => {
               <label className="block text-gray-700 font-semibold mb-2">
                 Category *
               </label>
-              <select
+              <input
+                type="text"
                 name="category"
                 value={formData.category}
                 onChange={handleInputChange}
+                list="categories-list"
                 className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
-              >
-                <option value="Italian">Italian</option>
-                <option value="Indian">Indian</option>
-                <option value="Mexican">Mexican</option>
-                <option value="Dessert">Dessert</option>
-                <option value="Breakfast">Breakfast</option>
-                <option value="Salad">Salad</option>
-                <option value="Other">Other</option>
-              </select>
+                placeholder="Select or type a category..."
+              />
+              <datalist id="categories-list">
+                {existingCategories.map(category => (
+                  <option key={category} value={category} />
+                ))}
+              </datalist>
+              <p className="text-gray-500 text-xs mt-1">
+                💡 Choose from existing categories or type to create a new one
+              </p>
             </div>
             <div>
               <label className="block text-gray-700 font-semibold mb-2">
@@ -388,6 +411,7 @@ const AddEditRecipe = () => {
             </button>
           </div>
         </form>
+        </div>
       </div>
     </div>
   );

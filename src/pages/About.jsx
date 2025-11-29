@@ -1,4 +1,10 @@
 import { Link } from 'react-router-dom';
+import { resetToSampleData } from '../utils/resetData';
+import Food1 from '../assets/Food1.jpg';
+import Ingredients1 from '../assets/Ingredients1.webp';
+import Vegetables1 from '../assets/vegetables1.jpg';
+import ChristmasDay from '../assets/ChristmasDay.jpg';
+import Amok from '../assets/Amok.jpg';
 
 const About = () => {
   const features = [
@@ -34,132 +40,147 @@ const About = () => {
     },
   ];
 
-  const techStack = [
-    { name: 'React', description: 'Component-based UI library' },
-    { name: 'React Router', description: 'Client-side routing' },
-    { name: 'React Context API', description: 'Global state management' },
-    { name: 'Tailwind CSS', description: 'Utility-first CSS framework' },
-    { name: 'Vite', description: 'Fast build tool and dev server' },
-    { name: 'LocalStorage', description: 'Browser-based data persistence' },
-  ];
 
   return (
-    <div className="min-h-screen bg-gray-50 py-12">
-      <div className="container mx-auto px-4">
+    <div className="min-h-screen bg-gray-50 py-8 md:py-12 relative overflow-hidden">
+      {/* Animated Blurry Background Images */}
+      <div className="fixed inset-0 pointer-events-none opacity-20 z-0">
+        <div className="absolute top-10 -right-20 w-96 h-96 animate-[float_20s_ease-in-out_infinite]">
+          <img
+            src={ChristmasDay}
+            alt=""
+            className="w-full h-full object-cover rounded-full blur-3xl"
+          />
+        </div>
+        <div className="absolute bottom-20 -left-20 w-80 h-80 animate-[float_25s_ease-in-out_infinite_reverse]">
+          <img
+            src={Amok}
+            alt=""
+            className="w-full h-full object-cover rounded-full blur-3xl"
+          />
+        </div>
+      </div>
+
+      <div className="container mx-auto px-4 relative z-10">
         {/* Header */}
-        <div className="text-center mb-12">
-          <h1 className="text-5xl font-bold text-gray-800 mb-4">About FlavorVault</h1>
-          <p className="text-xl text-gray-600 max-w-2xl mx-auto">
+        <div className="text-center mb-8 md:mb-12">
+          <h1 className="text-3xl sm:text-4xl md:text-5xl font-bold text-gray-800 mb-3 md:mb-4">About FlavorVault</h1>
+          <p className="text-base md:text-xl text-gray-600 max-w-2xl mx-auto px-4">
             Your personal digital cookbook for storing, organizing, and discovering delicious recipes
           </p>
         </div>
 
-        {/* Mission Section */}
-        <div className="bg-white rounded-lg shadow-md p-8 mb-12">
-          <h2 className="text-3xl font-bold text-gray-800 mb-4 text-center">Our Mission</h2>
-          <p className="text-gray-600 text-lg text-center max-w-3xl mx-auto">
-            FlavorVault was created to help home cooks and food enthusiasts keep all their recipes
-            organized in one beautiful, easy-to-use platform. Whether you're storing family recipes,
-            collecting new favorites, or planning your weekly meals, FlavorVault makes it simple and enjoyable.
-          </p>
+        {/* Mission Section with Image */}
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-8 mb-8 md:mb-12 items-center">
+          <div className="bg-white rounded-lg shadow-md p-6 md:p-8">
+            <h2 className="text-2xl md:text-3xl font-bold text-gray-800 mb-3 md:mb-4">Our Mission</h2>
+            <p className="text-sm md:text-base lg:text-lg text-gray-600">
+              FlavorVault was created to help home cooks and food enthusiasts keep all their recipes
+              organized in one beautiful, easy-to-use platform. Whether you're storing family recipes,
+              collecting new favorites, or planning your weekly meals, FlavorVault makes it simple and enjoyable.
+            </p>
+          </div>
+          <div className="overflow-hidden rounded-lg shadow-lg">
+            <img
+              src={Food1}
+              alt="Delicious food"
+              className="w-full h-full object-cover transform transition-transform duration-700 hover:scale-110"
+            />
+          </div>
         </div>
 
         {/* Features */}
-        <div className="mb-12">
-          <h2 className="text-3xl font-bold text-gray-800 mb-8 text-center">Features</h2>
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+        <div className="mb-8 md:mb-12">
+          <h2 className="text-2xl md:text-3xl font-bold text-gray-800 mb-6 md:mb-8 text-center">Features</h2>
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 md:gap-6">
             {features.map((feature, index) => (
-              <div key={index} className="bg-white rounded-lg shadow-md p-6 hover:shadow-lg transition-shadow">
-                <div className="text-4xl mb-3">{feature.icon}</div>
-                <h3 className="text-xl font-semibold text-gray-800 mb-2">{feature.title}</h3>
-                <p className="text-gray-600">{feature.description}</p>
+              <div key={index} className="bg-white rounded-lg shadow-md p-5 md:p-6 hover:shadow-lg transition-all duration-300 transform hover:scale-105 hover:rotate-1 animate-[fadeInUp_0.6s_ease-out]" style={{animationDelay: `${index * 0.1}s`}}>
+                <div className="text-3xl md:text-4xl mb-3 animate-bounce">{feature.icon}</div>
+                <h3 className="text-lg md:text-xl font-semibold text-gray-800 mb-2">{feature.title}</h3>
+                <p className="text-sm md:text-base text-gray-600">{feature.description}</p>
               </div>
             ))}
           </div>
         </div>
 
-        {/* Tech Stack */}
-        <div className="mb-12">
-          <h2 className="text-3xl font-bold text-gray-800 mb-8 text-center">Built With</h2>
-          <div className="bg-white rounded-lg shadow-md p-8">
-            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-              {techStack.map((tech, index) => (
-                <div key={index} className="flex items-start">
-                  <div className="bg-blue-100 text-blue-600 rounded-full p-2 mr-4">
-                    <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M5 13l4 4L19 7" />
-                    </svg>
-                  </div>
-                  <div>
-                    <h3 className="font-semibold text-gray-800">{tech.name}</h3>
-                    <p className="text-sm text-gray-600">{tech.description}</p>
-                  </div>
-                </div>
-              ))}
-            </div>
-          </div>
+        {/* Decorative Image Section */}
+        <div className="mb-8 md:mb-12 overflow-hidden rounded-2xl shadow-2xl">
+          <img
+            src={Ingredients1}
+            alt="Fresh ingredients"
+            className="w-full h-64 md:h-96 object-cover transform transition-transform duration-1000 hover:scale-105"
+          />
         </div>
 
-        {/* How It Works */}
-        <div className="mb-12">
-          <h2 className="text-3xl font-bold text-gray-800 mb-8 text-center">How It Works</h2>
-          <div className="bg-white rounded-lg shadow-md p-8">
-            <div className="space-y-6">
-              <div className="flex items-start">
-                <div className="bg-blue-500 text-white rounded-full w-8 h-8 flex items-center justify-center font-bold mr-4 flex-shrink-0">
-                  1
+        {/* How It Works with Image */}
+        <div className="mb-8 md:mb-12">
+          <h2 className="text-2xl md:text-3xl font-bold text-gray-800 mb-6 md:mb-8 text-center">How It Works</h2>
+          <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 items-center">
+            <div className="bg-white rounded-lg shadow-md p-6 md:p-8">
+              <div className="space-y-6">
+                <div className="flex items-start transform transition-transform duration-300 hover:translate-x-2">
+                  <div className="bg-gradient-to-r from-blue-500 to-purple-500 text-white rounded-full w-8 h-8 flex items-center justify-center font-bold mr-4 flex-shrink-0 shadow-lg">
+                    1
+                  </div>
+                  <div>
+                    <h3 className="text-lg font-semibold text-gray-800 mb-1">Add Your Recipes</h3>
+                    <p className="text-gray-600">
+                      Use our simple form to add recipes with ingredients, instructions, photos, and more
+                    </p>
+                  </div>
                 </div>
-                <div>
-                  <h3 className="text-lg font-semibold text-gray-800 mb-1">Add Your Recipes</h3>
-                  <p className="text-gray-600">
-                    Use our simple form to add recipes with ingredients, instructions, photos, and more
-                  </p>
+                <div className="flex items-start transform transition-transform duration-300 hover:translate-x-2">
+                  <div className="bg-gradient-to-r from-purple-500 to-pink-500 text-white rounded-full w-8 h-8 flex items-center justify-center font-bold mr-4 flex-shrink-0 shadow-lg">
+                    2
+                  </div>
+                  <div>
+                    <h3 className="text-lg font-semibold text-gray-800 mb-1">Organize & Filter</h3>
+                    <p className="text-gray-600">
+                      Categorize recipes and use our powerful filters to find exactly what you're looking for
+                    </p>
+                  </div>
+                </div>
+                <div className="flex items-start transform transition-transform duration-300 hover:translate-x-2">
+                  <div className="bg-gradient-to-r from-pink-500 to-orange-500 text-white rounded-full w-8 h-8 flex items-center justify-center font-bold mr-4 flex-shrink-0 shadow-lg">
+                    3
+                  </div>
+                  <div>
+                    <h3 className="text-lg font-semibold text-gray-800 mb-1">Save Favorites</h3>
+                    <p className="text-gray-600">
+                      Mark your favorite recipes with a heart to quickly access them later
+                    </p>
+                  </div>
+                </div>
+                <div className="flex items-start transform transition-transform duration-300 hover:translate-x-2">
+                  <div className="bg-gradient-to-r from-orange-500 to-red-500 text-white rounded-full w-8 h-8 flex items-center justify-center font-bold mr-4 flex-shrink-0 shadow-lg">
+                    4
+                  </div>
+                  <div>
+                    <h3 className="text-lg font-semibold text-gray-800 mb-1">Cook & Enjoy!</h3>
+                    <p className="text-gray-600">
+                      Follow step-by-step instructions and create delicious meals with ease
+                    </p>
+                  </div>
                 </div>
               </div>
-              <div className="flex items-start">
-                <div className="bg-blue-500 text-white rounded-full w-8 h-8 flex items-center justify-center font-bold mr-4 flex-shrink-0">
-                  2
-                </div>
-                <div>
-                  <h3 className="text-lg font-semibold text-gray-800 mb-1">Organize & Filter</h3>
-                  <p className="text-gray-600">
-                    Categorize recipes and use our powerful filters to find exactly what you're looking for
-                  </p>
-                </div>
-              </div>
-              <div className="flex items-start">
-                <div className="bg-blue-500 text-white rounded-full w-8 h-8 flex items-center justify-center font-bold mr-4 flex-shrink-0">
-                  3
-                </div>
-                <div>
-                  <h3 className="text-lg font-semibold text-gray-800 mb-1">Save Favorites</h3>
-                  <p className="text-gray-600">
-                    Mark your favorite recipes with a heart to quickly access them later
-                  </p>
-                </div>
-              </div>
-              <div className="flex items-start">
-                <div className="bg-blue-500 text-white rounded-full w-8 h-8 flex items-center justify-center font-bold mr-4 flex-shrink-0">
-                  4
-                </div>
-                <div>
-                  <h3 className="text-lg font-semibold text-gray-800 mb-1">Cook & Enjoy!</h3>
-                  <p className="text-gray-600">
-                    Follow step-by-step instructions and create delicious meals with ease
-                  </p>
-                </div>
-              </div>
+            </div>
+            <div className="overflow-hidden rounded-2xl shadow-2xl order-first lg:order-last">
+              <img
+                src={Vegetables1}
+                alt="Fresh vegetables"
+                className="w-full h-full object-cover transform transition-transform duration-700 hover:scale-110 hover:rotate-2"
+              />
             </div>
           </div>
         </div>
 
         {/* Data Privacy */}
-        <div className="bg-green-50 border border-green-200 rounded-lg p-6 mb-12">
+        <div className="bg-green-50 border border-green-200 rounded-lg p-5 md:p-6 mb-8 md:mb-12">
           <div className="flex items-start">
-            <span className="text-3xl mr-4">🔒</span>
+            <span className="text-2xl md:text-3xl mr-3 md:mr-4 flex-shrink-0">🔒</span>
             <div>
-              <h3 className="text-xl font-semibold text-gray-800 mb-2">Your Data is Private</h3>
-              <p className="text-gray-600">
+              <h3 className="text-lg md:text-xl font-semibold text-gray-800 mb-2">Your Data is Private</h3>
+              <p className="text-sm md:text-base text-gray-600">
                 All your recipes are stored locally in your browser's localStorage. We don't collect,
                 store, or share any of your data. Your recipes are yours alone!
               </p>
@@ -167,22 +188,44 @@ const About = () => {
           </div>
         </div>
 
+        {/* Developer Tools */}
+        <div className="bg-blue-50 border border-blue-200 rounded-lg p-5 md:p-6 mb-8 md:mb-12">
+          <div className="flex flex-col md:flex-row md:items-center md:justify-between gap-4">
+            <div className="flex items-start">
+              <span className="text-2xl md:text-3xl mr-3 md:mr-4 flex-shrink-0">🔧</span>
+              <div>
+                <h3 className="text-lg md:text-xl font-semibold text-gray-800 mb-2">Reset Sample Data</h3>
+                <p className="text-sm md:text-base text-gray-600">
+                  Want to start fresh? Reset your collection to the default 24 sample recipes.
+                  This will clear all your custom recipes and favorites.
+                </p>
+              </div>
+            </div>
+            <button
+              onClick={resetToSampleData}
+              className="bg-gradient-to-r from-blue-600 to-indigo-600 text-white px-6 py-3 rounded-lg font-semibold hover:from-blue-700 hover:to-indigo-700 transform hover:scale-105 transition-all duration-300 shadow-lg whitespace-nowrap"
+            >
+              Reset to Sample Data
+            </button>
+          </div>
+        </div>
+
         {/* CTA */}
-        <div className="text-center bg-gradient-to-r from-blue-500 to-purple-600 text-white rounded-lg p-12">
-          <h2 className="text-3xl font-bold mb-4">Ready to Get Started?</h2>
-          <p className="text-xl mb-6">
+        <div className="text-center bg-gradient-to-r from-blue-500 to-purple-600 text-white rounded-lg p-8 md:p-12">
+          <h2 className="text-2xl md:text-3xl font-bold mb-3 md:mb-4">Ready to Get Started?</h2>
+          <p className="text-base md:text-xl mb-6 px-4">
             Begin building your personal recipe collection today
           </p>
-          <div className="flex justify-center space-x-4">
+          <div className="flex flex-col sm:flex-row justify-center gap-3 md:gap-4">
             <Link
               to="/add"
-              className="bg-white text-blue-600 px-8 py-3 rounded-lg font-semibold hover:bg-gray-100 transition-colors"
+              className="bg-white text-blue-600 px-6 md:px-8 py-3 rounded-lg font-semibold hover:bg-gray-100 transition-all duration-300 transform hover:scale-105 shadow-lg"
             >
               Add Your First Recipe
             </Link>
             <Link
               to="/recipes"
-              className="bg-blue-700 text-white px-8 py-3 rounded-lg font-semibold hover:bg-blue-800 transition-colors"
+              className="bg-blue-700 text-white px-6 md:px-8 py-3 rounded-lg font-semibold hover:bg-blue-800 transition-all duration-300 transform hover:scale-105 shadow-lg"
             >
               Browse Recipes
             </Link>

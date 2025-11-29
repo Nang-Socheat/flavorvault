@@ -1,4 +1,4 @@
-import { createContext, useContext, useState, useEffect } from 'react';
+import { createContext, useContext, useState, useEffect, useCallback } from 'react';
 import {
   getRecipes,
   saveRecipes,
@@ -7,7 +7,6 @@ import {
   deleteRecipe as deleteRecipeFromStorage,
   getFavorites,
   toggleFavorite as toggleFavoriteInStorage,
-  isFavorite as checkIsFavorite,
   getSettings,
   saveSettings,
 } from '../utils/localStorage';
@@ -15,6 +14,7 @@ import { sampleRecipes } from '../data/sampleRecipes';
 
 const AppContext = createContext();
 
+// eslint-disable-next-line react-refresh/only-export-components
 export const useApp = () => {
   const context = useContext(AppContext);
   if (!context) {
@@ -114,7 +114,7 @@ export const AppProvider = ({ children }) => {
   };
 
   // Search and filter functions
-  const searchRecipes = (query, filters = {}) => {
+  const searchRecipes = useCallback((query, filters = {}) => {
     let filtered = [...recipes];
 
     // Text search (title, description, ingredients)
@@ -160,7 +160,7 @@ export const AppProvider = ({ children }) => {
     }
 
     return filtered;
-  };
+  }, [recipes]);
 
   const saveMealPlan = (mealPlan) => {
     localStorage.setItem('mealPlan', JSON.stringify(mealPlan));
