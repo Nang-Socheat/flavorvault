@@ -707,7 +707,7 @@ const MealPlanner = () => {
         }}
       />
 
-      <div className="container mx-auto px-3 md:px-4 py-4 md:py-8 relative z-10">
+      <div className="max-w-[1920px] mx-auto px-2 sm:px-3 md:px-4 lg:px-6 py-4 md:py-8 relative z-10">
         {/* Header */}
         <div className="text-center mb-4 md:mb-8">
           <h1 className="text-3xl sm:text-4xl md:text-5xl lg:text-6xl font-extrabold mb-2 md:mb-3 text-white drop-shadow-2xl">

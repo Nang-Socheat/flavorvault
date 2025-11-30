@@ -136,7 +136,7 @@ const AddEditRecipe = () => {
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-blue-50 via-purple-50 to-pink-50">
-      <div className="container mx-auto px-4 py-6 md:py-8">
+      <div className="max-w-[1920px] mx-auto px-2 sm:px-3 md:px-4 lg:px-6 py-6 md:py-8">
         <div className="max-w-3xl mx-auto">
           {/* Header */}
           <div className="mb-6 md:mb-8 bg-white/80 backdrop-blur-sm rounded-2xl shadow-lg p-6 transform transition-all duration-300 hover:shadow-xl">

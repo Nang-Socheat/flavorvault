@@ -61,7 +61,7 @@ const About = () => {
         </div>
       </div>
 
-      <div className="container mx-auto px-4 relative z-10">
+      <div className="max-w-[1920px] mx-auto px-2 sm:px-3 md:px-4 lg:px-6 relative z-10">
         {/* Header */}
         <div className="text-center mb-8 md:mb-12">
           <h1 className="text-3xl sm:text-4xl md:text-5xl font-bold text-gray-800 mb-3 md:mb-4">About FlavorVault</h1>

@@ -112,7 +112,7 @@ const Home = () => {
         {/* Light overlay for text readability */}
         <div className="absolute inset-0 bg-gradient-to-b from-black/40 via-black/30 to-black/40"></div>
 
-        <div className="container mx-auto px-4 text-center relative z-10">
+        <div className="max-w-[1920px] mx-auto px-2 sm:px-3 md:px-4 lg:px-6 text-center relative z-10">
           <h1 className="text-3xl sm:text-4xl md:text-5xl lg:text-6xl font-bold mb-3 md:mb-4 animate-[fadeInUp_0.8s_ease-out] drop-shadow-lg">
             Welcome to FlavorVault
           </h1>
@@ -137,7 +137,7 @@ const Home = () => {
       </div>
 
       {/* Stats Section */}
-      <div className="container mx-auto px-4 py-8 md:py-12">
+      <div className="max-w-[1920px] mx-auto px-2 sm:px-3 md:px-4 lg:px-6 py-8 md:py-12">
         <div className="grid grid-cols-2 md:grid-cols-4 gap-4 md:gap-6 mb-8 md:mb-12">
           <div className="bg-white rounded-lg shadow-md p-4 md:p-6 text-center transform hover:scale-105 transition-all duration-300 hover:shadow-xl">
             <div className="text-3xl md:text-4xl mb-2">📚</div>
