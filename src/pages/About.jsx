@@ -1,7 +1,7 @@
 import { Link } from 'react-router-dom';
 import { resetToSampleData } from '../utils/resetData';
 import Food1 from '../assets/Food1.jpg';
-import Ingredients1 from '../assets/Ingredients1.webp';
+import Ingredients3 from '../assets/Ingredients3.jpg';
 import Vegetables1 from '../assets/vegetables1.jpg';
 import ChristmasDay from '../assets/ChristmasDay.jpg';
 import Amok from '../assets/Amok.jpg';
@@ -106,7 +106,7 @@ const About = () => {
         {/* Decorative Image Section */}
         <div className="mb-8 md:mb-12 overflow-hidden rounded-2xl shadow-2xl">
           <img
-            src={Ingredients1}
+            src={Ingredients3}
             alt="Fresh ingredients"
             className="w-full h-64 md:h-96 object-cover transform transition-transform duration-1000 hover:scale-105"
           />
