@@ -154,9 +154,8 @@ export const AppProvider = ({ children }) => {
       );
     }
 
-    // Filter by max prep time
     if (filters.maxPrepTime) {
-      filtered = filtered.filter(recipe => recipe.prepTime <= filters.maxPrepTime);
+      filtered = filtered.filter(recipe => (recipe.prepTime + recipe.cookTime) <= filters.maxPrepTime);
     }
 
     return filtered;
