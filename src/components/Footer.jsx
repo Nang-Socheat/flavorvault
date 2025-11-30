@@ -1,11 +1,12 @@
 import { Link } from 'react-router-dom';
 import FooterBg from '../assets/Footer.webp';
+import FlavorVaultLogo from '../assets/FlavorvaultLogo.png';
 
 const Footer = () => {
   const currentYear = new Date().getFullYear();
 
   return (
-    <footer className="relative text-white mt-12 overflow-hidden">
+    <footer className="relative text-white overflow-hidden">
       {/* Blurred Background Image */}
       <div className="absolute inset-0">
         <img
@@ -21,7 +22,14 @@ const Footer = () => {
         <div className="grid grid-cols-1 md:grid-cols-3 gap-8 mb-6">
           {/* About Section */}
           <div>
-            <h3 className="text-xl font-bold mb-3 drop-shadow-lg">FlavorVault</h3>
+            <div className="flex items-center gap-3 mb-3">
+              <img
+                src={FlavorVaultLogo}
+                alt="FlavorVault Logo"
+                className="w-12 h-12 drop-shadow-lg"
+              />
+              <h3 className="text-xl font-bold drop-shadow-lg">FlavorVault</h3>
+            </div>
             <p className="text-gray-200 text-sm drop-shadow-md">
               Your personal recipe collection, beautifully organized. Store, discover, and share your favorite recipes.
             </p>
@@ -77,8 +85,17 @@ const Footer = () => {
         </div>
 
         {/* Bottom Bar */}
-        <div className="border-t border-gray-600/50 pt-6 text-center text-sm text-gray-300 drop-shadow-md">
-          <p>&copy; {currentYear} FlavorVault. Built for Front-End Web Development.</p>
+        <div className="border-t border-gray-600/50 pt-6 text-center">
+          {/* <div className="flex flex-col items-center gap-3 mb-3">
+            <img 
+              src={FlavorVaultLogo} 
+              alt="FlavorVault Logo" 
+              className="w-16 h-16 drop-shadow-xl"
+            />
+          </div> */}
+          <p className="text-sm text-gray-300 drop-shadow-md">
+            &copy; {currentYear} FlavorVault. Built for Front-End Web Development Class.
+          </p>
         </div>
       </div>
     </footer>

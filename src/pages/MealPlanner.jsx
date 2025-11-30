@@ -46,9 +46,6 @@ const MealPlanner = () => {
     { id: 'breakfast', label: 'Breakfast', icon: '🌅', color: 'from-orange-400 to-yellow-300', bgColor: 'bg-orange-50', borderColor: 'border-orange-300', textColor: 'text-orange-700' },
     { id: 'lunch', label: 'Lunch', icon: '☀️', color: 'from-blue-400 to-cyan-300', bgColor: 'bg-blue-50', borderColor: 'border-blue-300', textColor: 'text-blue-700' },
     { id: 'dinner', label: 'Dinner', icon: '🌙', color: 'from-purple-400 to-indigo-400', bgColor: 'bg-purple-50', borderColor: 'border-purple-300', textColor: 'text-purple-700' },
-    { id: 'snack', label: 'Snack', icon: '🍎', color: 'from-green-400 to-emerald-300', bgColor: 'bg-green-50', borderColor: 'border-green-300', textColor: 'text-green-700' },
-    { id: 'special', label: 'Special', icon: '⭐', color: 'from-pink-400 to-rose-300', bgColor: 'bg-pink-50', borderColor: 'border-pink-300', textColor: 'text-pink-700' },
-    { id: 'occasion', label: 'Occasion', icon: '🎉', color: 'from-amber-400 to-orange-400', bgColor: 'bg-amber-50', borderColor: 'border-amber-300', textColor: 'text-amber-700' },
   ];
 
   // Save meal plan to localStorage whenever it changes
@@ -90,8 +87,8 @@ const MealPlanner = () => {
     const dates = [];
 
     for (let i = 0; i < 7; i++) {
-      const day = new Date(current.setDate(first + i));
-      dates.push(new Date(day));
+      const day = new Date(current.getFullYear(), current.getMonth(), first + i);
+      dates.push(day);
     }
 
     return dates;
@@ -122,6 +119,30 @@ const MealPlanner = () => {
     const newDate = new Date(selectedDate);
     newDate.setDate(newDate.getDate() + 7);
     setSelectedDate(newDate);
+  };
+
+  // Print meal plan
+  const handlePrintMealPlan = () => {
+    const dateKey = formatDateKey(selectedDate);
+    
+    if (viewMode === 'day') {
+      // Print single day - pass data via URL params
+      const dayPlan = { [dateKey]: mealPlan[dateKey] || {} };
+      const data = encodeURIComponent(JSON.stringify(dayPlan));
+      const printUrl = `/print-meal-plan?mode=day&date=${dateKey}&data=${data}`;
+      window.open(printUrl, '_blank');
+    } else {
+      // Print week view
+      const weekDates = getWeekDates(selectedDate);
+      const weekPlan = {};
+      weekDates.forEach(date => {
+        const key = formatDateKey(date);
+        weekPlan[key] = mealPlan[key] || {};
+      });
+      const data = encodeURIComponent(JSON.stringify(weekPlan));
+      const printUrl = `/print-meal-plan?mode=week&date=${dateKey}&data=${data}`;
+      window.open(printUrl, '_blank');
+    }
   };
 
   // Add meal to plan
@@ -250,7 +271,7 @@ const MealPlanner = () => {
     const isToday = formatDateKey(new Date()) === dateKey;
 
     return (
-      <div className="space-y-6">
+      <div className="space-y-4">
         {/* Date Header */}
         <div className="text-center">
           <div className="inline-block bg-gradient-to-r from-orange-600 to-amber-600 text-white px-8 py-4 rounded-2xl shadow-xl border-2 border-orange-500/50">
@@ -260,7 +281,7 @@ const MealPlanner = () => {
         </div>
 
         {/* Meal Types Grid */}
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 md:gap-6">
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 md:gap-6 pb-4">
           {mealTypes.map(mealType => (
             <div key={mealType.id} className="bg-white border-2 border-gray-200 rounded-xl p-4 md:p-6 shadow-lg hover:shadow-xl transition-all duration-300 transform hover:-translate-y-1">
               {/* Meal Type Header */}
@@ -280,73 +301,72 @@ const MealPlanner = () => {
 
               {/* Meals List */}
               <div className="space-y-3">
-                {(dayPlan[mealType.id] || []).map(meal => {
-                  const recipe = getRecipeById(meal.recipeId);
-                  if (!recipe) return null;
+                {(dayPlan[mealType.id] || []).length > 0 ? (
+                  (dayPlan[mealType.id] || []).map(meal => {
+                    const recipe = getRecipeById(meal.recipeId);
+                    if (!recipe) return null;
 
-                  return (
-                    <div key={meal.id} className="bg-gray-50 rounded-lg p-3 shadow-md hover:shadow-lg transition-shadow border border-gray-200">
-                      <div className="flex gap-3">
-                        {/* Recipe Image */}
-                        <Link to={`/recipe/${recipe.id}`} className="shrink-0">
-                          <img
-                            src={recipe.image || 'https://via.placeholder.com/100x100?text=No+Image'}
-                            alt={recipe.title}
-                            className="w-16 h-16 md:w-20 md:h-20 object-cover rounded-lg cursor-pointer hover:opacity-80 transition-opacity"
-                            onError={(e) => {
-                              e.target.src = 'https://via.placeholder.com/100x100?text=No+Image';
-                            }}
-                          />
-                        </Link>
-
-                        {/* Recipe Info */}
-                        <div className="flex-1 min-w-0">
-                          <Link
-                            to={`/recipe/${recipe.id}`}
-                            className="font-bold text-gray-900 hover:underline line-clamp-1 text-sm md:text-base"
-                          >
-                            {recipe.title}
+                    return (
+                      <div key={meal.id} className="bg-gray-50 rounded-lg p-3 shadow-md hover:shadow-lg transition-shadow border border-gray-200">
+                        <div className="flex gap-3">
+                          {/* Recipe Image */}
+                          <Link to={`/recipe/${recipe.id}`} className="shrink-0">
+                            <img
+                              src={recipe.image || 'https://via.placeholder.com/100x100?text=No+Image'}
+                              alt={recipe.title}
+                              className="w-16 h-16 md:w-20 md:h-20 object-cover rounded-lg cursor-pointer hover:opacity-80 transition-opacity"
+                              onError={(e) => {
+                                e.target.src = 'https://via.placeholder.com/100x100?text=No+Image';
+                              }}
+                            />
                           </Link>
-                          <p className="text-xs md:text-sm text-gray-600 mt-1">
-                            {recipe.category} • {recipe.prepTime + recipe.cookTime} min
-                          </p>
 
-                          {/* Portions Control */}
-                          <div className="flex items-center gap-2 mt-2">
-                            <span className="text-xs md:text-sm text-gray-700 font-medium">Portions:</span>
-                            <button
-                              onClick={() => updatePortions(dateKey, mealType.id, meal.id, meal.portions - 1)}
-                              className="w-6 h-6 md:w-7 md:h-7 bg-gray-300 hover:bg-gray-400 rounded text-sm font-bold text-gray-800"
+                          {/* Recipe Info */}
+                          <div className="flex-1 min-w-0">
+                            <Link
+                              to={`/recipe/${recipe.id}`}
+                              className="font-bold text-gray-900 hover:underline line-clamp-1 text-sm md:text-base"
                             >
-                              -
-                            </button>
-                            <span className="text-sm md:text-base font-bold text-gray-900 w-6 md:w-8 text-center">{meal.portions}</span>
-                            <button
-                              onClick={() => updatePortions(dateKey, mealType.id, meal.id, meal.portions + 1)}
-                              className="w-6 h-6 md:w-7 md:h-7 bg-gray-300 hover:bg-gray-400 rounded text-sm font-bold text-gray-800"
-                            >
-                              +
-                            </button>
+                              {recipe.title}
+                            </Link>
+                            <p className="text-xs md:text-sm text-gray-600 mt-1">
+                              {recipe.category} • {recipe.prepTime + recipe.cookTime} min
+                            </p>
+
+                            {/* Portions Control */}
+                            <div className="flex items-center gap-2 mt-2">
+                              <span className="text-xs md:text-sm text-gray-700 font-medium">Portions:</span>
+                              <button
+                                onClick={() => updatePortions(dateKey, mealType.id, meal.id, meal.portions - 1)}
+                                className="w-6 h-6 md:w-7 md:h-7 bg-gray-300 hover:bg-gray-400 rounded text-sm font-bold text-gray-800"
+                              >
+                                -
+                              </button>
+                              <span className="text-sm md:text-base font-bold text-gray-900 w-6 md:w-8 text-center">{meal.portions}</span>
+                              <button
+                                onClick={() => updatePortions(dateKey, mealType.id, meal.id, meal.portions + 1)}
+                                className="w-6 h-6 md:w-7 md:h-7 bg-gray-300 hover:bg-gray-400 rounded text-sm font-bold text-gray-800"
+                              >
+                                +
+                              </button>
+                            </div>
                           </div>
+
+                          {/* Remove Button */}
+                          <button
+                            onClick={() => removeMealFromPlan(dateKey, mealType.id, meal.id)}
+                            className="text-red-500 hover:text-red-700 text-2xl md:text-3xl shrink-0 self-start font-bold"
+                            title="Remove meal"
+                          >
+                            ×
+                          </button>
                         </div>
-
-                        {/* Remove Button */}
-                        <button
-                          onClick={() => removeMealFromPlan(dateKey, mealType.id, meal.id)}
-                          className="text-red-500 hover:text-red-700 text-2xl md:text-3xl shrink-0 self-start font-bold"
-                          title="Remove meal"
-                        >
-                          ×
-                        </button>
                       </div>
-                    </div>
-                  );
-                })}
-
-                {/* Empty State */}
-                {(!dayPlan[mealType.id] || dayPlan[mealType.id].length === 0) && (
-                  <div className="text-center text-gray-400 py-6 md:py-8">
-                    <p className="text-sm md:text-base">No {mealType.label.toLowerCase()} planned</p>
+                    );
+                  })
+                ) : (
+                  <div className="text-center text-gray-400 py-2">
+                    <p className="text-xs md:text-sm">No {mealType.label.toLowerCase()} planned</p>
                   </div>
                 )}
               </div>
@@ -696,7 +716,7 @@ const MealPlanner = () => {
   };
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-slate-900 via-gray-800 to-slate-900">
+    <div className="min-h-screen bg-gradient-to-br from-slate-900 via-gray-800 to-slate-900 pb-0">
       {/* Simple Single Background Pattern */}
       <div
         className="fixed inset-0 opacity-10"
@@ -772,6 +792,14 @@ const MealPlanner = () => {
               >
                 Next →
               </button>
+              
+              <button
+                onClick={handlePrintMealPlan}
+                className="bg-gradient-to-r from-blue-600 to-cyan-600 text-white px-4 md:px-6 py-2 rounded-lg text-sm md:text-base font-semibold hover:shadow-lg transition-all"
+                title={viewMode === 'day' ? "Print today's meal plan" : "Print this week's meal plan"}
+              >
+                🖨️ Print
+              </button>
             </div>
           </div>
         </div>
@@ -779,132 +807,6 @@ const MealPlanner = () => {
         {/* Main Content */}
         <div className="bg-gradient-to-br from-slate-800 to-gray-900 backdrop-blur-xl rounded-xl md:rounded-2xl shadow-2xl p-4 md:p-6 border-2 border-orange-500/50">
           {viewMode === 'day' ? renderDayView() : renderWeekView()}
-        </div>
-      </div>
-
-      {/* Bottom Photo Frame Border - Infinite Scroll */}
-      <div className="w-full bg-gradient-to-r from-amber-900 via-orange-800 to-amber-900 py-4 shadow-xl relative z-10 mt-8 overflow-hidden">
-        <div className="relative">
-          {/* Scrolling container with duplicated images for seamless loop */}
-          <div className="flex animate-scroll">
-            {/* First set of images */}
-            <div className="flex gap-3 shrink-0">
-              <div className="group relative overflow-hidden rounded-xl shadow-lg cursor-pointer w-40 h-24 transform transition-all duration-300 hover:scale-110 hover:rotate-3 hover:z-20">
-                <img src={Ingredients1} alt="Ingredients" className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-125" />
-                <div className="absolute inset-0 bg-gradient-to-t from-black/60 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300 flex items-end justify-center pb-2">
-                  <span className="text-white text-xs font-bold">Ingredients</span>
-                </div>
-              </div>
-
-              <div className="group relative overflow-hidden rounded-xl shadow-lg cursor-pointer w-40 h-24 transform transition-all duration-300 hover:scale-110 hover:-rotate-3 hover:z-20">
-                <img src={NumBanhChok} alt="Banh Chok" className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-125" />
-                <div className="absolute inset-0 bg-gradient-to-t from-black/60 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300 flex items-end justify-center pb-2">
-                  <span className="text-white text-xs font-bold">Num Banh Chok</span>
-                </div>
-              </div>
-
-              <div className="group relative overflow-hidden rounded-xl shadow-lg cursor-pointer w-40 h-24 transform transition-all duration-300 hover:scale-110 hover:rotate-3 hover:z-20">
-                <img src={KhmerFood} alt="Khmer" className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-125" />
-                <div className="absolute inset-0 bg-gradient-to-t from-black/60 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300 flex items-end justify-center pb-2">
-                  <span className="text-white text-xs font-bold">Khmer Food</span>
-                </div>
-              </div>
-
-              <div className="group relative overflow-hidden rounded-xl shadow-lg cursor-pointer w-40 h-24 transform transition-all duration-300 hover:scale-110 hover:-rotate-3 hover:z-20">
-                <img src={Vegetables1} alt="Vegetables" className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-125" />
-                <div className="absolute inset-0 bg-gradient-to-t from-black/60 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300 flex items-end justify-center pb-2">
-                  <span className="text-white text-xs font-bold">Fresh Vegetables</span>
-                </div>
-              </div>
-
-              <div className="group relative overflow-hidden rounded-xl shadow-lg cursor-pointer w-40 h-24 transform transition-all duration-300 hover:scale-110 hover:rotate-3 hover:z-20">
-                <img src={HealthyFood} alt="Healthy" className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-125" />
-                <div className="absolute inset-0 bg-gradient-to-t from-black/60 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300 flex items-end justify-center pb-2">
-                  <span className="text-white text-xs font-bold">Healthy Food</span>
-                </div>
-              </div>
-
-              <div className="group relative overflow-hidden rounded-xl shadow-lg cursor-pointer w-40 h-24 transform transition-all duration-300 hover:scale-110 hover:-rotate-3 hover:z-20">
-                <img src={Amok} alt="Amok" className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-125" />
-                <div className="absolute inset-0 bg-gradient-to-t from-black/60 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300 flex items-end justify-center pb-2">
-                  <span className="text-white text-xs font-bold">Amok</span>
-                </div>
-              </div>
-
-              <div className="group relative overflow-hidden rounded-xl shadow-lg cursor-pointer w-40 h-24 transform transition-all duration-300 hover:scale-110 hover:rotate-3 hover:z-20">
-                <img src={ChristmasDay} alt="Celebration" className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-125" />
-                <div className="absolute inset-0 bg-gradient-to-t from-black/60 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300 flex items-end justify-center pb-2">
-                  <span className="text-white text-xs font-bold">Family Meal</span>
-                </div>
-              </div>
-
-              <div className="group relative overflow-hidden rounded-xl shadow-lg cursor-pointer w-40 h-24 transform transition-all duration-300 hover:scale-110 hover:-rotate-3 hover:z-20">
-                <img src={Food1} alt="Food" className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-125" />
-                <div className="absolute inset-0 bg-gradient-to-t from-black/60 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300 flex items-end justify-center pb-2">
-                  <span className="text-white text-xs font-bold">Delicious Food</span>
-                </div>
-              </div>
-            </div>
-
-            {/* Duplicated set for seamless loop */}
-            <div className="flex gap-3 shrink-0">
-              <div className="group relative overflow-hidden rounded-xl shadow-lg cursor-pointer w-40 h-24 transform transition-all duration-300 hover:scale-110 hover:rotate-3 hover:z-20">
-                <img src={Ingredients1} alt="Ingredients" className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-125" />
-                <div className="absolute inset-0 bg-gradient-to-t from-black/60 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300 flex items-end justify-center pb-2">
-                  <span className="text-white text-xs font-bold">Ingredients</span>
-                </div>
-              </div>
-
-              <div className="group relative overflow-hidden rounded-xl shadow-lg cursor-pointer w-40 h-24 transform transition-all duration-300 hover:scale-110 hover:-rotate-3 hover:z-20">
-                <img src={NumBanhChok} alt="Banh Chok" className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-125" />
-                <div className="absolute inset-0 bg-gradient-to-t from-black/60 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300 flex items-end justify-center pb-2">
-                  <span className="text-white text-xs font-bold">Num Banh Chok</span>
-                </div>
-              </div>
-
-              <div className="group relative overflow-hidden rounded-xl shadow-lg cursor-pointer w-40 h-24 transform transition-all duration-300 hover:scale-110 hover:rotate-3 hover:z-20">
-                <img src={KhmerFood} alt="Khmer" className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-125" />
-                <div className="absolute inset-0 bg-gradient-to-t from-black/60 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300 flex items-end justify-center pb-2">
-                  <span className="text-white text-xs font-bold">Khmer Food</span>
-                </div>
-              </div>
-
-              <div className="group relative overflow-hidden rounded-xl shadow-lg cursor-pointer w-40 h-24 transform transition-all duration-300 hover:scale-110 hover:-rotate-3 hover:z-20">
-                <img src={Vegetables1} alt="Vegetables" className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-125" />
-                <div className="absolute inset-0 bg-gradient-to-t from-black/60 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300 flex items-end justify-center pb-2">
-                  <span className="text-white text-xs font-bold">Fresh Vegetables</span>
-                </div>
-              </div>
-
-              <div className="group relative overflow-hidden rounded-xl shadow-lg cursor-pointer w-40 h-24 transform transition-all duration-300 hover:scale-110 hover:rotate-3 hover:z-20">
-                <img src={HealthyFood} alt="Healthy" className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-125" />
-                <div className="absolute inset-0 bg-gradient-to-t from-black/60 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300 flex items-end justify-center pb-2">
-                  <span className="text-white text-xs font-bold">Healthy Food</span>
-                </div>
-              </div>
-
-              <div className="group relative overflow-hidden rounded-xl shadow-lg cursor-pointer w-40 h-24 transform transition-all duration-300 hover:scale-110 hover:-rotate-3 hover:z-20">
-                <img src={Amok} alt="Amok" className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-125" />
-                <div className="absolute inset-0 bg-gradient-to-t from-black/60 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300 flex items-end justify-center pb-2">
-                  <span className="text-white text-xs font-bold">Amok</span>
-                </div>
-              </div>
-
-              <div className="group relative overflow-hidden rounded-xl shadow-lg cursor-pointer w-40 h-24 transform transition-all duration-300 hover:scale-110 hover:rotate-3 hover:z-20">
-                <img src={ChristmasDay} alt="Celebration" className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-125" />
-                <div className="absolute inset-0 bg-gradient-to-t from-black/60 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300 flex items-end justify-center pb-2">
-                  <span className="text-white text-xs font-bold">Family Meal</span>
-                </div>
-              </div>
-
-              <div className="group relative overflow-hidden rounded-xl shadow-lg cursor-pointer w-40 h-24 transform transition-all duration-300 hover:scale-110 hover:-rotate-3 hover:z-20">
-                <img src={Food1} alt="Food" className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-125" />
-                <div className="absolute inset-0 bg-gradient-to-t from-black/60 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300 flex items-end justify-center pb-2">
-                  <span className="text-white text-xs font-bold">Delicious Food</span>
-                </div>
-              </div>
-            </div>
-          </div>
         </div>
       </div>
 
@@ -942,19 +844,6 @@ const MealPlanner = () => {
         @keyframes slideInLeft {
           0%, 100% { transform: translateX(0); }
           50% { transform: translateX(10px); }
-        }
-
-        @keyframes scroll {
-          0% { transform: translateX(0); }
-          100% { transform: translateX(-50%); }
-        }
-
-        .animate-scroll {
-          animation: scroll 30s linear infinite;
-        }
-
-        .animate-scroll:hover {
-          animation-play-state: paused;
         }
 
         .animate-gradient {

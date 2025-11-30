@@ -15,6 +15,8 @@ const BrowseRecipes = () => {
     maxPrepTime: null,
   });
   const [showScrollTop, setShowScrollTop] = useState(false);
+  const [selectedRecipes, setSelectedRecipes] = useState([]);
+  const [selectionMode, setSelectionMode] = useState(false);
 
   // Read category from URL on mount
   useEffect(() => {
@@ -43,7 +45,29 @@ const BrowseRecipes = () => {
   // Get unique categories from recipes
   const categories = ['all', ...new Set(recipes.map(r => r.category))];
 
-  // Compute filtered recipes using useMemo instead of useEffect + setState
+  // Category emoji mapping
+  const getCategoryEmoji = (category) => {
+    const emojiMap = {
+      'all': '🍽️',
+      'Italian': '🍝',
+      'Mexican': '🌮',
+      'Indian': '🍛',
+      'Dessert': '🍰',
+      'Breakfast': '🥞',
+      'Salad': '🥗',
+      'Asian': '🥡',
+      'Seafood': '🦐',
+      'Lunch': '🥪',
+      'Dinner': '🍽️',
+      'Snack': '🍿',
+      'Appetizer': '🥟',
+      'Occasion': '🎉',
+      'Khmer Food': '🍜',
+    };
+    return emojiMap[category] || '🍽️';
+  };
+
+  // Compute filtered recipes using useMemo
   const filteredRecipes = useMemo(() => {
     return searchRecipes(searchQuery, filters);
   }, [searchQuery, filters, searchRecipes]);
@@ -100,11 +124,43 @@ const BrowseRecipes = () => {
       )}
 
       {/* Header */}
-      <div className="mb-6 md:mb-8">
-        <h1 className="text-3xl md:text-4xl font-bold text-indigo-700 mb-2 md:mb-4">Browse Recipes</h1>
-        <p className="text-sm md:text-base text-slate-700">
-          Discover and explore delicious recipes from our collection
-        </p>
+      <div className="mb-6 md:mb-8 flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4">
+        <div>
+          <h1 className="text-3xl md:text-4xl font-bold text-indigo-700 mb-2 md:mb-4">Browse Recipes</h1>
+          <p className="text-sm md:text-base text-slate-700">
+            Discover and explore delicious recipes from our collection
+          </p>
+        </div>
+        
+        {/* Multi-Select Print Button */}
+        <div className="flex gap-3">
+          <button
+            onClick={() => {
+              setSelectionMode(!selectionMode);
+              setSelectedRecipes([]);
+            }}
+            className={`px-4 py-2 rounded-lg font-semibold transition-all shadow-md hover:shadow-lg ${
+              selectionMode
+                ? 'bg-red-600 text-white hover:bg-red-700'
+                : 'bg-blue-600 text-white hover:bg-blue-700'
+            }`}
+          >
+            {selectionMode ? '✕ Cancel Selection' : '📄 Select to Print'}
+          </button>
+          
+          {selectionMode && selectedRecipes.length > 0 && (
+            <button
+              onClick={() => {
+                const ids = selectedRecipes.join(',');
+                window.open(`/print/multi?ids=${ids}`, '_blank');
+              }}
+              className="px-4 py-2 bg-green-600 text-white rounded-lg font-semibold hover:bg-green-700 transition-all shadow-md hover:shadow-lg flex items-center gap-2"
+            >
+              <span>🖨️</span>
+              Print {selectedRecipes.length} Recipe{selectedRecipes.length > 1 ? 's' : ''}
+            </button>
+          )}
+        </div>
       </div>
 
       {/* Surprise Me Feature */}
@@ -127,9 +183,9 @@ const BrowseRecipes = () => {
         </div>
       </div>
 
-      {/* Compact Search & Filter Box */}
-      <div className="bg-white rounded-xl shadow-lg p-4 mb-6">
-        <div className="flex flex-col lg:flex-row gap-3">
+      {/* Enhanced Search & Filter Box */}
+      <div className="bg-gradient-to-br from-indigo-600 via-purple-600 to-pink-600 rounded-2xl shadow-xl p-5 md:p-6 mb-6 border-2 border-indigo-700">
+        <div className="flex flex-col lg:flex-row gap-4">
           {/* Search Input */}
           <div className="flex-1 relative">
             <input
@@ -137,60 +193,78 @@ const BrowseRecipes = () => {
               value={searchQuery}
               onChange={handleSearchChange}
               placeholder="Search recipes by name, ingredients..."
-              className="w-full px-4 py-2.5 pl-10 rounded-lg border border-gray-300 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+              className="w-full px-5 py-3 pl-12 rounded-xl border-2 border-white/30 focus:outline-none focus:ring-2 focus:ring-white focus:border-white transition-all shadow-lg text-gray-800 font-semibold bg-white/95"
             />
-            <span className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400 text-lg">
+            <span className="absolute left-4 top-1/2 transform -translate-y-1/2 text-purple-600 text-xl">
               🔍
             </span>
           </div>
 
-          {/* Category Filter */}
-          <select
-            value={filters.category}
-            onChange={(e) => handleFilterChange('category', e.target.value)}
-            className="px-4 py-2.5 rounded-lg border border-gray-300 focus:outline-none focus:ring-2 focus:ring-blue-500 bg-white"
-          >
-            <option value="all">All Categories</option>
-            {categories.filter(c => c !== 'all').map(category => (
-              <option key={category} value={category.toLowerCase()}>
-                {category}
-              </option>
-            ))}
-          </select>
+          {/* Filter Dropdowns Container */}
+          <div className="flex flex-col sm:flex-row gap-3 lg:gap-4">
+            {/* Category Filter */}
+            <div className="relative">
+              <select
+                value={filters.category}
+                onChange={(e) => handleFilterChange('category', e.target.value)}
+                className="appearance-none w-full sm:w-auto px-5 py-3 pr-10 rounded-xl border-2 border-white/30 focus:outline-none focus:ring-2 focus:ring-white focus:border-white bg-white/95 cursor-pointer transition-all shadow-lg font-bold text-gray-800 hover:bg-white"
+              >
+                {categories.map(category => (
+                  <option key={category} value={category.toLowerCase()}>
+                    {getCategoryEmoji(category)} {category === 'all' ? 'All Categories' : category}
+                  </option>
+                ))}
+              </select>
+              <span className="absolute right-3 top-1/2 transform -translate-y-1/2 text-gray-600 pointer-events-none text-lg">
+                ▼
+              </span>
+            </div>
 
-          {/* Difficulty Filter */}
-          <select
-            value={filters.difficulty}
-            onChange={(e) => handleFilterChange('difficulty', e.target.value)}
-            className="px-4 py-2.5 rounded-lg border border-gray-300 focus:outline-none focus:ring-2 focus:ring-blue-500 bg-white"
-          >
-            <option value="all">All Levels</option>
-            <option value="easy">Easy</option>
-            <option value="medium">Medium</option>
-            <option value="hard">Hard</option>
-          </select>
+            {/* Difficulty Filter */}
+            <div className="relative">
+              <select
+                value={filters.difficulty}
+                onChange={(e) => handleFilterChange('difficulty', e.target.value)}
+                className="appearance-none w-full sm:w-auto px-5 py-3 pr-10 rounded-xl border-2 border-white/30 focus:outline-none focus:ring-2 focus:ring-white focus:border-white bg-white/95 cursor-pointer transition-all shadow-lg font-bold text-gray-800 hover:bg-white"
+              >
+                <option value="all">📊 All Levels</option>
+                <option value="easy">🟢 Easy</option>
+                <option value="medium">🟡 Medium</option>
+                <option value="hard">🔴 Hard</option>
+              </select>
+              <span className="absolute right-3 top-1/2 transform -translate-y-1/2 text-gray-600 pointer-events-none text-lg">
+                ▼
+              </span>
+            </div>
 
-          {/* Prep Time Filter */}
-          <select
-            value={filters.maxPrepTime || ''}
-            onChange={(e) => handleFilterChange('maxPrepTime', e.target.value ? parseInt(e.target.value) : null)}
-            className="px-4 py-2.5 rounded-lg border border-gray-300 focus:outline-none focus:ring-2 focus:ring-blue-500 bg-white"
-          >
-            <option value="">Any Time</option>
-            <option value="30">Under 30 min</option>
-            <option value="60">Under 60 min</option>
-            <option value="120">Under 120 min</option>
-          </select>
+            {/* Prep Time Filter */}
+            <div className="relative">
+              <select
+                value={filters.maxPrepTime || ''}
+                onChange={(e) => handleFilterChange('maxPrepTime', e.target.value ? parseInt(e.target.value) : null)}
+                className="appearance-none w-full sm:w-auto px-5 py-3 pr-10 rounded-xl border-2 border-white/30 focus:outline-none focus:ring-2 focus:ring-white focus:border-white bg-white/95 cursor-pointer transition-all shadow-lg font-bold text-gray-800 hover:bg-white"
+              >
+                <option value="">⏱️ Any Time</option>
+                <option value="30">⚡ Under 30 min</option>
+                <option value="60">🕐 Under 60 min</option>
+                <option value="120">🕑 Under 120 min</option>
+              </select>
+              <span className="absolute right-3 top-1/2 transform -translate-y-1/2 text-gray-600 pointer-events-none text-lg">
+                ▼
+              </span>
+            </div>
 
-          {/* Clear Filters Button */}
-          {hasActiveFilters && (
-            <button
-              onClick={clearFilters}
-              className="px-4 py-2.5 bg-gray-100 hover:bg-gray-200 text-gray-700 rounded-lg font-medium transition-colors whitespace-nowrap"
-            >
-              ✕ Clear
-            </button>
-          )}
+            {/* Clear Filters Button */}
+            {hasActiveFilters && (
+              <button
+                onClick={clearFilters}
+                className="px-5 py-3 bg-white hover:bg-gray-100 text-gray-800 rounded-xl font-bold transition-all shadow-lg hover:shadow-xl transform hover:scale-105 whitespace-nowrap flex items-center justify-center gap-2"
+              >
+                <span className="text-lg">✕</span>
+                Clear All
+              </button>
+            )}
+          </div>
         </div>
       </div>
 
@@ -206,7 +280,31 @@ const BrowseRecipes = () => {
       {filteredRecipes.length > 0 ? (
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4 md:gap-6">
           {filteredRecipes.map((recipe) => (
-            <RecipeCard key={recipe.id} recipe={recipe} />
+            <div key={recipe.id} className="relative">
+              {selectionMode && (
+                <div className="absolute top-2 left-2 z-30">
+                  <button
+                    onClick={(e) => {
+                      e.preventDefault();
+                      e.stopPropagation();
+                      setSelectedRecipes(prev =>
+                        prev.includes(recipe.id)
+                          ? prev.filter(id => id !== recipe.id)
+                          : [...prev, recipe.id]
+                      );
+                    }}
+                    className={`w-10 h-10 rounded-full flex items-center justify-center font-bold text-lg shadow-lg transition-all ${
+                      selectedRecipes.includes(recipe.id)
+                        ? 'bg-green-600 text-white scale-110'
+                        : 'bg-white/95 backdrop-blur-sm text-gray-700 hover:bg-gray-100'
+                    }`}
+                  >
+                    {selectedRecipes.includes(recipe.id) ? '✓' : '+'}
+                  </button>
+                </div>
+              )}
+              <RecipeCard recipe={recipe} />
+            </div>
           ))}
         </div>
       ) : (

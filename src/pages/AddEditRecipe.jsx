@@ -41,7 +41,7 @@ const AddEditRecipe = () => {
       cookTime: '',
       servings: '',
       difficulty: 'Easy',
-      category: 'Italian',
+      category: existingCategories[0] || 'Italian',
       ingredients: [''],
       instructions: [''],
       tags: '',
@@ -49,6 +49,7 @@ const AddEditRecipe = () => {
   });
 
   const [errors, setErrors] = useState({});
+  const [imageUploadMethod, setImageUploadMethod] = useState('url'); // 'url' or 'file'
 
   const handleInputChange = (e) => {
     const { name, value } = e.target;
@@ -59,6 +60,21 @@ const AddEditRecipe = () => {
     // Clear error for this field
     if (errors[name]) {
       setErrors(prev => ({ ...prev, [name]: '' }));
+    }
+  };
+
+  const handleImageUpload = (e) => {
+    const file = e.target.files[0];
+    if (file) {
+      // Convert image to base64
+      const reader = new FileReader();
+      reader.onloadend = () => {
+        setFormData(prev => ({
+          ...prev,
+          image: reader.result,
+        }));
+      };
+      reader.readAsDataURL(file);
     }
   };
 
@@ -135,7 +151,7 @@ const AddEditRecipe = () => {
   };
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-blue-50 via-purple-50 to-pink-50">
+    <div className="min-h-screen bg-gradient-to-br from-blue-50 via-purple-50 to-pink-50 pb-0">
       <div className="max-w-[1920px] mx-auto px-2 sm:px-3 md:px-4 lg:px-6 py-6 md:py-8">
         <div className="max-w-3xl mx-auto">
           {/* Header */}
@@ -167,7 +183,7 @@ const AddEditRecipe = () => {
           {/* Title */}
           <div className="mb-6">
             <label className="block text-gray-700 font-semibold mb-2">
-              Recipe Title *
+              Recipe Title <span className="text-red-600">*</span>
             </label>
             <input
               type="text"
@@ -185,7 +201,7 @@ const AddEditRecipe = () => {
           {/* Description */}
           <div className="mb-6">
             <label className="block text-gray-700 font-semibold mb-2">
-              Description *
+              Description <span className="text-red-600">*</span>
             </label>
             <textarea
               name="description"
@@ -200,29 +216,86 @@ const AddEditRecipe = () => {
             {errors.description && <p className="text-red-500 text-sm mt-1">{errors.description}</p>}
           </div>
 
-          {/* Image URL */}
+          {/* Image Upload/URL */}
           <div className="mb-6">
             <label className="block text-gray-700 font-semibold mb-2">
-              Image URL
+              Recipe Image
             </label>
-            <input
-              type="url"
-              name="image"
-              value={formData.image}
-              onChange={handleInputChange}
-              className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
-              placeholder="https://example.com/image.jpg (or leave blank for default)"
-            />
-            <p className="text-gray-500 text-sm mt-1">
-              Paste a URL to an image (e.g., from Unsplash or your own hosting)
-            </p>
+            
+            {/* Toggle buttons for upload method */}
+            <div className="flex gap-2 mb-3">
+              <button
+                type="button"
+                onClick={() => setImageUploadMethod('url')}
+                className={`px-4 py-2 rounded-lg font-medium transition-all ${
+                  imageUploadMethod === 'url'
+                    ? 'bg-blue-600 text-white shadow-md'
+                    : 'bg-gray-200 text-gray-700 hover:bg-gray-300'
+                }`}
+              >
+                🔗 URL
+              </button>
+              <button
+                type="button"
+                onClick={() => setImageUploadMethod('file')}
+                className={`px-4 py-2 rounded-lg font-medium transition-all ${
+                  imageUploadMethod === 'file'
+                    ? 'bg-blue-600 text-white shadow-md'
+                    : 'bg-gray-200 text-gray-700 hover:bg-gray-300'
+                }`}
+              >
+                📁 Upload File
+              </button>
+            </div>
+
+            {imageUploadMethod === 'url' ? (
+              <>
+                <input
+                  type="url"
+                  name="image"
+                  value={formData.image}
+                  onChange={handleInputChange}
+                  className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
+                  placeholder="https://example.com/image.jpg"
+                />
+                <p className="text-gray-500 text-sm mt-1">
+                  Paste a URL to an image (e.g., from Unsplash or your own hosting)
+                </p>
+              </>
+            ) : (
+              <>
+                <input
+                  type="file"
+                  accept="image/*"
+                  onChange={handleImageUpload}
+                  className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 file:mr-4 file:py-2 file:px-4 file:rounded-lg file:border-0 file:text-sm file:font-semibold file:bg-blue-50 file:text-blue-700 hover:file:bg-blue-100"
+                />
+                <p className="text-gray-500 text-sm mt-1">
+                  Upload an image from your computer (JPG, PNG, etc.)
+                </p>
+              </>
+            )}
+
+            {/* Image preview */}
+            {formData.image && (
+              <div className="mt-3">
+                <img
+                  src={formData.image}
+                  alt="Recipe preview"
+                  className="w-full h-48 object-cover rounded-lg border-2 border-gray-300"
+                  onError={(e) => {
+                    e.target.src = 'https://via.placeholder.com/400x300?text=Invalid+Image';
+                  }}
+                />
+              </div>
+            )}
           </div>
 
           {/* Time and Servings Grid */}
           <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-6">
             <div>
               <label className="block text-gray-700 font-semibold mb-2">
-                Prep Time (min) *
+                Prep Time (min) <span className="text-red-600">*</span>
               </label>
               <input
                 type="number"
@@ -238,7 +311,7 @@ const AddEditRecipe = () => {
             </div>
             <div>
               <label className="block text-gray-700 font-semibold mb-2">
-                Cook Time (min) *
+                Cook Time (min) <span className="text-red-600">*</span>
               </label>
               <input
                 type="number"
@@ -254,7 +327,7 @@ const AddEditRecipe = () => {
             </div>
             <div>
               <label className="block text-gray-700 font-semibold mb-2">
-                Servings *
+                Servings <span className="text-red-600">*</span>
               </label>
               <input
                 type="number"
@@ -274,40 +347,52 @@ const AddEditRecipe = () => {
           <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mb-6">
             <div>
               <label className="block text-gray-700 font-semibold mb-2">
-                Category *
+                Category <span className="text-red-600">*</span>
               </label>
-              <input
-                type="text"
-                name="category"
-                value={formData.category}
-                onChange={handleInputChange}
-                list="categories-list"
-                className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
-                placeholder="Select or type a category..."
-              />
-              <datalist id="categories-list">
-                {existingCategories.map(category => (
-                  <option key={category} value={category} />
-                ))}
-              </datalist>
+              <div className="relative">
+                <select
+                  name="category"
+                  value={formData.category}
+                  onChange={handleInputChange}
+                  className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 appearance-none bg-white font-medium text-gray-700 cursor-pointer hover:border-blue-400 transition-colors"
+                >
+                  {existingCategories.map(category => (
+                    <option key={category} value={category}>
+                      {category}
+                    </option>
+                  ))}
+                </select>
+                <div className="absolute inset-y-0 right-0 flex items-center px-3 pointer-events-none">
+                  <svg className="w-5 h-5 text-gray-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M19 9l-7 7-7-7" />
+                  </svg>
+                </div>
+              </div>
               <p className="text-gray-500 text-xs mt-1">
-                💡 Choose from existing categories or type to create a new one
+                🍽️ Select from existing categories
               </p>
             </div>
             <div>
               <label className="block text-gray-700 font-semibold mb-2">
-                Difficulty *
+                Difficulty <span className="text-red-600">*</span>
               </label>
-              <select
-                name="difficulty"
-                value={formData.difficulty}
-                onChange={handleInputChange}
-                className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
-              >
-                <option value="Easy">Easy</option>
-                <option value="Medium">Medium</option>
-                <option value="Hard">Hard</option>
-              </select>
+              <div className="relative">
+                <select
+                  name="difficulty"
+                  value={formData.difficulty}
+                  onChange={handleInputChange}
+                  className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 appearance-none bg-white font-medium text-gray-700 cursor-pointer hover:border-blue-400 transition-colors"
+                >
+                  <option value="Easy">🟢 Easy</option>
+                  <option value="Medium">🟡 Medium</option>
+                  <option value="Hard">🔴 Hard</option>
+                </select>
+                <div className="absolute inset-y-0 right-0 flex items-center px-3 pointer-events-none">
+                  <svg className="w-5 h-5 text-gray-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M19 9l-7 7-7-7" />
+                  </svg>
+                </div>
+              </div>
             </div>
           </div>
 

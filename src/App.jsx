@@ -1,4 +1,5 @@
-import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
+import { BrowserRouter as Router, Routes, Route, useLocation } from 'react-router-dom';
+import { useEffect } from 'react';
 import { AppProvider } from './context/AppContext';
 import Navbar from './components/Navbar';
 import Footer from './components/Footer';
@@ -11,14 +12,46 @@ import MealPlanner from './pages/MealPlanner';
 import About from './pages/About';
 import PrintRecipe from './pages/PrintRecipe';
 import PrintMealPlan from './pages/PrintMealPlan';
+
+// Component to scroll to top on route change and page load
+function ScrollToTop() {
+  const { pathname } = useLocation();
+
+  // Scroll to top on route change
+  useEffect(() => {
+    window.scrollTo(0, 0);
+  }, [pathname]);
+
+  // Disable browser's scroll restoration and scroll to top on mount
+  useEffect(() => {
+    // Disable automatic scroll restoration
+    if ('scrollRestoration' in window.history) {
+      window.history.scrollRestoration = 'manual';
+    }
+    
+    // Scroll to top immediately
+    window.scrollTo(0, 0);
+    
+    // Also scroll after a small delay to ensure content is loaded
+    const timer = setTimeout(() => {
+      window.scrollTo(0, 0);
+    }, 100);
+    
+    return () => clearTimeout(timer);
+  }, []);
+
+  return null;
+}
+
 function App() {
   return (
     <AppProvider>
       <Router>
+        <ScrollToTop />
         <div className="min-h-screen bg-gray-50">
         <Routes>
             <Route path="/print/:id" element={<PrintRecipe />} />
-            <Route path="/print-meal-plan/:day" element={<PrintMealPlan />} />
+            <Route path="/print-meal-plan" element={<PrintMealPlan />} />
             <Route path="*" element={
               <>
                 <Navbar />

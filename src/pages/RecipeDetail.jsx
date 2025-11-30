@@ -1,4 +1,5 @@
 import { useParams, useNavigate, Link } from 'react-router-dom';
+import { useState } from 'react';
 import { useApp } from '../context/AppContext';
 
 const RecipeDetail = () => {
@@ -8,6 +9,10 @@ const RecipeDetail = () => {
 
   const recipe = getRecipeById(id);
   const isRecipeFavorite = isFavorite(id);
+  
+  // Cooking mode state
+  const [cookingMode, setCookingMode] = useState(false);
+  const [currentStep, setCurrentStep] = useState(0);
 
   const handleBack = () => {
     // Check if there's history to go back to, otherwise go to recipes
@@ -22,17 +27,19 @@ const RecipeDetail = () => {
   if (!recipe) {
     return (
       <div className="max-w-[1920px] mx-auto px-2 sm:px-3 md:px-4 lg:px-6 py-12 text-center">
-        <div className="text-6xl mb-4">😕</div>
-        <h2 className="text-3xl font-bold text-gray-800 mb-4">Recipe Not Found</h2>
-        <p className="text-gray-600 mb-6">
-          The recipe you're looking for doesn't exist or has been removed.
-        </p>
-        <Link
-          to="/recipes"
-          className="bg-blue-500 text-white px-6 py-3 rounded-lg font-semibold hover:bg-blue-600 transition-colors"
-        >
-          Browse Recipes
-        </Link>
+        <div className="bg-white rounded-2xl shadow-2xl p-12 max-w-2xl mx-auto border-4 border-red-200">
+          <div className="text-8xl mb-6">😕</div>
+          <h2 className="text-4xl font-bold text-gray-900 mb-4">Recipe Not Found</h2>
+          <p className="text-gray-600 text-lg mb-8">
+            The recipe you're looking for doesn't exist or has been removed.
+          </p>
+          <Link
+            to="/recipes"
+            className="inline-block bg-gradient-to-r from-blue-600 to-indigo-600 text-white px-8 py-4 rounded-xl font-bold hover:from-blue-700 hover:to-indigo-700 transition-all shadow-lg hover:shadow-xl transform hover:scale-105"
+          >
+            Browse Recipes
+          </Link>
+        </div>
       </div>
     );
   }
@@ -52,114 +59,150 @@ const RecipeDetail = () => {
      window.open(`/print/${recipe.id}`, '_blank');
   };
 
+  // Cooking mode functions
+  const toggleCookingMode = () => {
+    setCookingMode(!cookingMode);
+    setCurrentStep(0);
+    if (!cookingMode) {
+      // Scroll to instructions section when entering cooking mode
+      setTimeout(() => {
+        document.getElementById('cooking-mode-section')?.scrollIntoView({ behavior: 'smooth' });
+      }, 100);
+    }
+  };
+
+  const nextStep = () => {
+    if (currentStep < recipe.instructions.length - 1) {
+      setCurrentStep(currentStep + 1);
+    }
+  };
+
+  const prevStep = () => {
+    if (currentStep > 0) {
+      setCurrentStep(currentStep - 1);
+    }
+  };
+
+  const goToStep = (index) => {
+    setCurrentStep(index);
+  };
+
   return (
     <div className="min-h-screen bg-gray-50 py-8">
-      <div className="max-w-[1920px] mx-auto px-2 sm:px-3 md:px-4 lg:px-6">
+      <div className="max-w-7xl mx-auto px-2 sm:px-3 md:px-4 lg:px-6">
         {/* Back Button */}
         <button
           onClick={handleBack}
-          className="mb-6 text-blue-600 hover:text-blue-800 font-medium flex items-center"
+          className="mb-6 bg-white text-gray-700 px-6 py-3 rounded-xl font-semibold shadow-md hover:shadow-lg transition-all flex items-center gap-2 hover:bg-gray-50 border border-gray-200"
         >
-          ← Back
+          <span className="text-xl">←</span>
+          Back
         </button>
         
-        <div className="bg-white rounded-lg shadow-lg overflow-hidden">
+        <div className="bg-white rounded-2xl shadow-xl overflow-hidden border border-gray-200">
           {/* Image Header */}
-          <div className="relative h-96 bg-gray-200">
+          <div className="relative h-72 sm:h-96 bg-gray-100 overflow-hidden">
             <img
               src={recipe.image || 'https://via.placeholder.com/1200x400?text=No+Image'}
               alt={recipe.title}
               className="w-full h-full object-cover"
               onError={(e) => {
-                // Prevent infinite loop by checking if already set to placeholder
                 if (e.target.src !== 'https://via.placeholder.com/1200x400?text=No+Image') {
                   e.target.src = 'https://via.placeholder.com/1200x400?text=No+Image';
                 } else {
-                  // If placeholder also fails, use a data URL as final fallback
                   e.target.src = 'data:image/svg+xml,%3Csvg xmlns="http://www.w3.org/2000/svg" width="1200" height="400"%3E%3Crect width="1200" height="400" fill="%23e5e7eb"/%3E%3Ctext x="50%25" y="50%25" text-anchor="middle" dy=".3em" fill="%239ca3af" font-family="system-ui" font-size="24"%3ENo Image%3C/text%3E%3C/svg%3E';
                 }
               }}
             />
-            <div className="absolute top-4 right-4 flex space-x-2">
-              {/* Print Button */}
-             <button
+            {/* Subtle gradient for text readability */}
+            <div className="absolute inset-0 bg-gradient-to-t from-black/50 via-transparent to-transparent"></div>
+            
+            {/* Action Buttons */}
+            <div className="absolute top-4 right-4 flex space-x-3 z-10">
+              <button
                 onClick={handlePrint}
-                className="bg-white rounded-full p-3 shadow-lg hover:bg-gray-100 transition-colors"
+                className="bg-white/95 backdrop-blur-sm rounded-full p-3 shadow-lg hover:bg-white hover:scale-105 transition-all"
                 title="Print Recipe"
               >
                 <span className="text-2xl">🖨️</span>
               </button>
               <button
                 onClick={handleToggleFavorite}
-                className="bg-white rounded-full p-3 shadow-lg hover:bg-gray-100 transition-colors"
+                className="bg-white/95 backdrop-blur-sm rounded-full p-3 shadow-lg hover:bg-white hover:scale-105 transition-all"
               >
                 <span className="text-2xl">
                   {isRecipeFavorite ? '❤️' : '🤍'}
                 </span>
               </button>
             </div>
+            
+            {/* Title Overlay */}
+            <div className="absolute bottom-0 left-0 right-0 p-6 sm:p-8 bg-gradient-to-t from-black/70 to-transparent">
+              <h1 className="text-3xl sm:text-4xl lg:text-5xl font-bold text-white drop-shadow-lg">
+                {recipe.title}
+              </h1>
+            </div>
           </div>
 
           {/* Content */}
-          <div className="p-8">
-            {/* Title and Meta */}
-            <div className="mb-6">
-              <div className="flex items-start justify-between mb-4">
-                <div>
-                  <h1 className="text-4xl font-bold text-gray-800 mb-2">{recipe.title}</h1>
-                  <p className="text-gray-600 text-lg">{recipe.description}</p>
-                </div>
-              </div>
+          <div className="p-6 sm:p-8 lg:p-10">
+            {/* Description */}
+            <div className="bg-blue-50 rounded-xl p-6 mb-8 border-l-4 border-blue-600">
+              <p className="text-gray-800 text-lg sm:text-xl font-medium leading-relaxed">
+                {recipe.description}
+              </p>
+            </div>
 
-              {/* Tags */}
-              <div className="flex flex-wrap gap-2 mb-4">
-                <span className="bg-blue-100 text-blue-800 px-3 py-1 rounded-full text-sm font-medium">
-                  {recipe.category}
+            {/* Tags */}
+            <div className="flex flex-wrap gap-3 mb-8">
+              <span className="inline-flex items-center gap-2 bg-blue-600 text-white px-5 py-2.5 rounded-lg text-sm font-bold shadow-md hover:bg-blue-700 transition-colors">
+                <span className="text-lg">🍽️</span>
+                {recipe.category}
+              </span>
+              <span className={`inline-flex items-center gap-2 px-5 py-2.5 rounded-lg text-sm font-bold text-white shadow-md ${
+                recipe.difficulty === 'Easy' ? 'bg-green-600' :
+                recipe.difficulty === 'Medium' ? 'bg-yellow-600' :
+                'bg-red-600'
+              }`}>
+                <span className="text-lg">📊</span>
+                {recipe.difficulty}
+              </span>
+              {recipe.tags && recipe.tags.map(tag => (
+                <span key={tag} className="bg-gray-100 text-gray-700 px-4 py-2.5 rounded-lg text-sm font-semibold border border-gray-300">
+                  #{tag}
                 </span>
-                <span className={`px-3 py-1 rounded-full text-sm font-semibold text-white ${
-                  recipe.difficulty === 'Easy' ? 'bg-green-500' :
-                  recipe.difficulty === 'Medium' ? 'bg-yellow-500' :
-                  'bg-red-500'
-                }`}>
-                  {recipe.difficulty}
-                </span>
-                {recipe.tags && recipe.tags.map(tag => (
-                  <span key={tag} className="bg-gray-200 text-gray-700 px-3 py-1 rounded-full text-sm">
-                    {tag}
-                  </span>
-                ))}
-              </div>
+              ))}
+            </div>
 
-              {/* Stats */}
-              <div className="flex flex-wrap gap-6 text-gray-700">
-                <div className="flex items-center">
-                  <span className="text-2xl mr-2">⏱️</span>
-                  <div>
-                    <div className="text-sm text-gray-500">Prep Time</div>
-                    <div className="font-semibold">{recipe.prepTime} min</div>
-                  </div>
+            {/* Stats Grid */}
+            <div className="grid grid-cols-2 lg:grid-cols-4 gap-4 mb-8">
+              <div className="bg-white rounded-xl p-5 shadow-md border-2 border-blue-200">
+                <div className="flex items-center gap-3 mb-2">
+                  <span className="text-3xl">⏱️</span>
+                  <div className="text-sm font-semibold text-gray-600">Prep Time</div>
                 </div>
-                <div className="flex items-center">
-                  <span className="text-2xl mr-2">🍳</span>
-                  <div>
-                    <div className="text-sm text-gray-500">Cook Time</div>
-                    <div className="font-semibold">{recipe.cookTime} min</div>
-                  </div>
+                <div className="text-2xl font-bold text-gray-900">{recipe.prepTime} min</div>
+              </div>
+              <div className="bg-white rounded-xl p-5 shadow-md border-2 border-blue-200">
+                <div className="flex items-center gap-3 mb-2">
+                  <span className="text-3xl">🍳</span>
+                  <div className="text-sm font-semibold text-gray-600">Cook Time</div>
                 </div>
-                <div className="flex items-center">
-                  <span className="text-2xl mr-2">👥</span>
-                  <div>
-                    <div className="text-sm text-gray-500">Servings</div>
-                    <div className="font-semibold">{recipe.servings}</div>
-                  </div>
+                <div className="text-2xl font-bold text-gray-900">{recipe.cookTime} min</div>
+              </div>
+              <div className="bg-white rounded-xl p-5 shadow-md border-2 border-blue-200">
+                <div className="flex items-center gap-3 mb-2">
+                  <span className="text-3xl">👥</span>
+                  <div className="text-sm font-semibold text-gray-600">Servings</div>
                 </div>
-                <div className="flex items-center">
-                  <span className="text-2xl mr-2">🕐</span>
-                  <div>
-                    <div className="text-sm text-gray-500">Total Time</div>
-                    <div className="font-semibold">{recipe.prepTime + recipe.cookTime} min</div>
-                  </div>
+                <div className="text-2xl font-bold text-gray-900">{recipe.servings}</div>
+              </div>
+              <div className="bg-white rounded-xl p-5 shadow-md border-2 border-blue-200">
+                <div className="flex items-center gap-3 mb-2">
+                  <span className="text-3xl">🕐</span>
+                  <div className="text-sm font-semibold text-gray-600">Total Time</div>
                 </div>
+                <div className="text-2xl font-bold text-gray-900">{recipe.prepTime + recipe.cookTime} min</div>
               </div>
             </div>
 
@@ -167,13 +210,16 @@ const RecipeDetail = () => {
             <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
               {/* Ingredients */}
               <div className="lg:col-span-1">
-                <h2 className="text-2xl font-bold text-gray-800 mb-4">Ingredients</h2>
-                <div className="bg-gray-50 rounded-lg p-4">
-                  <ul className="space-y-2">
+                <div className="bg-white rounded-xl p-6 shadow-md border-2 border-blue-200">
+                  <h2 className="text-2xl sm:text-3xl font-bold text-gray-900 mb-6 flex items-center gap-3 pb-4 border-b-2 border-blue-200">
+                    <span className="text-3xl">🛒</span>
+                    Ingredients
+                  </h2>
+                  <ul className="space-y-3">
                     {recipe.ingredients.map((ingredient, index) => (
-                      <li key={index} className="flex items-start">
-                        <span className="text-blue-500 mr-2">•</span>
-                        <span className="text-gray-700">{ingredient}</span>
+                      <li key={index} className="flex items-start gap-3 bg-gray-50 rounded-lg p-3 border border-gray-200 hover:bg-blue-50 hover:border-blue-300 transition-colors">
+                        <span className="text-blue-600 font-bold text-lg flex-shrink-0">✓</span>
+                        <span className="text-gray-800 font-medium leading-relaxed">{ingredient}</span>
                       </li>
                     ))}
                   </ul>
@@ -181,33 +227,164 @@ const RecipeDetail = () => {
               </div>
 
               {/* Instructions */}
-              <div className="lg:col-span-2">
-                <h2 className="text-2xl font-bold text-gray-800 mb-4">Instructions</h2>
-                <div className="space-y-4">
-                  {recipe.instructions.map((instruction, index) => (
-                    <div key={index} className="flex items-start">
-                      <div className="flex-shrink-0 w-8 h-8 bg-blue-500 text-white rounded-full flex items-center justify-center font-semibold mr-4">
-                        {index + 1}
-                      </div>
-                      <p className="text-gray-700 pt-1">{instruction}</p>
+              <div className="lg:col-span-2" id="cooking-mode-section">
+                <div className="bg-white rounded-xl p-6 shadow-md border-2 border-blue-200">
+                  <div className="flex items-center justify-between mb-6 pb-4 border-b-2 border-blue-200">
+                    <h2 className="text-2xl sm:text-3xl font-bold text-gray-900 flex items-center gap-3">
+                      <span className="text-3xl">👨‍🍳</span>
+                      Instructions
+                    </h2>
+                    {/* Cooking Mode Toggle */}
+                    <button
+                      onClick={toggleCookingMode}
+                      className={`flex items-center gap-2 px-4 py-2 rounded-lg font-bold transition-all shadow-md hover:shadow-lg ${
+                        cookingMode 
+                          ? 'bg-red-600 text-white hover:bg-red-700' 
+                          : 'bg-green-600 text-white hover:bg-green-700'
+                      }`}
+                    >
+                      <span className="text-lg">{cookingMode ? '📖' : '🧑‍🍳'}</span>
+                      <span className="hidden sm:inline">{cookingMode ? 'Exit Cooking Mode' : 'Cooking Mode'}</span>
+                    </button>
+                  </div>
+
+                  {/* Regular Instructions View */}
+                  {!cookingMode && (
+                    <div className="space-y-5">
+                      {recipe.instructions.map((instruction, index) => (
+                        <div key={index} className="flex items-start gap-4 bg-gray-50 rounded-xl p-5 border border-gray-200 hover:bg-blue-50 hover:border-blue-300 transition-colors">
+                          <div className="flex-shrink-0 w-10 h-10 bg-blue-600 text-white rounded-full flex items-center justify-center font-bold text-lg shadow-md">
+                            {index + 1}
+                          </div>
+                          <p className="text-gray-800 font-medium pt-1.5 leading-relaxed">{instruction}</p>
+                        </div>
+                      ))}
                     </div>
-                  ))}
+                  )}
+
+                  {/* Cooking Mode View */}
+                  {cookingMode && (
+                    <div className="space-y-6">
+                      {/* Progress Bar */}
+                      <div className="bg-gray-200 rounded-full h-3 overflow-hidden">
+                        <div 
+                          className="bg-green-600 h-full transition-all duration-300"
+                          style={{ width: `${((currentStep + 1) / recipe.instructions.length) * 100}%` }}
+                        ></div>
+                      </div>
+
+                      {/* Current Step Display */}
+                      <div className="bg-gradient-to-br from-blue-50 to-green-50 rounded-2xl p-8 border-2 border-blue-300 shadow-lg min-h-[300px] flex flex-col justify-between">
+                        <div>
+                          <div className="flex items-center justify-between mb-6">
+                            <div className="flex items-center gap-4">
+                              <div className="w-16 h-16 bg-blue-600 text-white rounded-full flex items-center justify-center font-bold text-2xl shadow-lg">
+                                {currentStep + 1}
+                              </div>
+                              <div>
+                                <p className="text-sm text-gray-600 font-semibold">Step {currentStep + 1} of {recipe.instructions.length}</p>
+                                <div className="flex gap-1 mt-1">
+                                  {recipe.instructions.map((_, index) => (
+                                    <button
+                                      key={index}
+                                      onClick={() => goToStep(index)}
+                                      className={`w-2 h-2 rounded-full transition-all ${
+                                        index === currentStep ? 'bg-blue-600 w-6' : 'bg-gray-300 hover:bg-gray-400'
+                                      }`}
+                                      aria-label={`Go to step ${index + 1}`}
+                                    />
+                                  ))}
+                                </div>
+                              </div>
+                            </div>
+                          </div>
+                          
+                          <p className="text-gray-900 text-xl sm:text-2xl font-medium leading-relaxed">
+                            {recipe.instructions[currentStep]}
+                          </p>
+                        </div>
+
+                        {/* Navigation Buttons */}
+                        <div className="flex items-center justify-between mt-8 gap-4">
+                          <button
+                            onClick={prevStep}
+                            disabled={currentStep === 0}
+                            className={`flex items-center gap-2 px-6 py-3 rounded-xl font-bold transition-all shadow-md ${
+                              currentStep === 0
+                                ? 'bg-gray-300 text-gray-500 cursor-not-allowed'
+                                : 'bg-blue-600 text-white hover:bg-blue-700 hover:shadow-lg hover:scale-105'
+                            }`}
+                          >
+                            <span className="text-xl">←</span>
+                            <span className="hidden sm:inline">Previous</span>
+                          </button>
+
+                          {/* Show All Steps Button */}
+                          <button
+                            onClick={toggleCookingMode}
+                            className="px-4 py-3 bg-gray-600 text-white rounded-xl font-bold hover:bg-gray-700 transition-all shadow-md hover:shadow-lg"
+                            title="Show all steps"
+                          >
+                            <span className="text-xl">📋</span>
+                          </button>
+
+                          <button
+                            onClick={nextStep}
+                            disabled={currentStep === recipe.instructions.length - 1}
+                            className={`flex items-center gap-2 px-6 py-3 rounded-xl font-bold transition-all shadow-md ${
+                              currentStep === recipe.instructions.length - 1
+                                ? 'bg-gray-300 text-gray-500 cursor-not-allowed'
+                                : 'bg-green-600 text-white hover:bg-green-700 hover:shadow-lg hover:scale-105'
+                            }`}
+                          >
+                            <span className="hidden sm:inline">Next</span>
+                            <span className="text-xl">→</span>
+                          </button>
+                        </div>
+                      </div>
+
+                      {/* Step Overview (thumbnail view) */}
+                      <div className="bg-white rounded-xl p-4 border border-gray-200">
+                        <p className="text-sm font-semibold text-gray-600 mb-3">All Steps:</p>
+                        <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-6 gap-2">
+                          {recipe.instructions.map((_, index) => (
+                            <button
+                              key={index}
+                              onClick={() => goToStep(index)}
+                              className={`p-3 rounded-lg font-bold transition-all ${
+                                index === currentStep
+                                  ? 'bg-blue-600 text-white shadow-md scale-105'
+                                  : index < currentStep
+                                  ? 'bg-green-100 text-green-700 hover:bg-green-200'
+                                  : 'bg-gray-100 text-gray-600 hover:bg-gray-200'
+                              }`}
+                            >
+                              {index + 1}
+                              {index < currentStep && <span className="ml-1">✓</span>}
+                            </button>
+                          ))}
+                        </div>
+                      </div>
+                    </div>
+                  )}
                 </div>
               </div>
             </div>
 
             {/* Actions */}
-            <div className="mt-8 pt-8 border-t border-gray-200 flex justify-between">
+            <div className="mt-8 pt-8 border-t-2 border-gray-200 flex flex-col sm:flex-row gap-4 justify-between">
               <Link
                 to={`/edit/${recipe.id}`}
-                className="bg-blue-500 text-white px-6 py-3 rounded-lg font-semibold hover:bg-blue-600 transition-colors"
+                className="flex items-center justify-center gap-2 bg-blue-600 text-white px-8 py-4 rounded-xl font-bold hover:bg-blue-700 transition-all shadow-md hover:shadow-lg"
               >
+                <span className="text-xl">✏️</span>
                 Edit Recipe
               </Link>
               <button
                 onClick={handleDelete}
-                className="bg-red-500 text-white px-6 py-3 rounded-lg font-semibold hover:bg-red-600 transition-colors"
+                className="flex items-center justify-center gap-2 bg-red-600 text-white px-8 py-4 rounded-xl font-bold hover:bg-red-700 transition-all shadow-md hover:shadow-lg"
               >
+                <span className="text-xl">🗑️</span>
                 Delete Recipe
               </button>
             </div>

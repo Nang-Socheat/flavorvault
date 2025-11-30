@@ -13,73 +13,73 @@ const RecipeCard = ({ recipe }) => {
 
   return (
     <Link to={`/recipe/${recipe.id}`} className="block group">
-      <div className="bg-white rounded-lg shadow-md overflow-hidden transition-transform duration-200 hover:scale-105 hover:shadow-xl">
-        {/* Image */}
-        <div className="relative h-48 bg-gray-200 overflow-hidden">
-          <img
-            src={recipe.image || 'https://via.placeholder.com/400x300?text=No+Image'}
-            alt={recipe.title}
-            className="w-full h-full object-cover"
-            onError={(e) => {
-              // Prevent infinite loop by checking if already set to placeholder
-              if (e.target.src !== 'https://via.placeholder.com/400x300?text=No+Image') {
-                e.target.src = 'https://via.placeholder.com/400x300?text=No+Image';
-              } else {
-                // If placeholder also fails, use a data URL as final fallback
-                e.target.src = 'data:image/svg+xml,%3Csvg xmlns="http://www.w3.org/2000/svg" width="400" height="300"%3E%3Crect width="400" height="300" fill="%23e5e7eb"/%3E%3Ctext x="50%25" y="50%25" text-anchor="middle" dy=".3em" fill="%239ca3af" font-family="system-ui" font-size="20"%3ENo Image%3C/text%3E%3C/svg%3E';
-              }
-            }}
-          />
-          {/* Favorite Button */}
-          <button
-            onClick={handleFavoriteClick}
-            className="absolute top-2 right-2 bg-white rounded-full p-2 shadow-md hover:bg-gray-100 transition-colors"
-            aria-label={isRecipeFavorite ? 'Remove from favorites' : 'Add to favorites'}
-          >
-            <span className="text-xl">
-              {isRecipeFavorite ? '❤️' : '🤍'}
-            </span>
-          </button>
-          {/* Difficulty Badge */}
-          <div className="absolute bottom-2 left-2">
-            <span className={`px-3 py-1 rounded-full text-xs font-semibold text-white ${
-              recipe.difficulty === 'Easy' ? 'bg-green-500' :
-              recipe.difficulty === 'Medium' ? 'bg-yellow-500' :
-              'bg-red-500'
-            }`}>
-              {recipe.difficulty}
-            </span>
-          </div>
-        </div>
-
-        {/* Content */}
-        <div className="p-4">
-          <h3 className="text-lg font-bold text-gray-800 mb-2 line-clamp-1">
-            {recipe.title}
-          </h3>
-          <p className="text-gray-600 text-sm mb-3 line-clamp-2">
-            {recipe.description}
-          </p>
-
-          {/* Meta Info */}
-          <div className="flex items-center justify-between text-sm text-gray-500 mb-3">
-            <div className="flex items-center space-x-4">
-              <span className="flex items-center">
-                <span className="mr-1">⏱️</span>
-                {recipe.prepTime + recipe.cookTime} min
+      <div className="relative bg-white rounded-2xl shadow-lg overflow-hidden transition-all duration-300 hover:scale-[1.02] hover:shadow-xl h-[420px] sm:h-[440px] lg:h-[400px] flex flex-col border border-gray-200">
+        {/* Content Container */}
+        <div className="relative flex flex-col h-full">
+          {/* Image Section - Fixed Height */}
+          <div className="relative h-48 sm:h-52 lg:h-44 overflow-hidden flex-shrink-0 bg-gray-100">
+            <img
+              src={recipe.image || 'https://via.placeholder.com/400x300?text=No+Image'}
+              alt={recipe.title}
+              className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-110"
+              onError={(e) => {
+                if (e.target.src !== 'https://via.placeholder.com/400x300?text=No+Image') {
+                  e.target.src = 'https://via.placeholder.com/400x300?text=No+Image';
+                } else {
+                  e.target.src = 'data:image/svg+xml,%3Csvg xmlns="http://www.w3.org/2000/svg" width="400" height="300"%3E%3Crect width="400" height="300" fill="%23e5e7eb"/%3E%3Ctext x="50%25" y="50%25" text-anchor="middle" dy=".3em" fill="%239ca3af" font-family="system-ui" font-size="20"%3ENo Image%3C/text%3E%3C/svg%3E';
+                }
+              }}
+            />
+            {/* Favorite Button */}
+            <button
+              onClick={handleFavoriteClick}
+              className="absolute top-3 right-3 z-20 bg-white/95 backdrop-blur-sm rounded-full p-2.5 shadow-lg hover:bg-white hover:scale-110 transition-all duration-200"
+              aria-label={isRecipeFavorite ? 'Remove from favorites' : 'Add to favorites'}
+            >
+              <span className="text-2xl leading-none">
+                {isRecipeFavorite ? '❤️' : '🤍'}
               </span>
-              <span className="flex items-center">
-                <span className="mr-1">👥</span>
-                {recipe.servings}
+            </button>
+            {/* Difficulty Badge */}
+            <div className="absolute bottom-3 left-3 z-20">
+              <span className={`px-3 py-1.5 rounded-lg text-xs font-bold text-white shadow-lg ${
+                recipe.difficulty === 'Easy' ? 'bg-green-600' :
+                recipe.difficulty === 'Medium' ? 'bg-yellow-600' :
+                'bg-red-600'
+              }`}>
+                {recipe.difficulty}
               </span>
             </div>
           </div>
 
-          {/* Category */}
-          <div className="flex items-center justify-between">
-            <span className="text-xs font-medium text-blue-600 bg-blue-50 px-2 py-1 rounded">
-              {recipe.category}
-            </span>
+          {/* Content Section */}
+          <div className="flex-1 p-4 bg-white flex flex-col min-h-0">
+            <h3 className="text-base sm:text-lg font-bold text-gray-900 mb-2 leading-tight break-words line-clamp-3">
+              {recipe.title}
+            </h3>
+            <p className="text-gray-600 text-sm mb-3 line-clamp-2 flex-shrink-0 leading-relaxed">
+              {recipe.description}
+            </p>
+
+            {/* Meta Info */}
+            <div className="flex items-center gap-2 mb-3 flex-shrink-0">
+              <span className="flex items-center gap-1.5 bg-blue-50 text-blue-700 px-3 py-1.5 rounded-lg text-sm font-semibold border border-blue-200">
+                <span className="text-base">⏱️</span>
+                <span>{recipe.prepTime + recipe.cookTime}m</span>
+              </span>
+              <span className="flex items-center gap-1.5 bg-blue-50 text-blue-700 px-3 py-1.5 rounded-lg text-sm font-semibold border border-blue-200">
+                <span className="text-base">👥</span>
+                <span>{recipe.servings}</span>
+              </span>
+            </div>
+
+            {/* Category - Bottom */}
+            <div className="mt-auto flex-shrink-0">
+              <span className="inline-flex items-center gap-2 text-sm font-bold text-white px-4 py-2 rounded-lg shadow-md bg-blue-600 hover:bg-blue-700 transition-colors">
+                <span className="text-base">🍽️</span>
+                {recipe.category}
+              </span>
+            </div>
           </div>
         </div>
       </div>

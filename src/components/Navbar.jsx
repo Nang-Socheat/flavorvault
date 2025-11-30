@@ -19,8 +19,13 @@ const Navbar = () => {
     return location.pathname === path;
   };
 
-  const handleLinkClick = () => {
+  const handleLinkClick = (path) => {
     setIsMobileMenuOpen(false);
+    
+    // If clicking on the current page, scroll to top
+    if (location.pathname === path) {
+      window.scrollTo({ top: 0, behavior: 'smooth' });
+    }
   };
 
   // Close menu on escape key
@@ -50,7 +55,7 @@ const Navbar = () => {
         <div className="max-w-[1920px] mx-auto px-2 sm:px-3 md:px-4 lg:px-6">
           <div className="flex justify-between items-center h-14 sm:h-16">
             {/* Logo */}
-            <Link to="/" className="flex items-center space-x-1.5 sm:space-x-2" onClick={handleLinkClick}>
+            <Link to="/" className="flex items-center space-x-1.5 sm:space-x-2" onClick={() => handleLinkClick('/')}>
               <img src={logo} alt="FlavorVault Logo" className="h-10 w-10 sm:h-12 sm:w-12 object-contain" />
               <span className="text-base sm:text-lg md:text-xl font-bold text-gray-800 truncate">FlavorVault</span>
             </Link>
@@ -61,6 +66,7 @@ const Navbar = () => {
                 <Link
                   key={link.path}
                   to={link.path}
+                  onClick={() => handleLinkClick(link.path)}
                   className={`px-3 xl:px-4 py-2 rounded-lg font-medium transition-all duration-300 ${
                     isActive(link.path)
                       ? 'bg-blue-500 text-white shadow-md'
@@ -104,7 +110,7 @@ const Navbar = () => {
       {isMobileMenuOpen && (
         <div
           className="fixed inset-0 bg-black/50 backdrop-blur-sm z-40 lg:hidden"
-          onClick={handleLinkClick}
+          onClick={() => handleLinkClick(location.pathname)}
           aria-hidden="true"
         />
       )}
@@ -124,7 +130,7 @@ const Navbar = () => {
                 <Link
                   key={link.path}
                   to={link.path}
-                  onClick={handleLinkClick}
+                  onClick={() => handleLinkClick(link.path)}
                   className={`flex items-center space-x-3 px-4 py-3.5 font-medium transition-all duration-200 border-l-4 ${
                     isActive(link.path)
                       ? 'bg-gradient-to-r from-blue-50 to-blue-100 border-blue-500 text-blue-700 shadow-sm'

@@ -54,145 +54,136 @@ const SurpriseMe = () => {
   };
 
   return (
-    <div className="bg-gradient-to-br from-purple-50 via-pink-50 to-orange-50 rounded-2xl p-6 md:p-8 shadow-xl border border-purple-100">
-      {/* Header */}
-      <div className="text-center mb-6">
-        <div className="inline-flex items-center justify-center w-16 h-16 bg-gradient-to-br from-purple-500 to-pink-500 rounded-full mb-4 shadow-lg">
-          <span className="text-3xl animate-bounce">🎲</span>
+    <div className="bg-gradient-to-br from-purple-200 via-pink-200 to-orange-200 rounded-xl p-4 md:p-6 shadow-xl border-2 border-purple-300">
+      {/* Compact Header with Button */}
+      <div className="flex flex-col sm:flex-row items-center justify-between gap-4 mb-4">
+        <div className="flex items-center gap-3">
+          <div className="flex items-center justify-center w-10 h-10 bg-gradient-to-br from-purple-700 to-pink-700 rounded-full shadow-lg">
+            <span className="text-xl">🎲</span>
+          </div>
+          <div>
+            <h2 className="text-lg md:text-xl font-bold text-purple-900">
+              Feeling Adventurous?
+            </h2>
+            <p className="text-xs md:text-sm text-gray-800 font-semibold">Let us surprise you!</p>
+          </div>
         </div>
-        <h2 className="text-2xl md:text-3xl font-bold bg-gradient-to-r from-purple-600 to-pink-600 bg-clip-text text-transparent mb-2">
-          Feeling Adventurous?
-        </h2>
-        <p className="text-sm md:text-base text-gray-600">
-          Can't decide what to cook? Let us surprise you with a random recipe!
-        </p>
-      </div>
 
-      {/* Surprise Me Button */}
-      <div className="text-center mb-6">
         <button
           onClick={getRandomRecipe}
           disabled={isAnimating}
           className={`
-            inline-flex items-center gap-3
-            bg-gradient-to-r from-purple-600 via-pink-600 to-orange-500
-            text-white px-8 py-4 rounded-xl font-bold text-lg
-            shadow-lg hover:shadow-2xl
+            inline-flex items-center gap-2 whitespace-nowrap
+            bg-gradient-to-r from-purple-600 to-pink-600
+            text-white px-5 py-2.5 rounded-lg font-semibold text-sm
+            shadow-md hover:shadow-lg
             transform transition-all duration-300
             ${isAnimating ? 'scale-95 opacity-70 cursor-not-allowed' : 'hover:scale-105 active:scale-95'}
           `}
         >
           {isAnimating ? (
             <>
-              <span className="animate-spin text-2xl">🎲</span>
-              Picking a Recipe...
+              <span className="animate-spin text-lg">🎲</span>
+              Picking...
             </>
           ) : (
             <>
-              <span className="text-2xl">✨</span>
+              <span className="text-lg">✨</span>
               Surprise Me!
-              <span className="text-2xl">✨</span>
             </>
           )}
         </button>
       </div>
 
-      {/* Random Recipe Display */}
+      {/* Loading Animation - Large Dice */}
+      {isAnimating && (
+        <div className="bg-white/80 rounded-lg shadow-md border border-purple-200 h-[180px] sm:h-[200px] lg:h-[160px] flex items-center justify-center">
+          <div className="text-center">
+            <div className="text-8xl animate-spin mb-4">🎲</div>
+            <p className="text-lg font-bold text-purple-700 animate-pulse">Finding your surprise...</p>
+          </div>
+        </div>
+      )}
+
+      {/* Horizontal Recipe Card - Fixed Height */}
       {randomRecipe && !isAnimating && (
-        <div className="bg-white rounded-xl shadow-lg overflow-hidden animate-[fadeInUp_0.5s_ease-out] border-2 border-purple-200">
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-0">
-            {/* Recipe Image - Fixed horizontal aspect ratio */}
-            <div className="relative h-80 overflow-hidden group">
+        <div className="bg-white rounded-lg shadow-md overflow-hidden animate-[fadeInUp_0.5s_ease-out] border border-purple-200 h-[180px] sm:h-[200px] lg:h-[160px]">
+          <div className="flex h-full">
+            {/* Recipe Image - Fixed Width */}
+            <div className="relative w-[140px] sm:w-[180px] lg:w-[200px] flex-shrink-0 overflow-hidden group">
               <img
                 src={randomRecipe.image}
                 alt={randomRecipe.title}
                 className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-110"
               />
-              <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-transparent to-transparent"></div>
+              <div className="absolute inset-0 bg-gradient-to-t from-black/50 via-transparent to-transparent"></div>
 
-              {/* Badges */}
-              <div className="absolute top-4 left-4 flex flex-wrap gap-2">
-                <span className="bg-white/95 backdrop-blur-sm px-3 py-1.5 rounded-full text-xs font-bold text-gray-800 shadow-lg flex items-center gap-1">
+              {/* Compact Badges */}
+              <div className="absolute top-2 left-2">
+                <span className="bg-white/95 backdrop-blur-sm px-2 py-1 rounded-full text-xs font-semibold text-gray-800 shadow-md flex items-center gap-1">
                   <span>{categoryEmojis[randomRecipe.category] || '🍽️'}</span>
-                  {randomRecipe.category}
-                </span>
-                <span className={`
-                  px-3 py-1.5 rounded-full text-xs font-bold text-white shadow-lg
-                  ${randomRecipe.difficulty === 'Easy' ? 'bg-green-500' :
-                    randomRecipe.difficulty === 'Medium' ? 'bg-yellow-500' : 'bg-red-500'}
-                `}>
-                  {randomRecipe.difficulty}
+                  <span className="hidden sm:inline">{randomRecipe.category}</span>
                 </span>
               </div>
 
-              {/* Time Badge */}
-              <div className="absolute bottom-4 left-4">
-                <span className="bg-purple-600 text-white px-4 py-2 rounded-full text-sm font-bold shadow-lg flex items-center gap-2">
-                  <span>⏱️</span>
-                  {randomRecipe.prepTime + randomRecipe.cookTime} min total
+              <div className="absolute bottom-2 left-2">
+                <span className="bg-purple-600 text-white px-2 py-1 rounded-full text-xs font-semibold shadow-md">
+                  ⏱️ {randomRecipe.prepTime + randomRecipe.cookTime}m
                 </span>
               </div>
             </div>
 
-            {/* Recipe Details */}
-            <div className="p-6 flex flex-col justify-between bg-gradient-to-br from-white to-purple-50">
-              <div>
-                <h3 className="text-2xl md:text-3xl font-bold text-gray-900 mb-3">
+            {/* Recipe Details - Flexible Width */}
+            <div className="flex-1 p-3 lg:p-4 flex flex-col justify-between min-w-0">
+              <div className="flex-1 min-h-0">
+                <h3 className="text-base sm:text-lg lg:text-xl font-bold text-gray-900 mb-1 lg:mb-1.5 truncate">
                   {randomRecipe.title}
                 </h3>
-                <p className="text-sm md:text-base text-gray-600 mb-4 leading-relaxed">
+                <p className="text-xs sm:text-sm text-gray-600 mb-2 lg:mb-2 line-clamp-2">
                   {randomRecipe.description}
                 </p>
 
-                {/* Stats */}
-                <div className="grid grid-cols-3 gap-3 mb-6">
-                  <div className="bg-blue-50 rounded-lg p-3 text-center">
-                    <div className="text-2xl mb-1">👥</div>
-                    <div className="text-xs text-gray-600 font-medium">Servings</div>
-                    <div className="text-lg font-bold text-gray-800">{randomRecipe.servings}</div>
+                {/* Compact Stats */}
+                <div className="flex flex-wrap gap-2 lg:gap-3 mb-2 lg:mb-2">
+                  <div className="flex items-center gap-1 text-xs sm:text-sm text-gray-700">
+                    <span>👥</span>
+                    <span className="font-medium">{randomRecipe.servings}</span>
                   </div>
-                  <div className="bg-green-50 rounded-lg p-3 text-center">
-                    <div className="text-2xl mb-1">🔪</div>
-                    <div className="text-xs text-gray-600 font-medium">Prep</div>
-                    <div className="text-lg font-bold text-gray-800">{randomRecipe.prepTime}m</div>
+                  <div className="flex items-center gap-1 text-xs sm:text-sm text-gray-700">
+                    <span>🔪</span>
+                    <span className="font-medium">{randomRecipe.prepTime}m</span>
                   </div>
-                  <div className="bg-orange-50 rounded-lg p-3 text-center">
-                    <div className="text-2xl mb-1">🍳</div>
-                    <div className="text-xs text-gray-600 font-medium">Cook</div>
-                    <div className="text-lg font-bold text-gray-800">{randomRecipe.cookTime}m</div>
+                  <div className="flex items-center gap-1 text-xs sm:text-sm text-gray-700">
+                    <span>🍳</span>
+                    <span className="font-medium">{randomRecipe.cookTime}m</span>
                   </div>
+                  <span className={`
+                    px-2 py-0.5 rounded-full text-xs font-semibold text-white
+                    ${randomRecipe.difficulty === 'Easy' ? 'bg-green-500' :
+                      randomRecipe.difficulty === 'Medium' ? 'bg-yellow-500' : 'bg-red-500'}
+                  `}>
+                    {randomRecipe.difficulty}
+                  </span>
                 </div>
-
-                {/* Tags */}
-                {randomRecipe.tags && randomRecipe.tags.length > 0 && (
-                  <div className="flex flex-wrap gap-2 mb-6">
-                    {randomRecipe.tags.slice(0, 4).map((tag, index) => (
-                      <span
-                        key={index}
-                        className="bg-purple-100 text-purple-700 px-3 py-1 rounded-full text-xs font-medium"
-                      >
-                        #{tag}
-                      </span>
-                    ))}
-                  </div>
-                )}
               </div>
 
-              {/* Action Buttons */}
-              <div className="flex flex-col sm:flex-row gap-3">
+              {/* Compact Action Buttons */}
+              <div className="flex gap-2 mt-auto">
                 <Link
                   to={`/recipe/${randomRecipe.id}`}
-                  className="flex-1 inline-flex items-center justify-center bg-gradient-to-r from-purple-600 to-pink-600 text-white px-6 py-3 rounded-lg font-semibold hover:from-purple-700 hover:to-pink-700 transform hover:scale-105 transition-all duration-300 shadow-md text-center"
+                  className="flex-1 inline-flex items-center justify-center bg-gradient-to-r from-purple-600 to-pink-600 text-white px-3 py-1.5 sm:py-2 rounded-lg font-semibold text-xs sm:text-sm hover:from-purple-700 hover:to-pink-700 transform hover:scale-105 transition-all duration-300 shadow-sm"
                 >
-                  View Recipe
-                  <span className="ml-2">→</span>
+                  <span className="hidden sm:inline">View Full Details</span>
+                  <span className="sm:hidden">View</span>
+                  <span className="ml-1">→</span>
                 </Link>
                 <button
                   onClick={getRandomRecipe}
-                  className="flex-1 inline-flex items-center justify-center border-2 border-purple-600 text-purple-600 px-6 py-3 rounded-lg font-semibold hover:bg-purple-50 transform hover:scale-105 transition-all duration-300 text-center"
+                  className="inline-flex items-center justify-center border-2 border-purple-600 text-purple-600 px-3 py-1.5 sm:py-2 rounded-lg font-semibold text-xs sm:text-sm hover:bg-purple-50 transform hover:scale-105 transition-all duration-300"
                 >
-                  <span className="mr-2">🎲</span>
-                  Try Another
+                  <span className="mr-1">🎲</span>
+                  <span className="hidden sm:inline">Try Another</span>
+                  <span className="sm:hidden">Another</span>
                 </button>
               </div>
             </div>
@@ -200,11 +191,11 @@ const SurpriseMe = () => {
         </div>
       )}
 
-      {/* Empty State */}
+      {/* Empty State - Minimal */}
       {!randomRecipe && !isAnimating && (
-        <div className="text-center py-8 bg-white/50 rounded-xl border-2 border-dashed border-purple-300">
-          <div className="text-6xl mb-3 opacity-50">🎲</div>
-          <p className="text-gray-500 font-medium">Click "Surprise Me!" to discover a random recipe</p>
+        <div className="text-center py-6 bg-white/80 rounded-lg border-2 border-dashed border-purple-500">
+          <div className="text-4xl mb-2 opacity-80">🎲</div>
+          <p className="text-gray-800 text-sm font-bold">Click the button above to discover a recipe</p>
         </div>
       )}
     </div>
