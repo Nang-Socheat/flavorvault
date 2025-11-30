@@ -1,5 +1,6 @@
 import { Link } from 'react-router-dom';
 import { useApp } from '../context/AppContext';
+import { useState, useEffect } from 'react';
 import RecipeCard from '../components/RecipeCard';
 import Food1 from '../assets/Food1.webp';
 import Ingredients1 from '../assets/Ingredients1.webp';
@@ -12,6 +13,20 @@ import Amok from '../assets/Amok.jpg';
 
 const Home = () => {
   const { recipes, favorites } = useApp();
+  const [showScrollTop, setShowScrollTop] = useState(false);
+
+  useEffect(() => {
+    const handleScroll = () => {
+      setShowScrollTop(window.scrollY > 400);
+    };
+
+    window.addEventListener('scroll', handleScroll);
+    return () => window.removeEventListener('scroll', handleScroll);
+  }, []);
+
+  const scrollToTop = () => {
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+  };
 
   // Calculate stats
   const totalRecipes = recipes.length;
@@ -43,6 +58,7 @@ const Home = () => {
   }, {});
 
   const allCategories = Object.entries(categoryCounts)
+    .filter(([category]) => category !== 'Khmer Food' && category !== 'Occasion') // Exclude duplicates
     .sort((a, b) => a[0].localeCompare(b[0])) // Sort alphabetically
     .map(([category, count]) => ({ category, count }));
 
@@ -98,7 +114,29 @@ const Home = () => {
   };
 
   return (
-    <div className="min-h-screen bg-gray-50">
+    <div className="min-h-screen bg-gradient-to-b from-slate-50 via-blue-50 to-purple-50">{/* Scroll to Top Button */}
+      {showScrollTop && (
+        <button
+          onClick={scrollToTop}
+          className="fixed bottom-8 right-8 bg-blue-600 text-white p-4 rounded-full shadow-lg hover:bg-blue-700 transition-all duration-300 transform hover:scale-110 z-50 animate-[fadeInUp_0.3s_ease-out]"
+          aria-label="Scroll to top"
+        >
+          <svg
+            className="w-6 h-6"
+            fill="none"
+            stroke="currentColor"
+            viewBox="0 0 24 24"
+          >
+            <path
+              strokeLinecap="round"
+              strokeLinejoin="round"
+              strokeWidth={2}
+              d="M5 10l7-7m0 0l7 7m-7-7v18"
+            />
+          </svg>
+        </button>
+      )}
+
       {/* Hero Section with Food Image */}
       <div className="relative text-white py-16 md:py-24 lg:py-32 overflow-hidden">
         {/* Background Image - Clear and Visible */}
@@ -207,12 +245,12 @@ const Home = () => {
               <img
                 src={Vegetables1}
                 alt="Fresh vegetables"
-                className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-110"
+                className="w-full h-full object-cover animate-[subtle-zoom_7s_ease-in-out_infinite] group-hover:scale-110 transition-transform duration-700"
               />
-              <div className="absolute inset-0 bg-gradient-to-t from-black/70 via-black/40 to-transparent"></div>
+              <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-black/20 to-transparent"></div>
               <div className="absolute bottom-0 left-0 right-0 p-6 text-white">
-                <h3 className="text-2xl md:text-3xl font-bold mb-2">Healthy & Fresh</h3>
-                <p className="text-sm md:text-base mb-4">Discover nutritious recipes with fresh vegetables</p>
+                <h3 className="text-2xl md:text-3xl font-bold mb-2 drop-shadow-lg">Healthy & Fresh</h3>
+                <p className="text-sm md:text-base mb-4 drop-shadow-md">Discover nutritious recipes with fresh vegetables</p>
                 <Link
                   to="/recipes"
                   className="inline-block bg-white text-green-600 px-6 py-2 rounded-lg font-semibold hover:bg-green-50 transition-all duration-300 transform hover:scale-105"
@@ -227,14 +265,14 @@ const Home = () => {
               <img
                 src={Amok}
                 alt="Khmer cuisine"
-                className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-110"
+                className="w-full h-full object-cover animate-[subtle-zoom_9s_ease-in-out_infinite] group-hover:scale-110 transition-transform duration-700"
               />
-              <div className="absolute inset-0 bg-gradient-to-t from-black/70 via-black/40 to-transparent"></div>
+              <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-black/20 to-transparent"></div>
               <div className="absolute bottom-0 left-0 right-0 p-6 text-white">
-                <h3 className="text-2xl md:text-3xl font-bold mb-2">Khmer Cuisine</h3>
-                <p className="text-sm md:text-base mb-4">Experience authentic Cambodian flavors</p>
+                <h3 className="text-2xl md:text-3xl font-bold mb-2 drop-shadow-lg">Khmer Cuisine</h3>
+                <p className="text-sm md:text-base mb-4 drop-shadow-md">Experience authentic Cambodian flavors</p>
                 <Link
-                  to="/recipes"
+                  to="/recipes?category=Khmer Food"
                   className="inline-block bg-white text-orange-600 px-6 py-2 rounded-lg font-semibold hover:bg-orange-50 transition-all duration-300 transform hover:scale-105"
                 >
                   Explore
@@ -247,14 +285,14 @@ const Home = () => {
               <img
                 src={ChristmasDay}
                 alt="Special occasions"
-                className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-110"
+                className="w-full h-full object-cover animate-[subtle-zoom_10s_ease-in-out_infinite] group-hover:scale-110 transition-transform duration-700"
               />
-              <div className="absolute inset-0 bg-gradient-to-t from-black/70 via-black/40 to-transparent"></div>
+              <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-black/20 to-transparent"></div>
               <div className="absolute bottom-0 left-0 right-0 p-6 text-white">
-                <h3 className="text-2xl md:text-3xl font-bold mb-2">Special Occasions</h3>
-                <p className="text-sm md:text-base mb-4">Celebrate with memorable recipes</p>
+                <h3 className="text-2xl md:text-3xl font-bold mb-2 drop-shadow-lg">Special Occasions</h3>
+                <p className="text-sm md:text-base mb-4 drop-shadow-md">Celebrate with memorable recipes</p>
                 <Link
-                  to="/recipes"
+                  to="/recipes?category=Occasion"
                   className="inline-block bg-white text-red-600 px-6 py-2 rounded-lg font-semibold hover:bg-red-50 transition-all duration-300 transform hover:scale-105"
                 >
                   Discover
@@ -289,38 +327,15 @@ const Home = () => {
           </div>
         </div>
 
-        {/* Image Feature Section - Khmer Food */}
-        <div className="mb-8 md:mb-12 grid grid-cols-1 md:grid-cols-2 gap-6 items-center">
-          <div className="overflow-hidden rounded-2xl shadow-xl order-last md:order-first">
-            <img
-              src={KhmerFood}
-              alt="Traditional Khmer cuisine"
-              className="w-full h-64 md:h-80 object-cover transform transition-transform duration-700 hover:scale-110"
-            />
-          </div>
-          <div className="bg-white rounded-2xl shadow-lg p-6 md:p-8">
-            <h2 className="text-2xl md:text-3xl font-bold text-amber-700 mb-4">🍜 Discover Khmer Cuisine</h2>
-            <p className="text-slate-700 mb-4">
-              Explore the rich flavors of Cambodia with our authentic Khmer recipes. From aromatic Fish Amok to savory Lok Lak, experience traditional dishes that tell a story of culture and heritage.
-            </p>
-            <Link
-              to="/recipes"
-              className="inline-block bg-gradient-to-r from-orange-600 to-red-600 text-white px-6 py-3 rounded-lg font-semibold hover:from-orange-700 hover:to-red-700 transition-all transform hover:scale-105 shadow-lg"
-            >
-              Explore Khmer Recipes →
-            </Link>
-          </div>
-        </div>
-
         {/* Quick Recipes Section */}
         {quickRecipes.length > 0 && (
-          <div className="mb-8 md:mb-12 bg-gradient-to-r from-orange-50 to-yellow-50 rounded-xl p-6 md:p-8">
+          <div className="mb-8 md:mb-12 bg-gradient-to-r from-orange-500 to-red-500 rounded-xl p-6 md:p-8 shadow-lg">
             <div className="flex flex-col md:flex-row md:items-center md:justify-between mb-6">
               <div>
-                <h2 className="text-2xl md:text-3xl font-bold text-orange-700 mb-2">⚡ Quick & Easy</h2>
-                <p className="text-sm md:text-base text-slate-700">Ready in 30 minutes or less!</p>
+                <h2 className="text-2xl md:text-3xl font-bold text-white mb-2">⚡ Quick & Easy</h2>
+                <p className="text-sm md:text-base text-orange-50">Ready in 30 minutes or less!</p>
               </div>
-              <Link to="/recipes" className="text-orange-600 hover:text-orange-800 font-medium transition-colors mt-3 md:mt-0">
+              <Link to="/recipes" className="text-white hover:text-orange-100 font-medium transition-colors mt-3 md:mt-0 underline">
                 View All Quick Recipes →
               </Link>
             </div>
@@ -333,46 +348,49 @@ const Home = () => {
         )}
 
         {/* Healthy Eating Section with Image */}
-        <div className="mb-8 md:mb-12 grid grid-cols-1 md:grid-cols-2 gap-6 items-center">
-          <div className="bg-gradient-to-br from-green-50 to-emerald-50 rounded-2xl shadow-lg p-6 md:p-8">
-            <h2 className="text-2xl md:text-3xl font-bold text-emerald-700 mb-4">🥗 Healthy Living</h2>
-            <p className="text-slate-700 mb-4">
+        <div className="mb-8 md:mb-12 grid grid-cols-1 md:grid-cols-2 gap-6 items-start">
+          <div className="bg-gradient-to-br from-green-600 to-emerald-700 rounded-2xl shadow-xl p-6 md:p-8 flex flex-col justify-center">
+            <h2 className="text-2xl md:text-3xl font-bold text-white mb-4">🥗 Healthy Living</h2>
+            <p className="text-green-50 mb-4">
               Nourish your body with nutritious and delicious recipes. Balance flavor and health with fresh ingredients, vibrant colors, and wholesome meals that make you feel great.
             </p>
             <div className="grid grid-cols-2 gap-3 text-sm">
               <div className="flex items-center gap-2">
                 <span className="text-2xl">✓</span>
-                <span className="text-green-700 font-medium">Fresh ingredients</span>
+                <span className="text-white font-medium">Fresh ingredients</span>
               </div>
               <div className="flex items-center gap-2">
                 <span className="text-2xl">✓</span>
-                <span className="text-green-700 font-medium">Balanced nutrition</span>
+                <span className="text-white font-medium">Balanced nutrition</span>
               </div>
               <div className="flex items-center gap-2">
                 <span className="text-2xl">✓</span>
-                <span className="text-green-700 font-medium">Full of flavor</span>
+                <span className="text-white font-medium">Full of flavor</span>
               </div>
               <div className="flex items-center gap-2">
                 <span className="text-2xl">✓</span>
-                <span className="text-green-700 font-medium">Easy to make</span>
+                <span className="text-white font-medium">Easy to make</span>
               </div>
             </div>
           </div>
-          <div className="overflow-hidden rounded-2xl shadow-xl">
+          <div className="overflow-hidden rounded-2xl shadow-xl max-h-[400px]">
             <img
               src={HealthyFood}
               alt="Healthy fresh food"
-              className="w-full h-64 md:h-80 object-cover transform transition-transform duration-700 hover:scale-110"
+              className="w-full h-full object-cover object-center animate-[subtle-zoom_8s_ease-in-out_infinite] hover:scale-110 transition-transform duration-700"
             />
           </div>
         </div>
 
         {/* Featured Recipes */}
         {featuredRecipes.length > 0 && (
-          <div className="mb-8 md:mb-12">
+          <div className="mb-8 md:mb-12 bg-gradient-to-r from-teal-500 to-cyan-600 rounded-xl p-6 md:p-8 shadow-lg">
             <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between mb-4 md:mb-6 gap-2">
-              <h2 className="text-2xl md:text-3xl font-bold text-teal-700">Recently Added</h2>
-              <Link to="/recipes" className="text-blue-600 hover:text-blue-800 font-medium transition-colors">
+              <div>
+                <h2 className="text-2xl md:text-3xl font-bold text-white mb-2">Recently Added</h2>
+                <p className="text-sm md:text-base text-teal-50">Check out our newest recipes</p>
+              </div>
+              <Link to="/recipes" className="text-white hover:text-teal-100 font-medium transition-colors underline">
                 View All →
               </Link>
             </div>
@@ -384,40 +402,53 @@ const Home = () => {
           </div>
         )}
 
-        {/* Quick Actions */}
-        <div className="mt-8 md:mt-12 bg-white rounded-lg shadow-md p-6 md:p-8">
-          <h2 className="text-xl md:text-2xl font-bold text-indigo-700 mb-4 md:mb-6 text-center">Quick Actions</h2>
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-3 md:gap-4">
-            <Link
-              to="/recipes"
-              className="flex items-center p-4 border-2 border-gray-200 rounded-lg hover:border-blue-500 hover:bg-blue-50 transition-all duration-300 transform hover:scale-105 hover:shadow-lg"
-            >
-              <span className="text-2xl md:text-3xl mr-3 md:mr-4 flex-shrink-0">🔍</span>
-              <div>
-                <h3 className="font-semibold text-blue-700 text-sm md:text-base">Browse & Search</h3>
-                <p className="text-xs md:text-sm text-slate-600">Find the perfect recipe</p>
-              </div>
-            </Link>
-            <Link
-              to="/favorites"
-              className="flex items-center p-4 border-2 border-gray-200 rounded-lg hover:border-rose-500 hover:bg-rose-50 transition-all duration-300 transform hover:scale-105 hover:shadow-lg"
-            >
-              <span className="text-2xl md:text-3xl mr-3 md:mr-4 flex-shrink-0">❤️</span>
-              <div>
-                <h3 className="font-semibold text-rose-700 text-sm md:text-base">My Favorites</h3>
-                <p className="text-xs md:text-sm text-slate-600">Your saved recipes</p>
-              </div>
-            </Link>
-            <Link
-              to="/add"
-              className="flex items-center p-4 border-2 border-gray-200 rounded-lg hover:border-green-500 hover:bg-green-50 transition-all duration-300 transform hover:scale-105 hover:shadow-lg"
-            >
-              <span className="text-2xl md:text-3xl mr-3 md:mr-4 flex-shrink-0">➕</span>
-              <div>
-                <h3 className="font-semibold text-green-700 text-sm md:text-base">Add New Recipe</h3>
-                <p className="text-xs md:text-sm text-slate-600">Create your masterpiece</p>
-              </div>
-            </Link>
+        {/* Quick Actions with Background Image */}
+        <div className="mt-8 md:mt-12 relative rounded-lg shadow-2xl overflow-hidden">
+          {/* Background Image */}
+          <div className="absolute inset-0">
+            <img
+              src={KhmerFood}
+              alt="Khmer cuisine background"
+              className="w-full h-full object-cover"
+            />
+            <div className="absolute inset-0 bg-gradient-to-r from-indigo-700/30 via-purple-700/30 to-pink-700/30"></div>
+          </div>
+          
+          {/* Content */}
+          <div className="relative z-10 p-6 md:p-8">
+            <h2 className="text-xl md:text-2xl font-bold text-white mb-4 md:mb-6 text-center drop-shadow-lg">Quick Actions</h2>
+            <div className="grid grid-cols-1 md:grid-cols-3 gap-3 md:gap-4">
+              <Link
+                to="/recipes"
+                className="flex items-center p-4 bg-white/10 backdrop-blur-sm border-2 border-white/30 rounded-lg hover:bg-white/20 hover:border-white/50 transition-all duration-300 transform hover:scale-105 hover:shadow-xl"
+              >
+                <span className="text-2xl md:text-3xl mr-3 md:mr-4 flex-shrink-0">🔍</span>
+                <div>
+                  <h3 className="font-semibold text-white text-sm md:text-base">Browse & Search</h3>
+                  <p className="text-xs md:text-sm text-white/80">Find the perfect recipe</p>
+                </div>
+              </Link>
+              <Link
+                to="/favorites"
+                className="flex items-center p-4 bg-white/10 backdrop-blur-sm border-2 border-white/30 rounded-lg hover:bg-white/20 hover:border-white/50 transition-all duration-300 transform hover:scale-105 hover:shadow-xl"
+              >
+                <span className="text-2xl md:text-3xl mr-3 md:mr-4 flex-shrink-0">❤️</span>
+                <div>
+                  <h3 className="font-semibold text-white text-sm md:text-base">My Favorites</h3>
+                  <p className="text-xs md:text-sm text-white/80">Your saved recipes</p>
+                </div>
+              </Link>
+              <Link
+                to="/add"
+                className="flex items-center p-4 bg-white/10 backdrop-blur-sm border-2 border-white/30 rounded-lg hover:bg-white/20 hover:border-white/50 transition-all duration-300 transform hover:scale-105 hover:shadow-xl"
+              >
+                <span className="text-2xl md:text-3xl mr-3 md:mr-4 flex-shrink-0 text-green-400">➕</span>
+                <div>
+                  <h3 className="font-semibold text-white text-sm md:text-base">Add New Recipe</h3>
+                  <p className="text-xs md:text-sm text-white/80">Create your masterpiece</p>
+                </div>
+              </Link>
+            </div>
           </div>
         </div>
       </div>

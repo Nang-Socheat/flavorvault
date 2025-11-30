@@ -1,6 +1,7 @@
 import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
 import { AppProvider } from './context/AppContext';
 import Navbar from './components/Navbar';
+import Footer from './components/Footer';
 import Home from './pages/Home';
 import BrowseRecipes from './pages/BrowseRecipes';
 import RecipeDetail from './pages/RecipeDetail';
@@ -31,6 +32,7 @@ function App() {
                   <Route path="/meal-planner" element={<MealPlanner />} />
                   <Route path="/about" element={<About />} />
                 </Routes>
+                <Footer />
               </>
             } />
           </Routes>

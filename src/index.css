@@ -42,3 +42,12 @@ body {
     transform: translateY(-20px) translateX(5px);
   }
 }
+
+@keyframes subtle-zoom {
+  0%, 100% {
+    transform: scale(1);
+  }
+  50% {
+    transform: scale(1.05);
+  }
+}

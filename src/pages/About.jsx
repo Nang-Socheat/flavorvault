@@ -1,4 +1,5 @@
 import { Link } from 'react-router-dom';
+import { useState, useEffect } from 'react';
 import { resetToSampleData } from '../utils/resetData';
 import Food1 from '../assets/Food1.jpg';
 import Ingredients3 from '../assets/Ingredients3.jpg';
@@ -7,6 +8,21 @@ import ChristmasDay from '../assets/ChristmasDay.jpg';
 import Amok from '../assets/Amok.jpg';
 
 const About = () => {
+  const [showScrollTop, setShowScrollTop] = useState(false);
+
+  useEffect(() => {
+    const handleScroll = () => {
+      setShowScrollTop(window.scrollY > 400);
+    };
+
+    window.addEventListener('scroll', handleScroll);
+    return () => window.removeEventListener('scroll', handleScroll);
+  }, []);
+
+  const scrollToTop = () => {
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+  };
+
   const features = [
     {
       icon: '📚',
@@ -43,6 +59,29 @@ const About = () => {
 
   return (
     <div className="min-h-screen bg-gray-50 py-8 md:py-12 relative overflow-hidden">
+      {/* Scroll to Top Button */}
+      {showScrollTop && (
+        <button
+          onClick={scrollToTop}
+          className="fixed bottom-8 right-8 bg-blue-600 text-white p-4 rounded-full shadow-lg hover:bg-blue-700 transition-all duration-300 transform hover:scale-110 z-50 animate-[fadeInUp_0.3s_ease-out]"
+          aria-label="Scroll to top"
+        >
+          <svg
+            className="w-6 h-6"
+            fill="none"
+            stroke="currentColor"
+            viewBox="0 0 24 24"
+          >
+            <path
+              strokeLinecap="round"
+              strokeLinejoin="round"
+              strokeWidth={2}
+              d="M5 10l7-7m0 0l7 7m-7-7v18"
+            />
+          </svg>
+        </button>
+      )}
+
       {/* Animated Blurry Background Images */}
       <div className="fixed inset-0 pointer-events-none opacity-20 z-0">
         <div className="absolute top-10 -right-20 w-96 h-96 animate-[float_20s_ease-in-out_infinite]">
@@ -115,7 +154,7 @@ const About = () => {
         {/* How It Works with Image */}
         <div className="mb-8 md:mb-12">
           <h2 className="text-2xl md:text-3xl font-bold text-gray-800 mb-6 md:mb-8 text-center">How It Works</h2>
-          <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 items-center">
+          <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 items-start">
             <div className="bg-white rounded-lg shadow-md p-6 md:p-8">
               <div className="space-y-6">
                 <div className="flex items-start transform transition-transform duration-300 hover:translate-x-2">
@@ -164,11 +203,11 @@ const About = () => {
                 </div>
               </div>
             </div>
-            <div className="overflow-hidden rounded-2xl shadow-2xl order-first lg:order-last">
+            <div className="overflow-hidden rounded-2xl shadow-2xl order-first lg:order-last max-h-[500px]">
               <img
                 src={Vegetables1}
                 alt="Fresh vegetables"
-                className="w-full h-full object-cover transform transition-transform duration-700 hover:scale-110 hover:rotate-2"
+                className="w-full h-full object-cover object-center transform transition-transform duration-700 hover:scale-110"
               />
             </div>
           </div>
