@@ -153,9 +153,10 @@ const About = () => {
 
         {/* How It Works with Image */}
         <div className="mb-8 md:mb-12">
-          <h2 className="text-2xl md:text-3xl font-bold text-gray-800 mb-6 md:mb-8 text-center">How It Works</h2>
           <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 items-start">
+            {/* Steps Section with Heading */}
             <div className="bg-white rounded-lg shadow-md p-6 md:p-8">
+              <h2 className="text-2xl md:text-3xl font-bold text-gray-800 mb-6">How It Works</h2>
               <div className="space-y-6">
                 <div className="flex items-start transform transition-transform duration-300 hover:translate-x-2">
                   <div className="bg-gradient-to-r from-blue-500 to-purple-500 text-white rounded-full w-8 h-8 flex items-center justify-center font-bold mr-4 flex-shrink-0 shadow-lg">
@@ -203,11 +204,13 @@ const About = () => {
                 </div>
               </div>
             </div>
-            <div className="overflow-hidden rounded-2xl shadow-2xl order-first lg:order-last max-h-[500px]">
+            
+            {/* Image Section - Below steps on mobile, next to steps on desktop */}
+            <div className="overflow-hidden rounded-2xl shadow-2xl max-h-[500px] group">
               <img
                 src={Vegetables1}
                 alt="Fresh vegetables"
-                className="w-full h-full object-cover object-center transform transition-transform duration-700 hover:scale-110"
+                className="w-full h-full object-cover object-center transform transition-all duration-700 group-hover:scale-110 group-hover:rotate-1 animate-[subtle-zoom_8s_ease-in-out_infinite]"
               />
             </div>
           </div>
@@ -271,6 +274,18 @@ const About = () => {
           </div>
         </div>
       </div>
+
+      {/* Keyframe Animations */}
+      <style>{`
+        @keyframes subtle-zoom {
+          0%, 100% {
+            transform: scale(1);
+          }
+          50% {
+            transform: scale(1.05);
+          }
+        }
+      `}</style>
     </div>
   );
 };

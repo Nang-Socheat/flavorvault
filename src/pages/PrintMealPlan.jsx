@@ -124,69 +124,66 @@ const PrintMealPlan = () => {
             const meals = dayData[mealType.id] || [];
             
             return (
-              <div key={mealType.id} className="print-meal-section">
-                {/* Single border container for each meal type */}
-                <div className="border-2 border-gray-800 rounded overflow-hidden">
-                  {/* Meal Type Header - No emoji in print */}
-                  <div className="bg-gray-100 border-b-2 border-gray-800 px-4 py-2 print:px-3 print:py-1">
-                    <h2 className="text-xl font-bold text-gray-900 print:text-base">
-                      <span className="print:hidden">{mealType.icon} </span>{mealType.label}
-                    </h2>
-                  </div>
+              <div key={mealType.id} className="print-meal-category">
+                {meals.map((meal, mealIndex) => {
+                  const recipe = getRecipeById(meal.recipeId);
+                  if (!recipe) return null;
 
-                  {/* All Recipes for this meal type */}
-                  <div className="p-4 print:p-2">
-                    {meals.map((meal, index) => {
-                      const recipe = getRecipeById(meal.recipeId);
-                      if (!recipe) return null;
+                  return (
+                    <div key={meal.id} className="print-recipe-container border-2 border-gray-800 rounded overflow-hidden mb-4 print:mb-2">
+                      {/* Meal Type Header - One for each recipe */}
+                      <div className="bg-gray-100 border-b-2 border-gray-800 px-4 py-2 print:px-3 print:py-1">
+                        <h2 className="text-xl font-bold text-gray-900 print:text-base">
+                          {mealType.label}
+                        </h2>
+                      </div>
 
-                      return (
-                        <div key={meal.id} className={`print-recipe ${index > 0 ? 'mt-4 pt-4 border-t border-gray-400 print:mt-2 print:pt-2' : ''}`}>
-                          {/* Recipe Header */}
-                          <div className="mb-2 print:mb-1.5">
-                            <h3 className="text-lg font-bold text-gray-900 print:text-sm">
-                              {recipe.title}
-                            </h3>
-                            <div className="text-sm text-gray-700 mt-1 print:text-xs">
-                              {recipe.category} • {recipe.difficulty} • {recipe.prepTime + recipe.cookTime} min • Portions: {meal.portions}
-                            </div>
-                          </div>
-
-                          {/* Two Column Layout: Ingredients & Instructions - Always side-by-side */}
-                          <div className="grid grid-cols-2 gap-4 print:gap-3">
-                            {/* Ingredients */}
-                            <div>
-                              <h4 className="font-bold text-gray-900 mb-2 print:text-xs print:mb-1">Ingredients:</h4>
-                              <ul className="space-y-1 print:space-y-0.5">
-                                {recipe.ingredients.map((item, idx) => (
-                                  <li key={idx} className="flex items-start gap-2 text-sm print:text-xs">
-                                    <span className="font-bold">□</span>
-                                    <span className="text-gray-800">{item}</span>
-                                  </li>
-                                ))}
-                              </ul>
-                            </div>
-
-                            {/* Instructions */}
-                            <div>
-                              <h4 className="font-bold text-gray-900 mb-2 print:text-xs print:mb-1">Instructions:</h4>
-                              <ol className="space-y-1.5 print:space-y-0.5">
-                                {recipe.instructions.map((step, idx) => (
-                                  <li key={idx} className="flex gap-2 text-sm print:text-xs">
-                                    <div className="flex-shrink-0 w-5 h-5 border-2 border-gray-800 rounded-full flex items-center justify-center font-bold text-xs print:w-4 print:h-4 print:text-[9px]">
-                                      {idx + 1}
-                                    </div>
-                                    <p className="text-gray-800">{step}</p>
-                                  </li>
-                                ))}
-                              </ol>
-                            </div>
+                      {/* Recipe Content */}
+                      <div className="p-4 print:p-2">
+                        {/* Recipe Header */}
+                        <div className="mb-2 print:mb-1.5">
+                          <h3 className="text-lg font-bold text-gray-900 print:text-sm">
+                            {recipe.title}
+                          </h3>
+                          <div className="text-sm text-gray-700 mt-1 print:text-xs">
+                            {recipe.category} • {recipe.difficulty} • {recipe.prepTime + recipe.cookTime} min • Portions: {meal.portions}
                           </div>
                         </div>
-                      );
-                    })}
-                  </div>
-                </div>
+
+                        {/* Two Column Layout: Ingredients & Instructions */}
+                        <div className="grid grid-cols-2 gap-4 print:gap-3">
+                          {/* Ingredients */}
+                          <div>
+                            <h4 className="font-bold text-gray-900 mb-2 print:text-xs print:mb-1">Ingredients:</h4>
+                            <ul className="space-y-1 print:space-y-0.5">
+                              {recipe.ingredients.map((item, idx) => (
+                                <li key={idx} className="flex items-start gap-2 text-sm print:text-xs">
+                                  <span className="font-bold">□</span>
+                                  <span className="text-gray-800">{item}</span>
+                                </li>
+                              ))}
+                            </ul>
+                          </div>
+
+                          {/* Instructions */}
+                          <div>
+                            <h4 className="font-bold text-gray-900 mb-2 print:text-xs print:mb-1">Instructions:</h4>
+                            <ol className="space-y-1.5 print:space-y-0.5">
+                              {recipe.instructions.map((step, idx) => (
+                                <li key={idx} className="flex gap-2 text-sm print:text-xs">
+                                  <div className="flex-shrink-0 w-5 h-5 border-2 border-gray-800 rounded-full flex items-center justify-center font-bold text-xs print:w-4 print:h-4 print:text-[9px]">
+                                    {idx + 1}
+                                  </div>
+                                  <p className="text-gray-800">{step}</p>
+                                </li>
+                              ))}
+                            </ol>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                  );
+                })}
               </div>
             );
           })}
@@ -253,27 +250,15 @@ const PrintMealPlan = () => {
             grid-template-columns: repeat(2, minmax(0, 1fr)) !important;
           }
           
-          /* Prevent recipes from splitting across pages */
-          .print-recipe {
+          /* Each recipe container should avoid breaking */
+          .print-recipe-container {
             page-break-inside: avoid !important;
             break-inside: avoid !important;
           }
           
-          /* Keep entire meal section together (header + content) */
-          .print-meal-section {
-            page-break-inside: avoid !important;
-            break-inside: avoid !important;
-          }
-          
-          /* If meal section doesn't fit, move to next page */
-          .print-meal-section {
+          /* If a recipe doesn't fit, move it to next page */
+          .print-recipe-container {
             page-break-before: auto;
-          }
-          
-          /* Ensure borders don't split */
-          .border-2.border-gray-800 {
-            box-decoration-break: clone;
-            -webkit-box-decoration-break: clone;
           }
           
           /* Reasonable font sizes for print */

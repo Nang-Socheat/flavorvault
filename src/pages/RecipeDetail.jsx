@@ -1,11 +1,11 @@
 import { useParams, useNavigate, Link } from 'react-router-dom';
-import { useState } from 'react';
+import { useState, useEffect, useRef, useCallback } from 'react';
 import { useApp } from '../context/AppContext';
 
 const RecipeDetail = () => {
   const { id } = useParams();
   const navigate = useNavigate();
-  const { getRecipeById, isFavorite, toggleFavorite, deleteRecipe } = useApp();
+  const { getRecipeById, isFavorite, toggleFavorite, deleteRecipe, recipes } = useApp();
 
   const recipe = getRecipeById(id);
   const isRecipeFavorite = isFavorite(id);
@@ -14,15 +14,95 @@ const RecipeDetail = () => {
   const [cookingMode, setCookingMode] = useState(false);
   const [currentStep, setCurrentStep] = useState(0);
 
+  // Get source page for back button text
+  const sourcePage = sessionStorage.getItem('recipeSourcePage') || 'recipes';
+  const backButtonText = sourcePage === 'favorites' ? 'Back to Favorites' : 'Back to Browse';
+
+  // Find next and previous recipes based on source page
+  // If from favorites, only navigate within favorite recipes
+  const availableRecipes = sourcePage === 'favorites' 
+    ? recipes.filter(r => isFavorite(r.id))
+    : recipes;
+  
+  const currentIndex = availableRecipes.findIndex(r => r.id === id);
+  const nextRecipe = currentIndex !== -1 && currentIndex < availableRecipes.length - 1 
+    ? availableRecipes[currentIndex + 1] 
+    : null;
+  const prevRecipe = currentIndex > 0 
+    ? availableRecipes[currentIndex - 1] 
+    : null;
+
+  // Swipe detection
+  const touchStartX = useRef(0);
+  const touchEndX = useRef(0);
+  const MIN_SWIPE_DISTANCE = 50;
+
   const handleBack = () => {
-    // Check if there's history to go back to, otherwise go to recipes
-    if (window.history.state && window.history.state.idx > 0) {
-      navigate(-1);
+    // Check where the user came from and navigate back accordingly
+    const sourcePage = sessionStorage.getItem('recipeSourcePage');
+    console.log('Navigating back, source page:', sourcePage);
+    const savedId = sessionStorage.getItem('lastViewedRecipeId');
+    console.log('Last viewed recipe ID in storage:', savedId);
+    
+    if (sourcePage === 'favorites') {
+      navigate('/favorites');
     } else {
-      // If no history, go to recipes page as fallback
       navigate('/recipes');
     }
   };
+
+  const handleNext = useCallback(() => {
+    if (nextRecipe) {
+      // Navigate to next recipe (will be saved when user clicks it)
+      navigate(`/recipe/${nextRecipe.id}`);
+      window.scrollTo(0, 0); // Scroll to top for the new recipe
+    }
+  }, [nextRecipe, navigate]);
+
+  const handlePrevious = useCallback(() => {
+    if (prevRecipe) {
+      // Navigate to previous recipe (will be saved when user clicks it)
+      navigate(`/recipe/${prevRecipe.id}`);
+      window.scrollTo(0, 0); // Scroll to top for the new recipe
+    }
+  }, [prevRecipe, navigate]);
+
+  useEffect(() => {
+    const handleTouchStart = (e) => {
+      touchStartX.current = e.touches[0].clientX;
+    };
+
+    const handleTouchMove = (e) => {
+      touchEndX.current = e.touches[0].clientX;
+    };
+
+    const handleTouchEnd = () => {
+      const swipeDistance = touchStartX.current - touchEndX.current;
+      
+      // Swipe left (next recipe)
+      if (swipeDistance > MIN_SWIPE_DISTANCE && nextRecipe) {
+        handleNext();
+      }
+      
+      // Swipe right (previous recipe)
+      if (swipeDistance < -MIN_SWIPE_DISTANCE && prevRecipe) {
+        handlePrevious();
+      }
+    };
+
+    // Only add listeners on mobile screens
+    if (window.innerWidth < 768) {
+      document.addEventListener('touchstart', handleTouchStart);
+      document.addEventListener('touchmove', handleTouchMove);
+      document.addEventListener('touchend', handleTouchEnd);
+    }
+
+    return () => {
+      document.removeEventListener('touchstart', handleTouchStart);
+      document.removeEventListener('touchmove', handleTouchMove);
+      document.removeEventListener('touchend', handleTouchEnd);
+    };
+  }, [handleNext, handlePrevious, nextRecipe, prevRecipe]);
 
   if (!recipe) {
     return (
@@ -90,14 +170,62 @@ const RecipeDetail = () => {
   return (
     <div className="min-h-screen bg-gray-50 py-8">
       <div className="max-w-7xl mx-auto px-2 sm:px-3 md:px-4 lg:px-6">
-        {/* Back Button */}
-        <button
-          onClick={handleBack}
-          className="mb-6 bg-white text-gray-700 px-6 py-3 rounded-xl font-semibold shadow-md hover:shadow-lg transition-all flex items-center gap-2 hover:bg-gray-50 border border-gray-200"
-        >
-          <span className="text-xl">←</span>
-          Back
-        </button>
+        {/* Navigation Buttons */}
+        <div className="mb-6 flex justify-between items-center gap-4">
+          <button
+            onClick={handleBack}
+            className="bg-white text-gray-700 px-4 sm:px-6 py-3 rounded-xl font-semibold shadow-md hover:shadow-lg transition-all flex items-center gap-2 hover:bg-gray-50 border border-gray-200"
+          >
+            <span className="text-xl">←</span>
+            <span className="hidden sm:inline">{backButtonText}</span>
+            <span className="sm:hidden">Back</span>
+          </button>
+          
+          {/* Navigation buttons for desktop */}
+          <div className="hidden md:flex items-center gap-3">
+            {prevRecipe && (
+              <button
+                onClick={handlePrevious}
+                className="bg-white text-gray-700 px-6 py-3 rounded-xl font-semibold shadow-md hover:shadow-lg transition-all flex items-center gap-2 hover:bg-gray-50 border border-gray-200"
+              >
+                <span className="text-xl">←</span>
+                Previous
+              </button>
+            )}
+            
+            {nextRecipe && (
+              <button
+                onClick={handleNext}
+                className="bg-gradient-to-r from-blue-600 to-indigo-600 text-white px-6 py-3 rounded-xl font-semibold shadow-md hover:shadow-lg transition-all flex items-center gap-2 hover:from-blue-700 hover:to-indigo-700"
+              >
+                Next
+                <span className="text-xl">→</span>
+              </button>
+            )}
+          </div>
+
+          {/* Swipe hint for mobile - now clickable buttons */}
+          <div className="md:hidden flex items-center gap-2">
+            {prevRecipe && (
+              <button
+                onClick={handlePrevious}
+                className="bg-white text-gray-700 px-3 py-2 rounded-lg font-medium shadow-sm hover:shadow-md transition-all flex items-center gap-1 border border-gray-300"
+              >
+                <span className="text-lg">←</span>
+                <span className="text-xs">Prev</span>
+              </button>
+            )}
+            {nextRecipe && (
+              <button
+                onClick={handleNext}
+                className="bg-blue-600 text-white px-3 py-2 rounded-lg font-medium shadow-sm hover:shadow-md transition-all flex items-center gap-1"
+              >
+                <span className="text-xs">Next</span>
+                <span className="text-lg">→</span>
+              </button>
+            )}
+          </div>
+        </div>
         
         <div className="bg-white rounded-2xl shadow-xl overflow-hidden border border-gray-200">
           {/* Image Header */}

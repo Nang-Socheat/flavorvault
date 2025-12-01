@@ -8,7 +8,7 @@ const Footer = () => {
   return (
     <footer className="relative text-white overflow-hidden">
       {/* Blurred Background Image */}
-      <div className="absolute inset-0">
+      <div className="absolute inset-0 z-0">
         <img
           src={FooterBg}
           alt="Footer background"
@@ -18,7 +18,7 @@ const Footer = () => {
       </div>
 
       {/* Content */}
-      <div className="relative z-10 max-w-[1920px] mx-auto px-2 sm:px-3 md:px-4 lg:px-6 py-8">
+      <div className="relative z-20 max-w-[1920px] mx-auto px-2 sm:px-3 md:px-4 lg:px-6 py-8">
         <div className="grid grid-cols-1 md:grid-cols-3 gap-8 mb-6">
           {/* About Section */}
           <div>
@@ -40,32 +40,32 @@ const Footer = () => {
             <h3 className="text-xl font-bold mb-3 drop-shadow-lg">Quick Links</h3>
             <ul className="space-y-2 text-sm">
               <li>
-                <Link to="/" className="text-gray-200 hover:text-white transition-colors drop-shadow-md">
+                <Link to="/" className="text-gray-200 hover:text-white transition-colors drop-shadow-md inline-block py-1">
                   Home
                 </Link>
               </li>
               <li>
-                <Link to="/recipes" className="text-gray-200 hover:text-white transition-colors drop-shadow-md">
+                <Link to="/recipes" className="text-gray-200 hover:text-white transition-colors drop-shadow-md inline-block py-1">
                   Browse Recipes
                 </Link>
               </li>
               <li>
-                <Link to="/add" className="text-gray-200 hover:text-white transition-colors drop-shadow-md">
+                <Link to="/add" className="text-gray-200 hover:text-white transition-colors drop-shadow-md inline-block py-1">
                   Add Recipe
                 </Link>
               </li>
               <li>
-                <Link to="/favorites" className="text-gray-200 hover:text-white transition-colors drop-shadow-md">
+                <Link to="/favorites" className="text-gray-200 hover:text-white transition-colors drop-shadow-md inline-block py-1">
                   Favorites
                 </Link>
               </li>
               <li>
-                <Link to="/meal-planner" className="text-gray-200 hover:text-white transition-colors drop-shadow-md">
+                <Link to="/meal-planner" className="text-gray-200 hover:text-white transition-colors drop-shadow-md inline-block py-1">
                   Meal Planner
                 </Link>
               </li>
               <li>
-                <Link to="/about" className="text-gray-200 hover:text-white transition-colors drop-shadow-md">
+                <Link to="/about" className="text-gray-200 hover:text-white transition-colors drop-shadow-md inline-block py-1">
                   About
                 </Link>
               </li>

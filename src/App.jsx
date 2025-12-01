@@ -15,29 +15,23 @@ import PrintMealPlan from './pages/PrintMealPlan';
 
 // Component to scroll to top on route change and page load
 function ScrollToTop() {
-  const { pathname } = useLocation();
+  const location = useLocation();
+  const { pathname } = location;
 
-  // Scroll to top on route change
+  // Scroll to top on route change, but not for browse recipes page
   useEffect(() => {
-    window.scrollTo(0, 0);
-  }, [pathname]);
+    // Don't scroll to top if we're on the browse recipes page
+    // (it handles its own scroll restoration)
+    if (pathname !== '/recipes') {
+      window.scrollTo(0, 0);
+    }
+  }, [pathname, location]);
 
-  // Disable browser's scroll restoration and scroll to top on mount
+  // Disable browser's scroll restoration on mount
   useEffect(() => {
-    // Disable automatic scroll restoration
     if ('scrollRestoration' in window.history) {
       window.history.scrollRestoration = 'manual';
     }
-    
-    // Scroll to top immediately
-    window.scrollTo(0, 0);
-    
-    // Also scroll after a small delay to ensure content is loaded
-    const timer = setTimeout(() => {
-      window.scrollTo(0, 0);
-    }, 100);
-    
-    return () => clearTimeout(timer);
   }, []);
 
   return null;

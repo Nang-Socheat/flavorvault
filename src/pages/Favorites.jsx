@@ -1,10 +1,48 @@
 import { Link } from 'react-router-dom';
 import { useApp } from '../context/AppContext';
 import RecipeCard from '../components/RecipeCard';
+import { useEffect } from 'react';
 
 const Favorites = () => {
   const { getFavoriteRecipes } = useApp();
   const favoriteRecipes = getFavoriteRecipes();
+
+  // Scroll to specific recipe card when returning from recipe detail
+  useEffect(() => {
+    const lastViewedRecipeId = sessionStorage.getItem('lastViewedRecipeId');
+    const sourcePage = sessionStorage.getItem('recipeSourcePage');
+    
+    if (lastViewedRecipeId && sourcePage === 'favorites') {
+      console.log('Attempting to scroll to recipe in Favorites:', lastViewedRecipeId);
+      
+      // Wait for DOM to render
+      const timer = setTimeout(() => {
+        const recipeCard = document.querySelector(`[data-recipe-id="${lastViewedRecipeId}"]`);
+        console.log('Recipe card found in Favorites:', recipeCard);
+        
+        if (recipeCard) {
+          // Scroll to the recipe card with some offset for better visibility
+          const offset = 100; // pixels from top
+          const elementPosition = recipeCard.getBoundingClientRect().top;
+          const offsetPosition = elementPosition + window.scrollY - offset;
+          
+          console.log('Scrolling to position:', offsetPosition);
+          // Use instant scroll for immediate landing
+          window.scrollTo({
+            top: offsetPosition,
+            behavior: 'auto'
+          });
+        } else {
+          console.warn('Recipe card not found in Favorites for ID:', lastViewedRecipeId);
+        }
+        // Clean up after scrolling
+        sessionStorage.removeItem('lastViewedRecipeId');
+        sessionStorage.removeItem('recipeSourcePage');
+      }, 300);
+      
+      return () => clearTimeout(timer);
+    }
+  }, []);
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-pink-50 via-red-50 to-orange-50">
@@ -30,7 +68,9 @@ const Favorites = () => {
           </div>
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
             {favoriteRecipes.map((recipe) => (
-              <RecipeCard key={recipe.id} recipe={recipe} />
+              <div key={recipe.id} data-recipe-id={recipe.id}>
+                <RecipeCard recipe={recipe} sourcePage="favorites" />
+              </div>
             ))}
           </div>
         </div>

@@ -1,5 +1,5 @@
-import { useState, useMemo, useEffect } from 'react';
-import { useSearchParams } from 'react-router-dom';
+import { useState, useMemo, useEffect, useRef } from 'react';
+import { useSearchParams, useLocation } from 'react-router-dom';
 import { useApp } from '../context/AppContext';
 import RecipeCard from '../components/RecipeCard';
 import SurpriseMe from '../components/SurpriseMe';
@@ -8,6 +8,7 @@ import Ingredients3 from '../assets/Ingredients3.jpg';
 const BrowseRecipes = () => {
   const { searchRecipes, recipes } = useApp();
   const [searchParams, setSearchParams] = useSearchParams();
+  const location = useLocation();
   const [searchQuery, setSearchQuery] = useState('');
   const [filters, setFilters] = useState({
     category: 'all',
@@ -17,6 +18,44 @@ const BrowseRecipes = () => {
   const [showScrollTop, setShowScrollTop] = useState(false);
   const [selectedRecipes, setSelectedRecipes] = useState([]);
   const [selectionMode, setSelectionMode] = useState(false);
+  const [viewMode, setViewMode] = useState('grid'); // 'grid', 'compact'
+
+  // Scroll to specific recipe card when returning from recipe detail
+  useEffect(() => {
+    const lastViewedRecipeId = sessionStorage.getItem('lastViewedRecipeId');
+    const sourcePage = sessionStorage.getItem('recipeSourcePage');
+    
+    if (lastViewedRecipeId && sourcePage === 'recipes') {
+      console.log('Attempting to scroll to recipe:', lastViewedRecipeId);
+      
+      // Wait for DOM to render - increased timeout for reliability
+      const timer = setTimeout(() => {
+        const recipeCard = document.querySelector(`[data-recipe-id="${lastViewedRecipeId}"]`);
+        console.log('Recipe card found:', recipeCard);
+        
+        if (recipeCard) {
+          // Scroll to the recipe card with some offset for better visibility
+          const offset = 100; // pixels from top
+          const elementPosition = recipeCard.getBoundingClientRect().top;
+          const offsetPosition = elementPosition + window.scrollY - offset;
+          
+          console.log('Scrolling to position:', offsetPosition);
+          // Use instant scroll instead of smooth for immediate landing
+          window.scrollTo({
+            top: offsetPosition,
+            behavior: 'auto' // Changed from 'smooth' to 'auto' for instant scroll
+          });
+        } else {
+          console.warn('Recipe card not found for ID:', lastViewedRecipeId);
+        }
+        // Clean up after scrolling
+        sessionStorage.removeItem('lastViewedRecipeId');
+        sessionStorage.removeItem('recipeSourcePage');
+      }, 300); // Increased from 200 to 300ms
+      
+      return () => clearTimeout(timer);
+    }
+  }, []); // Only run once on mount
 
   // Read category from URL on mount
   useEffect(() => {
@@ -268,45 +307,111 @@ const BrowseRecipes = () => {
         </div>
       </div>
 
-      {/* Results Count */}
-      <div className="mb-4">
+      {/* Results Count and View Toggle */}
+      <div className="mb-4 flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4">
         <p className="text-sm md:text-base text-slate-700">
           Found <span className="font-semibold text-blue-600">{filteredRecipes.length}</span> recipe
           {filteredRecipes.length !== 1 ? 's' : ''}
         </p>
+        
+        {/* View Mode Toggle */}
+        <div className="flex gap-2 bg-white rounded-lg p-1 shadow-md">
+          <button
+            onClick={() => setViewMode('grid')}
+            className={`px-3 py-2 rounded-md font-semibold text-sm transition-all ${
+              viewMode === 'grid'
+                ? 'bg-blue-600 text-white shadow-md'
+                : 'text-gray-600 hover:bg-gray-100'
+            }`}
+            title="Grid View"
+          >
+            <span className="hidden sm:inline">Grid</span>
+            <span className="sm:hidden">⊞</span>
+          </button>
+          <button
+            onClick={() => setViewMode('compact')}
+            className={`px-3 py-2 rounded-md font-semibold text-sm transition-all ${
+              viewMode === 'compact'
+                ? 'bg-blue-600 text-white shadow-md'
+                : 'text-gray-600 hover:bg-gray-100'
+            }`}
+            title="Compact View (Small Cards)"
+          >
+            <span className="hidden sm:inline">Compact</span>
+            <span className="sm:hidden">▦</span>
+          </button>
+        </div>
       </div>
 
-      {/* Recipe Grid */}
+      {/* Recipe Display - Grid or Compact */}
       {filteredRecipes.length > 0 ? (
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4 md:gap-6">
-          {filteredRecipes.map((recipe) => (
-            <div key={recipe.id} className="relative">
-              {selectionMode && (
-                <div className="absolute top-2 left-2 z-30">
-                  <button
-                    onClick={(e) => {
-                      e.preventDefault();
-                      e.stopPropagation();
-                      setSelectedRecipes(prev =>
-                        prev.includes(recipe.id)
-                          ? prev.filter(id => id !== recipe.id)
-                          : [...prev, recipe.id]
-                      );
-                    }}
-                    className={`w-10 h-10 rounded-full flex items-center justify-center font-bold text-lg shadow-lg transition-all ${
-                      selectedRecipes.includes(recipe.id)
-                        ? 'bg-green-600 text-white scale-110'
-                        : 'bg-white/95 backdrop-blur-sm text-gray-700 hover:bg-gray-100'
-                    }`}
-                  >
-                    {selectedRecipes.includes(recipe.id) ? '✓' : '+'}
-                  </button>
+        <>
+          {/* Grid View */}
+          {viewMode === 'grid' && (
+            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4 md:gap-6">
+              {filteredRecipes.map((recipe) => (
+                <div key={recipe.id} className="relative" data-recipe-id={recipe.id}>
+                  {selectionMode && (
+                    <div className="absolute top-2 left-2 z-30">
+                      <button
+                        onClick={(e) => {
+                          e.preventDefault();
+                          e.stopPropagation();
+                          setSelectedRecipes(prev =>
+                            prev.includes(recipe.id)
+                              ? prev.filter(id => id !== recipe.id)
+                              : [...prev, recipe.id]
+                          );
+                        }}
+                        className={`w-10 h-10 rounded-full flex items-center justify-center font-bold text-lg shadow-lg transition-all ${
+                          selectedRecipes.includes(recipe.id)
+                            ? 'bg-green-600 text-white scale-110'
+                            : 'bg-white/95 backdrop-blur-sm text-gray-700 hover:bg-gray-100'
+                        }`}
+                      >
+                        {selectedRecipes.includes(recipe.id) ? '✓' : '+'}
+                      </button>
+                    </div>
+                  )}
+                  <RecipeCard recipe={recipe} />
                 </div>
-              )}
-              <RecipeCard recipe={recipe} />
+              ))}
             </div>
-          ))}
-        </div>
+          )}
+
+          {/* Compact View - Smaller Cards */}
+          {viewMode === 'compact' && (
+            <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 xl:grid-cols-6 gap-3">
+              {filteredRecipes.map((recipe) => (
+                <div key={recipe.id} className="relative" data-recipe-id={recipe.id}>
+                  {selectionMode && (
+                    <div className="absolute top-1 left-1 z-30">
+                      <button
+                        onClick={(e) => {
+                          e.preventDefault();
+                          e.stopPropagation();
+                          setSelectedRecipes(prev =>
+                            prev.includes(recipe.id)
+                              ? prev.filter(id => id !== recipe.id)
+                              : [...prev, recipe.id]
+                          );
+                        }}
+                        className={`w-8 h-8 rounded-full flex items-center justify-center font-bold text-sm shadow-lg transition-all ${
+                          selectedRecipes.includes(recipe.id)
+                            ? 'bg-green-600 text-white scale-110'
+                            : 'bg-white/95 backdrop-blur-sm text-gray-700 hover:bg-gray-100'
+                        }`}
+                      >
+                        {selectedRecipes.includes(recipe.id) ? '✓' : '+'}
+                      </button>
+                    </div>
+                  )}
+                  <RecipeCard recipe={recipe} compact={true} />
+                </div>
+              ))}
+            </div>
+          )}
+        </>
       ) : (
         <div className="text-center py-8 md:py-12">
           <div className="text-5xl md:text-6xl mb-3 md:mb-4">🔍</div>

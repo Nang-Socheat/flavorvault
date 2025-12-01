@@ -56,35 +56,11 @@ const Navbar = () => {
     <>
       <nav className="bg-white shadow-lg sticky top-0 z-50">
         <div className="max-w-[1920px] mx-auto px-2 sm:px-3 md:px-4 lg:px-6">
-          <div className="flex justify-between items-center h-14 sm:h-16">
-            {/* Logo */}
-            <Link to="/" className="flex items-center space-x-1.5 sm:space-x-2" onClick={() => handleLinkClick('/')}>
-              <img src={logo} alt="FlavorVault Logo" className="h-10 w-10 sm:h-12 sm:w-12 object-contain" />
-              <span className="text-base sm:text-lg md:text-xl font-bold text-gray-800 truncate">FlavorVault</span>
-            </Link>
-
-            {/* Desktop Navigation */}
-            <div className="hidden lg:flex space-x-1">
-              {navLinks.map((link) => (
-                <Link
-                  key={link.path}
-                  to={link.path}
-                  onClick={() => handleLinkClick(link.path)}
-                  className={`px-3 xl:px-4 py-2 rounded-lg font-medium transition-all duration-300 ${
-                    isActive(link.path)
-                      ? 'bg-blue-500 text-white shadow-md'
-                      : 'text-gray-700 hover:bg-gray-100'
-                  }`}
-                >
-                  {link.label}
-                </Link>
-              ))}
-            </div>
-
-            {/* Mobile Menu Button */}
+          <div className="flex items-center h-14 sm:h-16">
+            {/* Mobile Menu Button - Left side */}
             <button
               onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
-              className="lg:hidden p-2 rounded-xl text-gray-700 hover:bg-gray-100 transition-all duration-200 active:scale-95"
+              className="lg:hidden p-2 rounded-xl text-gray-700 hover:bg-gray-100 transition-all duration-200 active:scale-95 mr-2"
               aria-label="Toggle menu"
               aria-expanded={isMobileMenuOpen}
             >
@@ -105,6 +81,33 @@ const Navbar = () => {
                 )}
               </svg>
             </button>
+
+            {/* Spacer - takes up middle space on mobile */}
+            <div className="flex-1 lg:hidden"></div>
+
+            {/* Logo - Right side on mobile, left on desktop */}
+            <Link to="/" className="flex items-center space-x-1.5 sm:space-x-2" onClick={() => handleLinkClick('/')}>
+              <img src={logo} alt="FlavorVault Logo" className="h-10 w-10 sm:h-12 sm:w-12 object-contain" />
+              <span className="text-base sm:text-lg md:text-xl font-bold text-gray-800 truncate">FlavorVault</span>
+            </Link>
+
+            {/* Desktop Navigation */}
+            <div className="hidden lg:flex space-x-1 ml-auto">
+              {navLinks.map((link) => (
+                <Link
+                  key={link.path}
+                  to={link.path}
+                  onClick={() => handleLinkClick(link.path)}
+                  className={`px-3 xl:px-4 py-2 rounded-lg font-medium transition-all duration-300 ${
+                    isActive(link.path)
+                      ? 'bg-blue-500 text-white shadow-md'
+                      : 'text-gray-700 hover:bg-gray-100'
+                  }`}
+                >
+                  {link.label}
+                </Link>
+              ))}
+            </div>
           </div>
         </div>
       </nav>

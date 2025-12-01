@@ -507,9 +507,9 @@ const MealPlanner = () => {
 
     return (
       <div className="fixed inset-0 bg-black/60 backdrop-blur-sm flex items-center justify-center z-50 p-4 animate-fadeIn">
-        <div className="bg-white rounded-2xl shadow-2xl max-w-6xl w-full max-h-[90vh] overflow-hidden">
+        <div className="bg-white rounded-2xl shadow-2xl max-w-6xl w-full max-h-[95vh] flex flex-col overflow-hidden">
           {/* Modal Header */}
-          <div className={`bg-gradient-to-r ${selectedMealType?.color} text-white px-6 py-5`}>
+          <div className={`bg-gradient-to-r ${selectedMealType?.color} text-white px-6 py-5 flex-shrink-0`}>
             <div className="flex items-center justify-between">
               <div className="flex items-center space-x-3">
                 <span className="text-3xl">{selectedMealType?.icon}</span>
@@ -545,7 +545,7 @@ const MealPlanner = () => {
           </div>
 
           {/* Search and Filter */}
-          <div className="px-6 py-4 bg-gray-50 border-b border-gray-200">
+          <div className="px-6 py-4 bg-gray-50 border-b border-gray-200 flex-shrink-0">
             <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mb-3">
               <input
                 type="text"
@@ -592,8 +592,8 @@ const MealPlanner = () => {
             )}
           </div>
 
-          {/* Recipe Grid */}
-          <div className="p-6 overflow-y-auto max-h-[60vh]">
+          {/* Recipe Grid - Scrollable */}
+          <div className="flex-1 overflow-y-auto p-6">
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
               {filteredRecipes.map(recipe => (
                 <div
@@ -761,7 +761,7 @@ const MealPlanner = () => {
     <div className="min-h-screen bg-gradient-to-b from-white via-blue-50 to-purple-50 pb-0">
       {/* Simple Background Pattern */}
       <div
-        className="fixed inset-0 opacity-30"
+        className="fixed inset-0 opacity-10 pointer-events-none z-0 animate-gradient"
         style={{
           backgroundImage: `url(${Vegetables1})`,
           backgroundSize: 'cover',
