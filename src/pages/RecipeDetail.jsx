@@ -16,7 +16,11 @@ const RecipeDetail = () => {
 
   // Get source page for back button text
   const sourcePage = sessionStorage.getItem('recipeSourcePage') || 'recipes';
-  const backButtonText = sourcePage === 'favorites' ? 'Back to Favorites' : 'Back to Browse';
+  const backButtonText = sourcePage === 'favorites' 
+    ? 'Back to Favorites' 
+    : sourcePage === 'meal-planner'
+    ? 'Back to Meal Planner'
+    : 'Back to Browse';
 
   // Find next and previous recipes based on source page
   // If from favorites, only navigate within favorite recipes
@@ -46,6 +50,8 @@ const RecipeDetail = () => {
     
     if (sourcePage === 'favorites') {
       navigate('/favorites');
+    } else if (sourcePage === 'meal-planner') {
+      navigate('/meal-planner');
     } else {
       navigate('/recipes');
     }

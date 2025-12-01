@@ -43,11 +43,11 @@ const MealPlanner = () => {
   const [showCalendarPicker, setShowCalendarPicker] = useState(false);
   const [pickerDate, setPickerDate] = useState(new Date());
 
-  // Meal types with color coding
+  // Meal types with color coding - darker, more contrasting colors
   const mealTypes = [
-    { id: 'breakfast', label: 'Breakfast', icon: '🌅', color: 'from-orange-400 to-yellow-300', bgColor: 'bg-orange-50', borderColor: 'border-orange-300', textColor: 'text-orange-700' },
-    { id: 'lunch', label: 'Lunch', icon: '☀️', color: 'from-blue-400 to-cyan-300', bgColor: 'bg-blue-50', borderColor: 'border-blue-300', textColor: 'text-blue-700' },
-    { id: 'dinner', label: 'Dinner', icon: '🌙', color: 'from-purple-400 to-indigo-400', bgColor: 'bg-purple-50', borderColor: 'border-purple-300', textColor: 'text-purple-700' },
+    { id: 'breakfast', label: 'Breakfast', icon: '🌅', color: 'from-orange-700 to-amber-600', bgColor: 'bg-orange-50', borderColor: 'border-orange-300', textColor: 'text-orange-700' },
+    { id: 'lunch', label: 'Lunch', icon: '☀️', color: 'from-blue-700 to-cyan-600', bgColor: 'bg-blue-50', borderColor: 'border-blue-300', textColor: 'text-blue-700' },
+    { id: 'dinner', label: 'Dinner', icon: '🌙', color: 'from-purple-700 to-indigo-700', bgColor: 'bg-purple-50', borderColor: 'border-purple-300', textColor: 'text-purple-700' },
   ];
 
   // Save meal plan to localStorage whenever it changes
@@ -325,7 +325,11 @@ const MealPlanner = () => {
                       <div key={meal.id} className="bg-gray-50 rounded-lg p-3 shadow-md hover:shadow-lg transition-shadow border border-gray-200">
                         <div className="flex gap-3">
                           {/* Recipe Image */}
-                          <Link to={`/recipe/${recipe.id}`} className="shrink-0">
+                          <Link 
+                            to={`/recipe/${recipe.id}`} 
+                            className="shrink-0"
+                            onClick={() => sessionStorage.setItem('recipeSourcePage', 'meal-planner')}
+                          >
                             <img
                               src={recipe.image || 'https://via.placeholder.com/100x100?text=No+Image'}
                               alt={recipe.title}
@@ -341,6 +345,7 @@ const MealPlanner = () => {
                             <Link
                               to={`/recipe/${recipe.id}`}
                               className="font-bold text-gray-900 hover:underline line-clamp-1 text-sm md:text-base"
+                              onClick={() => sessionStorage.setItem('recipeSourcePage', 'meal-planner')}
                             >
                               {recipe.title}
                             </Link>
