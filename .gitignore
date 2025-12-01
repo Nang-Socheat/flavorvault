@@ -12,6 +12,9 @@ dist
 dist-ssr
 *.local
 
+# Submission checklist (local only)
+SUBMISSION_CHECKLIST.md
+
 # Editor directories and files
 .vscode/*
 !.vscode/extensions.json
