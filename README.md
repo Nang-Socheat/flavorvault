@@ -32,8 +32,7 @@ A modern web application built with React for managing, organizing, and discover
 
 1. Clone the repository:
 ```bash
-git clone 
-cd g11-fp-yourflav
+git clone https://github.com/Nang-Socheat/flavorvault
 ```
 
 2. Install dependencies:
@@ -48,6 +47,8 @@ npm run dev
 
 4. Open your browser at `http://localhost:5173`
 
+# Project Deployment: https://flavorvault.vercel.app/
+
 ### Build for Production
 
 ```bash
@@ -58,13 +59,39 @@ npm run preview
 ## 📁 Project Structure
 
 ```
-src/
-├── components/       # Reusable UI components
-├── pages/           # Page components
-├── context/         # Global state management
-├── utils/           # Utility functions and sample data
-├── assets/          # Images and media
-└── App.jsx          # Root component
+g11-fp-yourflav/
+├── src/
+│   ├── components/          # Reusable UI components
+│   │   ├── Header.jsx       # Navigation header with menu
+│   │   ├── Footer.jsx       # Footer with social links
+│   │   └── RecipeCard.jsx   # Recipe card component
+│   ├── pages/               # Page components
+│   │   ├── Home.jsx         # Landing page with hero section
+│   │   ├── BrowseRecipes.jsx # Recipe browsing with filters
+│   │   ├── RecipeDetail.jsx  # Detailed recipe view
+│   │   ├── AddEditRecipe.jsx # Recipe creation/editing form
+│   │   ├── Favorites.jsx     # Favorites collection page
+│   │   ├── MealPlanner.jsx   # Meal planning calendar
+│   │   ├── About.jsx         # About page with info
+│   │   ├── PrintRecipe.jsx   # Print-friendly recipe view
+│   │   └── PrintMealPlan.jsx # Print-friendly meal plan
+│   ├── context/
+│   │   └── AppContext.jsx   # Global state management (recipes, favorites, meal plans)
+│   ├── utils/
+│   │   ├── sampleData.js    # 24 pre-loaded sample recipes
+│   │   └── resetData.js     # Data reset utility
+│   ├── assets/              # Images (food photos, backgrounds)
+│   ├── App.jsx              # Root component with routing
+│   ├── main.jsx             # App entry point
+│   └── index.css            # Global styles and Tailwind
+├── public/                  # Static assets
+├── index.html               # HTML template
+├── package.json             # Dependencies and scripts
+├── vite.config.js           # Vite build configuration
+├── tailwind.config.js       # Tailwind CSS configuration
+├── postcss.config.js        # PostCSS configuration
+├── eslint.config.js         # ESLint linting rules
+└── README.md                # Project documentation
 ```
 
 ## 💾 Data Storage
@@ -96,17 +123,12 @@ All data is stored in the browser's localStorage:
 
 ## 🎨 Sample Data
 
-The application includes 24 pre-loaded sample recipes across various categories. You can reset to sample data from the About page.
-
-## 📄 License
-
-This project is licensed under the MIT License.
+The application includes 26 pre-loaded sample recipes across various categories. You can reset to sample data from the About page.
 
 ## 👥 Contributors
 
 Group 11 - Fall 2025 Front-End Web Development
+Professor: Joe Chea
 Team Members: Nang Socheat, Born Kimsan, Prech July
 
 ---
-
-**Made with ❤️ using React and Tailwind CSS**
