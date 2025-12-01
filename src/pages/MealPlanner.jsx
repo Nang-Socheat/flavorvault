@@ -521,27 +521,29 @@ const MealPlanner = () => {
         <div className="bg-white rounded-2xl shadow-2xl max-w-6xl w-full max-h-[95vh] flex flex-col overflow-hidden">
           {/* Modal Header - Compact */}
           <div className={`bg-gradient-to-r ${selectedMealType?.color} text-white px-4 py-3 flex-shrink-0`}>
-            <div className="flex items-center justify-between">
-              <div className="flex items-center space-x-2">
-                <span className="text-2xl">{selectedMealType?.icon}</span>
-                <div>
-                  <h2 className="text-lg md:text-xl font-bold flex items-center gap-2">
-                    Select Recipe for {selectedMealType?.label}
+            <div className="flex items-start justify-between gap-3">
+              <div className="flex items-start space-x-2 flex-1 min-w-0">
+                <span className="text-2xl flex-shrink-0">{selectedMealType?.icon}</span>
+                <div className="flex-1 min-w-0">
+                  <div className="flex flex-col sm:flex-row sm:items-center gap-1 sm:gap-2">
+                    <h2 className="text-base sm:text-lg md:text-xl font-bold">
+                      Select Recipe for {selectedMealType?.label}
+                    </h2>
                     {selectedCount > 0 && (
-                      <span className="text-xs bg-white/30 px-2 py-1 rounded-full">
-                        {selectedCount} selected
+                      <span className="text-xs bg-white/30 px-2 py-1 rounded-full inline-block w-fit">
+                        ({selectedCount} Selected)
                       </span>
                     )}
-                  </h2>
-                  <p className="text-white/90 text-xs">
+                  </div>
+                  <p className="text-white/90 text-xs mt-0.5">
                     {new Date(selectorConfig.date).toLocaleDateString('en-US', { weekday: 'long', month: 'long', day: 'numeric' })}
                   </p>
                 </div>
               </div>
-              <div className="flex items-center gap-2">
+              <div className="flex items-center gap-2 flex-shrink-0">
                 <button
                   onClick={() => setShowRecipeSelector(false)}
-                  className="bg-white/20 hover:bg-white/30 px-3 py-1.5 rounded-lg text-xs font-bold transition-colors"
+                  className="bg-white/20 hover:bg-white/30 px-3 py-1.5 rounded-lg text-xs font-bold transition-colors hidden sm:block"
                 >
                   Done
                 </button>

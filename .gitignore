@@ -12,8 +12,10 @@ dist
 dist-ssr
 *.local
 
-# Submission checklist (local only)
+# Submission checklist and reports (local only)
 SUBMISSION_CHECKLIST.md
+docs/
+public/FlavorVault_report.pdf
 
 # Editor directories and files
 .vscode/*
