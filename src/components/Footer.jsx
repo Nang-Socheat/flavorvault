@@ -20,8 +20,8 @@ const Footer = () => {
       {/* Content */}
       <div className="relative z-20 max-w-[1920px] mx-auto px-2 sm:px-3 md:px-4 lg:px-6 py-8">
         <div className="grid grid-cols-1 md:grid-cols-3 gap-8 mb-6">
-          {/* About Section */}
-          <div>
+          {/* About Section - Full width on mobile */}
+          <div className="md:col-span-1">
             <div className="flex items-center gap-3 mb-3">
               <img
                 src={FlavorVaultLogo}
@@ -35,52 +35,55 @@ const Footer = () => {
             </p>
           </div>
 
-          {/* Quick Links */}
-          <div>
-            <h3 className="text-xl font-bold mb-3 drop-shadow-lg">Quick Links</h3>
-            <ul className="space-y-2 text-sm">
-              <li>
-                <Link to="/" className="text-gray-200 hover:text-white transition-colors drop-shadow-md inline-block py-1">
-                  Home
-                </Link>
-              </li>
-              <li>
-                <Link to="/recipes" className="text-gray-200 hover:text-white transition-colors drop-shadow-md inline-block py-1">
-                  Browse Recipes
-                </Link>
-              </li>
-              <li>
-                <Link to="/add" className="text-gray-200 hover:text-white transition-colors drop-shadow-md inline-block py-1">
-                  Add Recipe
-                </Link>
-              </li>
-              <li>
-                <Link to="/favorites" className="text-gray-200 hover:text-white transition-colors drop-shadow-md inline-block py-1">
-                  Favorites
-                </Link>
-              </li>
-              <li>
-                <Link to="/meal-planner" className="text-gray-200 hover:text-white transition-colors drop-shadow-md inline-block py-1">
-                  Meal Planner
-                </Link>
-              </li>
-              <li>
-                <Link to="/about" className="text-gray-200 hover:text-white transition-colors drop-shadow-md inline-block py-1">
-                  About
-                </Link>
-              </li>
-            </ul>
-          </div>
+          {/* Quick Links and Info - Side by side on mobile, separate columns on desktop */}
+          <div className="grid grid-cols-2 gap-6 md:col-span-2 md:grid-cols-2">
+            {/* Quick Links */}
+            <div>
+              <h3 className="text-xl font-bold mb-3 drop-shadow-lg">Quick Links</h3>
+              <ul className="space-y-2 text-sm">
+                <li>
+                  <Link to="/" className="text-gray-200 hover:text-white transition-colors drop-shadow-md inline-block py-1">
+                    Home
+                  </Link>
+                </li>
+                <li>
+                  <Link to="/recipes" className="text-gray-200 hover:text-white transition-colors drop-shadow-md inline-block py-1">
+                    Browse Recipes
+                  </Link>
+                </li>
+                <li>
+                  <Link to="/add" className="text-gray-200 hover:text-white transition-colors drop-shadow-md inline-block py-1">
+                    Add Recipe
+                  </Link>
+                </li>
+                <li>
+                  <Link to="/favorites" className="text-gray-200 hover:text-white transition-colors drop-shadow-md inline-block py-1">
+                    Favorites
+                  </Link>
+                </li>
+                <li>
+                  <Link to="/meal-planner" className="text-gray-200 hover:text-white transition-colors drop-shadow-md inline-block py-1">
+                    Meal Planner
+                  </Link>
+                </li>
+                <li>
+                  <Link to="/about" className="text-gray-200 hover:text-white transition-colors drop-shadow-md inline-block py-1">
+                    About
+                  </Link>
+                </li>
+              </ul>
+            </div>
 
-          {/* Info */}
-          <div>
-            <h3 className="text-xl font-bold mb-3 drop-shadow-lg">Information</h3>
-            <ul className="space-y-2 text-sm text-gray-200 drop-shadow-md">
-              <li>🔒 All data stored locally</li>
-              <li>💾 Your privacy is protected</li>
-              <li>🆓 Free to use</li>
-              <li>📱 Mobile friendly</li>
-            </ul>
+            {/* Info */}
+            <div>
+              <h3 className="text-xl font-bold mb-3 drop-shadow-lg">Information</h3>
+              <ul className="space-y-2 text-sm text-gray-200 drop-shadow-md">
+                <li>🔒 All data stored locally</li>
+                <li>💾 Your privacy is protected</li>
+                <li>🆓 Free to use</li>
+                <li>📱 Mobile friendly</li>
+              </ul>
+            </div>
           </div>
         </div>
 
