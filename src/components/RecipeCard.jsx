@@ -51,7 +51,7 @@ const RecipeCard = ({ recipe, compact = false, sourcePage = 'recipes' }) => {
 
           {/* Content Section */}
           <div className="flex-1 p-2 flex flex-col justify-between">
-            <h3 className="text-xs font-bold text-gray-900 line-clamp-2 mb-1 group-hover:text-purple-600 transition-colors">
+            <h3 className="text-xs font-bold text-gray-900 line-clamp-2 mb-1 group-hover:text-purple-600 transition-colors" title={recipe.title}>
               {recipe.title}
             </h3>
             <div className="flex items-center justify-between text-[10px] text-gray-600">
@@ -116,7 +116,7 @@ const RecipeCard = ({ recipe, compact = false, sourcePage = 'recipes' }) => {
 
           {/* Content Section */}
           <div className="flex-1 p-4 bg-white flex flex-col min-h-0">
-            <h3 className="text-base sm:text-lg font-bold text-gray-900 mb-2 leading-tight break-words line-clamp-3">
+            <h3 className="text-base sm:text-lg font-bold text-gray-900 mb-2 leading-tight break-words line-clamp-2" title={recipe.title}>
               {recipe.title}
             </h3>
             <p className="text-gray-600 text-sm mb-3 line-clamp-2 flex-shrink-0 leading-relaxed">

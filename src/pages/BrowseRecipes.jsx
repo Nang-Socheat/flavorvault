@@ -54,6 +54,10 @@ const BrowseRecipes = () => {
       }, 300); // Increased from 200 to 300ms
       
       return () => clearTimeout(timer);
+    } else {
+      // No saved recipe - this is a fresh navigation, scroll to top
+      console.log('No saved recipe, scrolling to top');
+      window.scrollTo(0, 0);
     }
   }, []); // Only run once on mount
 

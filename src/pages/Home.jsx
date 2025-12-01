@@ -124,6 +124,7 @@ const Home = () => {
           <div className="flex flex-col sm:flex-row justify-center gap-4 md:gap-5">
             <Link
               to="/recipes"
+              onClick={() => window.scrollTo(0, 0)}
               className="bg-white text-blue-600 px-8 md:px-10 py-4 md:py-5 rounded-xl font-bold text-lg hover:bg-gray-100 hover:scale-105 transition-all duration-300 shadow-2xl"
             >
               Browse Recipes
@@ -180,6 +181,7 @@ const Home = () => {
                 <p className="text-sm md:text-base mb-4 drop-shadow-md">Discover nutritious recipes with fresh vegetables</p>
                 <Link
                   to="/recipes"
+                  onClick={() => window.scrollTo(0, 0)}
                   className="inline-block bg-white text-green-600 px-6 py-2 rounded-lg font-semibold hover:bg-green-50 transition-all duration-300 transform hover:scale-105"
                 >
                   View Recipes
@@ -237,8 +239,16 @@ const Home = () => {
                 <h2 className="text-2xl md:text-3xl font-bold text-white mb-2">⚡ Quick & Easy</h2>
                 <p className="text-sm md:text-base text-orange-50">Ready in 30 minutes or less!</p>
               </div>
-              <Link to="/recipes" className="text-white hover:text-orange-100 font-medium transition-colors mt-3 md:mt-0 underline">
-                View All Quick Recipes →
+              <Link 
+                to="/recipes" 
+                onClick={() => {
+                  // Ensure scroll to top when navigating
+                  window.scrollTo(0, 0);
+                }}
+                className="text-white hover:text-orange-100 font-medium transition-colors mt-3 md:mt-0 underline"
+              >
+                <span className="md:hidden">View All Recipes →</span>
+                <span className="hidden md:inline">View All Quick Recipes →</span>
               </Link>
             </div>
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 md:gap-6">
@@ -267,6 +277,7 @@ const Home = () => {
             <div className="grid grid-cols-1 md:grid-cols-3 gap-3 md:gap-4">
               <Link
                 to="/recipes"
+                onClick={() => window.scrollTo(0, 0)}
                 className="flex items-center p-4 bg-white/10 backdrop-blur-sm border-2 border-white/30 rounded-lg hover:bg-white/20 hover:border-white/50 transition-all duration-300 transform hover:scale-105 hover:shadow-xl"
               >
                 <span className="text-2xl md:text-3xl mr-3 md:mr-4 flex-shrink-0">🔍</span>
