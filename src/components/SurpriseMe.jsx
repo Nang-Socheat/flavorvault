@@ -7,17 +7,23 @@ const SurpriseMe = () => {
   const [randomRecipe, setRandomRecipe] = useState(null);
   const [isAnimating, setIsAnimating] = useState(false);
 
-  // Load persisted random recipe from localStorage on mount
+  // Reset to initial state on mount (when navigating to Browse page)
   useEffect(() => {
-    const savedRecipeId = localStorage.getItem('surpriseMe_recipeId');
-    if (savedRecipeId && recipes.length > 0) {
-      const recipe = recipes.find(r => r.id === savedRecipeId);
-      if (recipe) {
-        setRandomRecipe(recipe);
-      }
-    }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
+    // Clear the surprise state when component mounts
+    setRandomRecipe(null);
+    localStorage.removeItem('surpriseMe_recipeId');
   }, []); // Only run once on mount
+
+  // Listen for page refresh event (when clicking Browse while on Browse page)
+  useEffect(() => {
+    const handlePageRefresh = () => {
+      setRandomRecipe(null);
+      setIsAnimating(false);
+    };
+
+    window.addEventListener('page-refresh', handlePageRefresh);
+    return () => window.removeEventListener('page-refresh', handlePageRefresh);
+  }, []);
 
   const getRandomRecipe = () => {
     if (recipes.length === 0) return;
@@ -30,8 +36,6 @@ const SurpriseMe = () => {
       const randomIndex = Math.floor(Math.random() * recipes.length);
       const recipe = recipes[randomIndex];
       setRandomRecipe(recipe);
-      // Persist the random recipe ID to localStorage
-      localStorage.setItem('surpriseMe_recipeId', recipe.id);
       setIsAnimating(false);
     }, 500);
   };

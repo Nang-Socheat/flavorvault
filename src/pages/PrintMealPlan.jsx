@@ -67,9 +67,12 @@ const PrintMealPlan = () => {
     );
   }
   const mealTypes = [
-    { id: 'breakfast', label: 'Breakfast', icon: '🌅', color: 'from-orange-400 to-yellow-300' },
-    { id: 'lunch', label: 'Lunch', icon: '☀️', color: 'from-blue-400 to-cyan-300' },
-    { id: 'dinner', label: 'Dinner', icon: '🌙', color: 'from-purple-400 to-indigo-400' },
+    { id: 'breakfast', label: 'Breakfast', icon: '🌅' },
+    { id: 'lunch', label: 'Lunch', icon: '☀️' },
+    { id: 'dinner', label: 'Dinner', icon: '🌙' },
+    { id: 'snack', label: 'Snack', icon: '🍎' },
+    { id: 'special', label: 'Special', icon: '⭐' },
+    { id: 'occasion', label: 'Occasion', icon: '🎉' },
   ];
 
   const formatDate = (dateString) => {
@@ -82,202 +85,116 @@ const PrintMealPlan = () => {
     });
   };
 
-  const getDayName = (dateString) => {
-    const date = new Date(dateString);
-    return date.toLocaleDateString('en-US', { weekday: 'long' });
-  };
-
-  const getShortDate = (dateString) => {
-    const date = new Date(dateString);
-    return date.toLocaleDateString('en-US', { month: 'short', day: 'numeric' });
-  };
-
-  // Render single day meal plan
+  // Render single day meal plan - only print meals that have content
   const renderDayPlan = () => {
     const dayData = mealPlan[dateStr] || {};
     
-    return (
-      <div className="max-w-5xl mx-auto p-6 print:p-3 print:max-h-screen">
-        {/* Header */}
-        <div className="text-center mb-4 print:mb-2">
-          <div className="inline-block bg-gradient-to-r from-orange-500 to-amber-500 text-white px-6 py-2 rounded-xl shadow-lg print:px-4 print:py-1.5">
-            <h1 className="text-2xl font-bold print:text-lg">🍽️ Meal Plan</h1>
-            <p className="text-base mt-0.5 print:text-xs">{formatDate(dateStr)}</p>
+    // Filter out meal types with no meals
+    const mealsWithContent = mealTypes.filter(mealType => {
+      const meals = dayData[mealType.id] || [];
+      return meals.length > 0;
+    });
+    
+    if (mealsWithContent.length === 0) {
+      return (
+        <div className="max-w-5xl mx-auto p-6 print:p-3">
+          <div className="text-center mb-4 print:mb-2">
+            <div className="inline-block border-2 border-gray-800 px-6 py-2 rounded-lg print:px-4 print:py-1.5">
+              <h1 className="text-2xl font-bold text-gray-900 print:text-lg">Meal Plan</h1>
+              <p className="text-base mt-0.5 text-gray-700 print:text-xs">{formatDate(dateStr)}</p>
+            </div>
           </div>
+          <p className="text-center text-gray-600 italic">No meals planned for this day.</p>
+        </div>
+      );
+    }
+    
+    return (
+      <div className="max-w-5xl mx-auto p-6 print:p-4">
+        {/* Header - Compact but readable */}
+        <div className="text-center mb-4 print:mb-2">
+          <h1 className="text-2xl font-bold text-gray-900 print:text-lg">Meal Plan</h1>
+          <p className="text-base text-gray-700 print:text-sm">{formatDate(dateStr)}</p>
+          <hr className="border-t-2 border-gray-800 mt-2 print:mt-1" />
         </div>
 
-        {/* Meal Sections - Compact for printing */}
-        <div className="space-y-3 print:space-y-2">
-          {mealTypes.map(mealType => {
+        {/* Meal Sections - Each meal type with all its recipes */}
+        <div className="space-y-4 print:space-y-2">
+          {mealsWithContent.map(mealType => {
             const meals = dayData[mealType.id] || [];
             
             return (
-              <div key={mealType.id} className="border border-gray-300 rounded-lg overflow-hidden print:break-inside-avoid">
-                {/* Meal Type Header - Compact */}
-                <div className={`bg-gradient-to-r ${mealType.color} text-white px-3 py-1.5 print:px-2 print:py-1`}>
-                  <h2 className="text-lg font-bold flex items-center gap-1.5 print:text-sm">
-                    <span className="text-base print:text-sm">{mealType.icon}</span>
-                    <span>{mealType.label}</span>
-                  </h2>
-                </div>
+              <div key={mealType.id} className="print-meal-section">
+                {/* Single border container for each meal type */}
+                <div className="border-2 border-gray-800 rounded overflow-hidden">
+                  {/* Meal Type Header - No emoji in print */}
+                  <div className="bg-gray-100 border-b-2 border-gray-800 px-4 py-2 print:px-3 print:py-1">
+                    <h2 className="text-xl font-bold text-gray-900 print:text-base">
+                      <span className="print:hidden">{mealType.icon} </span>{mealType.label}
+                    </h2>
+                  </div>
 
-                {/* Recipes - Compact */}
-                <div className="bg-white p-2 print:p-1.5">
-                  {meals.length > 0 ? (
-                    <div className="space-y-2 print:space-y-1.5">
-                      {meals.map((meal, index) => {
-                        const recipe = getRecipeById(meal.recipeId);
-                        if (!recipe) return null;
+                  {/* All Recipes for this meal type */}
+                  <div className="p-4 print:p-2">
+                    {meals.map((meal, index) => {
+                      const recipe = getRecipeById(meal.recipeId);
+                      if (!recipe) return null;
 
-                        return (
-                          <div key={meal.id} className="border border-gray-200 rounded p-2 print:p-1.5">
-                            <div className="flex gap-2">
-                              {/* Recipe Image - Smaller */}
-                              {recipe.image && (
-                                <div className="w-16 h-16 print:w-12 print:h-12 rounded overflow-hidden flex-shrink-0">
-                                  <img
-                                    src={recipe.image}
-                                    alt={recipe.title}
-                                    className="w-full h-full object-cover"
-                                    onError={(e) => {
-                                      e.target.style.display = 'none';
-                                    }}
-                                  />
-                                </div>
-                              )}
-
-                              {/* Recipe Info - Compact */}
-                              <div className="flex-1 min-w-0">
-                                <h3 className="text-sm font-bold text-gray-900 mb-0.5 print:text-xs leading-tight">
-                                  {recipe.title}
-                                </h3>
-                                <div className="text-xs text-gray-600 print:text-[9px] leading-snug">
-                                  <p>
-                                    {recipe.category} • {recipe.difficulty} • {recipe.prepTime + recipe.cookTime}min • Portions: {meal.portions}
-                                  </p>
-                                </div>
-                              </div>
+                      return (
+                        <div key={meal.id} className={`print-recipe ${index > 0 ? 'mt-4 pt-4 border-t border-gray-400 print:mt-2 print:pt-2' : ''}`}>
+                          {/* Recipe Header */}
+                          <div className="mb-2 print:mb-1.5">
+                            <h3 className="text-lg font-bold text-gray-900 print:text-sm">
+                              {recipe.title}
+                            </h3>
+                            <div className="text-sm text-gray-700 mt-1 print:text-xs">
+                              {recipe.category} • {recipe.difficulty} • {recipe.prepTime + recipe.cookTime} min • Portions: {meal.portions}
                             </div>
                           </div>
-                        );
-                      })}
-                    </div>
-                  ) : (
-                    <p className="text-center text-gray-400 py-2 italic print:py-1 print:text-xs">
-                      No {mealType.label.toLowerCase()} planned
-                    </p>
-                  )}
-                </div>
-              </div>
-            );
-          })}
-        </div>
 
-        {/* Footer - Compact */}
-        <div className="text-center text-xs text-gray-500 mt-3 pt-2 border-t print:text-[9px] print:mt-2 print:pt-1">
-          Printed from FlavorVault • {new Date().toLocaleDateString('en-US', { 
-            month: 'short', 
-            day: 'numeric', 
-            year: 'numeric' 
-          })}
-        </div>
-      </div>
-    );
-  };
-
-  // Render week meal plan
-  const renderWeekPlan = () => {
-    const dates = Object.keys(mealPlan).sort();
-    const weekStart = dates.length > 0 ? getShortDate(dates[0]) : '';
-    const weekEnd = dates.length > 0 ? getShortDate(dates[dates.length - 1]) : '';
-    
-    return (
-      <div className="max-w-6xl mx-auto p-4 print:p-2">
-        {/* Header - Compact */}
-        <div className="text-center mb-3 print:mb-2">
-          <div className="inline-block bg-gradient-to-r from-orange-500 to-amber-500 text-white px-6 py-2 rounded-xl shadow-lg print:px-4 print:py-1">
-            <h1 className="text-xl font-bold print:text-base">🍽️ Weekly Meal Plan</h1>
-            <p className="text-sm mt-0.5 print:text-xs">{weekStart} - {weekEnd}</p>
-          </div>
-        </div>
-
-        {/* Days - Compact Grid */}
-        <div className="space-y-2 print:space-y-1.5">
-          {dates.map((date, dayIndex) => {
-            const dayData = mealPlan[date] || {};
-            const today = new Date().toISOString().split('T')[0];
-            const isToday = date === today;
-
-            return (
-              <div 
-                key={date} 
-                className={`border rounded-lg overflow-hidden print:break-inside-avoid ${
-                  isToday ? 'border-green-500 bg-green-50/50' : 'border-gray-300'
-                }`}
-              >
-                {/* Day Header - Compact */}
-                <div className={`px-3 py-1 print:px-2 print:py-0.5 ${
-                  isToday 
-                    ? 'bg-gradient-to-r from-green-600 to-emerald-600 text-white' 
-                    : 'bg-gradient-to-r from-gray-100 to-slate-100 text-gray-800'
-                }`}>
-                  <h2 className="text-sm font-bold print:text-xs flex items-center gap-2">
-                    {getDayName(date)} - {getShortDate(date)}
-                    {isToday && <span className="text-xs font-normal bg-white/30 px-1.5 py-0.5 rounded print:text-[9px]">(Today)</span>}
-                  </h2>
-                </div>
-
-                {/* Meals - Compact 3-column Grid */}
-                <div className="grid grid-cols-1 md:grid-cols-3 gap-1.5 p-1.5 bg-white print:gap-1 print:p-1">
-                  {mealTypes.map(mealType => {
-                    const meals = dayData[mealType.id] || [];
-
-                    return (
-                      <div key={mealType.id} className="border border-gray-200 rounded overflow-hidden">
-                        {/* Meal Type - Compact */}
-                        <div className={`bg-gradient-to-r ${mealType.color} text-white px-2 py-0.5 print:px-1.5 print:py-0.5`}>
-                          <h3 className="text-xs font-bold flex items-center gap-0.5 print:text-[9px]">
-                            <span className="text-xs print:text-[9px]">{mealType.icon}</span>
-                            <span>{mealType.label}</span>
-                          </h3>
-                        </div>
-
-                        {/* Recipes - Very Compact */}
-                        <div className="p-1 print:p-0.5">
-                          {meals.length > 0 ? (
-                            <div className="space-y-1 print:space-y-0.5">
-                              {meals.map(meal => {
-                                const recipe = getRecipeById(meal.recipeId);
-                                if (!recipe) return null;
-
-                                return (
-                                  <div key={meal.id} className="text-[10px] border-b border-gray-100 pb-0.5 last:border-0 print:text-[8px] print:pb-0.5">
-                                    <p className="font-bold text-gray-900 leading-tight">{recipe.title}</p>
-                                    <p className="text-gray-600 leading-tight">
-                                      {recipe.prepTime + recipe.cookTime}m • {meal.portions}p
-                                    </p>
-                                  </div>
-                                );
-                              })}
+                          {/* Two Column Layout: Ingredients & Instructions - Always side-by-side */}
+                          <div className="grid grid-cols-2 gap-4 print:gap-3">
+                            {/* Ingredients */}
+                            <div>
+                              <h4 className="font-bold text-gray-900 mb-2 print:text-xs print:mb-1">Ingredients:</h4>
+                              <ul className="space-y-1 print:space-y-0.5">
+                                {recipe.ingredients.map((item, idx) => (
+                                  <li key={idx} className="flex items-start gap-2 text-sm print:text-xs">
+                                    <span className="font-bold">□</span>
+                                    <span className="text-gray-800">{item}</span>
+                                  </li>
+                                ))}
+                              </ul>
                             </div>
-                          ) : (
-                            <p className="text-[9px] text-gray-400 italic text-center py-1 print:text-[8px] print:py-0.5">
-                              No meals
-                            </p>
-                          )}
+
+                            {/* Instructions */}
+                            <div>
+                              <h4 className="font-bold text-gray-900 mb-2 print:text-xs print:mb-1">Instructions:</h4>
+                              <ol className="space-y-1.5 print:space-y-0.5">
+                                {recipe.instructions.map((step, idx) => (
+                                  <li key={idx} className="flex gap-2 text-sm print:text-xs">
+                                    <div className="flex-shrink-0 w-5 h-5 border-2 border-gray-800 rounded-full flex items-center justify-center font-bold text-xs print:w-4 print:h-4 print:text-[9px]">
+                                      {idx + 1}
+                                    </div>
+                                    <p className="text-gray-800">{step}</p>
+                                  </li>
+                                ))}
+                              </ol>
+                            </div>
+                          </div>
                         </div>
-                      </div>
-                    );
-                  })}
+                      );
+                    })}
+                  </div>
                 </div>
               </div>
             );
           })}
         </div>
 
-        {/* Footer - Compact */}
-        <div className="text-center text-[10px] text-gray-500 mt-2 pt-1 border-t print:text-[8px] print:mt-1.5 print:pt-0.5">
-          FlavorVault • {new Date().toLocaleDateString('en-US', { 
+        {/* Footer */}
+        <div className="text-center text-xs text-gray-600 mt-4 pt-2 border-t border-gray-400 print:text-[10px] print:mt-2 print:pt-1">
+          FlavorVault · {new Date().toLocaleDateString('en-US', { 
             month: 'short', 
             day: 'numeric', 
             year: 'numeric' 
@@ -286,6 +203,8 @@ const PrintMealPlan = () => {
       </div>
     );
   };
+
+  // Render week meal plan - REMOVED (only daily printing needed)
 
   return (
     <div className="min-h-screen bg-white">
@@ -294,9 +213,7 @@ const PrintMealPlan = () => {
         <div className="max-w-7xl mx-auto flex justify-between items-center">
           <div>
             <h1 className="text-xl font-bold text-gray-800">Print Preview</h1>
-            <p className="text-sm text-gray-600">
-              {mode === 'day' ? 'Daily' : 'Weekly'} Meal Plan
-            </p>
+            <p className="text-sm text-gray-600">Daily Meal Plan</p>
           </div>
           <div className="flex gap-3">
             <button
@@ -316,8 +233,8 @@ const PrintMealPlan = () => {
         </div>
       </div>
 
-      {/* Content */}
-      {mode === 'day' ? renderDayPlan() : renderWeekPlan()}
+      {/* Content - Only Daily View */}
+      {renderDayPlan()}
 
       {/* Print Styles */}
       <style>{`
@@ -328,43 +245,79 @@ const PrintMealPlan = () => {
           }
           
           body {
-            print-color-adjust: exact;
-            -webkit-print-color-adjust: exact;
+            color: black;
           }
           
-          * {
-            -webkit-print-color-adjust: exact !important;
-            print-color-adjust: exact !important;
+          /* Force two-column layout in print */
+          .print\\:grid-cols-2 {
+            grid-template-columns: repeat(2, minmax(0, 1fr)) !important;
           }
           
-          .print\\:break-inside-avoid {
-            break-inside: avoid;
-            page-break-inside: avoid;
+          /* Prevent recipes from splitting across pages */
+          .print-recipe {
+            page-break-inside: avoid !important;
+            break-inside: avoid !important;
           }
           
-          .page-break {
-            page-break-after: always;
-            break-after: page;
+          /* Keep entire meal section together (header + content) */
+          .print-meal-section {
+            page-break-inside: avoid !important;
+            break-inside: avoid !important;
           }
           
-          /* Force compact printing */
-          html, body {
-            height: auto !important;
-            overflow: visible !important;
+          /* If meal section doesn't fit, move to next page */
+          .print-meal-section {
+            page-break-before: auto;
           }
           
-          /* Tighter spacing for print */
-          .space-y-3 > * + * {
+          /* Ensure borders don't split */
+          .border-2.border-gray-800 {
+            box-decoration-break: clone;
+            -webkit-box-decoration-break: clone;
+          }
+          
+          /* Reasonable font sizes for print */
+          h1 {
+            font-size: 1.125rem !important;
+            line-height: 1.4 !important;
+          }
+          
+          h2 {
+            font-size: 1rem !important;
+            line-height: 1.4 !important;
+          }
+          
+          h3 {
+            font-size: 0.875rem !important;
+            line-height: 1.4 !important;
+          }
+          
+          h4 {
+            font-size: 0.75rem !important;
+            line-height: 1.4 !important;
+          }
+          
+          p, li {
+            font-size: 0.75rem !important;
+            line-height: 1.5 !important;
+          }
+          
+          /* Compact but readable spacing */
+          .print\\:mb-2 {
+            margin-bottom: 0.5rem !important;
+          }
+          
+          .print\\:p-4 {
+            padding: 0.5cm !important;
+          }
+          
+          .print\\:space-y-2 > * + * {
             margin-top: 0.5rem !important;
           }
           
-          .space-y-2 > * + * {
-            margin-top: 0.25rem !important;
+          .print\\:gap-3 {
+            gap: 0.75rem !important;
           }
-        }
-        
-        @media screen {
-          /* Preview styles remain normal */
         }
       `}</style>
     </div>

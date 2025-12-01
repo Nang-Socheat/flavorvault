@@ -36,6 +36,7 @@ const MealPlanner = () => {
   // Recipe search in selector
   const [recipeSearchQuery, setRecipeSearchQuery] = useState('');
   const [recipeCategoryFilter, setRecipeCategoryFilter] = useState('all');
+  const [showAllRecipes, setShowAllRecipes] = useState(false);
 
   // Calendar picker
   const [showCalendarPicker, setShowCalendarPicker] = useState(false);
@@ -204,6 +205,7 @@ const MealPlanner = () => {
     setShowRecipeSelector(true);
     setRecipeSearchQuery('');
     setRecipeCategoryFilter('all');
+    setShowAllRecipes(false); // Reset to category-specific view
   };
 
   // Select recipe from modal
@@ -233,11 +235,22 @@ const MealPlanner = () => {
     // Get recipes using search
     let filteredRecipes = searchRecipes(recipeSearchQuery, { category: recipeCategoryFilter });
 
-    // If not "special" meal type, filter by the meal type category
-    if (filterCategory !== null) {
+    // If showing all recipes OR special meal type, don't filter by category
+    // Otherwise, prioritize category-specific recipes first
+    if (!showAllRecipes && filterCategory !== null) {
+      // When not showing all, only show category-specific recipes
       filteredRecipes = filteredRecipes.filter(recipe =>
         recipe.category.toLowerCase() === filterCategory.toLowerCase()
       );
+    } else if (showAllRecipes && filterCategory !== null) {
+      // When showing all, sort to show category-specific first
+      const categoryRecipes = filteredRecipes.filter(recipe =>
+        recipe.category.toLowerCase() === filterCategory.toLowerCase()
+      );
+      const otherRecipes = filteredRecipes.filter(recipe =>
+        recipe.category.toLowerCase() !== filterCategory.toLowerCase()
+      );
+      filteredRecipes = [...categoryRecipes, ...otherRecipes];
     }
 
     return filteredRecipes;
@@ -274,8 +287,8 @@ const MealPlanner = () => {
       <div className="space-y-4">
         {/* Date Header */}
         <div className="text-center">
-          <div className="inline-block bg-gradient-to-r from-orange-600 to-amber-600 text-white px-8 py-4 rounded-2xl shadow-xl border-2 border-orange-500/50">
-            <h2 className="text-3xl font-bold mb-1">{formatDisplayDate(selectedDate)}</h2>
+          <div className="inline-block bg-gradient-to-r from-orange-500 to-amber-500 text-white px-8 py-4 rounded-2xl shadow-lg">
+            <h2 className="text-2xl md:text-3xl font-bold mb-1">{formatDisplayDate(selectedDate)}</h2>
             {isToday && <span className="text-sm font-medium bg-white/30 px-3 py-1 rounded-full">Today</span>}
           </div>
         </div>
@@ -505,9 +518,14 @@ const MealPlanner = () => {
                   <p className="text-white/90 text-sm mt-1">
                     {new Date(selectorConfig.date).toLocaleDateString('en-US', { weekday: 'long', month: 'long', day: 'numeric' })}
                   </p>
-                  {!isSpecial && (
+                  {!isSpecial && !showAllRecipes && (
                     <p className="text-white/80 text-xs mt-1 italic">
-                      Showing {categoryName} recipes only
+                      Showing {categoryName} recipes • Click "Show All Recipes" for more options
+                    </p>
+                  )}
+                  {!isSpecial && showAllRecipes && (
+                    <p className="text-white/80 text-xs mt-1 italic">
+                      Showing all recipes • {categoryName} recipes listed first
                     </p>
                   )}
                   {isSpecial && (
@@ -528,7 +546,7 @@ const MealPlanner = () => {
 
           {/* Search and Filter */}
           <div className="px-6 py-4 bg-gray-50 border-b border-gray-200">
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mb-3">
               <input
                 type="text"
                 placeholder="Search recipes by name..."
@@ -548,6 +566,30 @@ const MealPlanner = () => {
                 ))}
               </select>
             </div>
+            
+            {/* Show All Recipes Toggle - only show for specific meal types */}
+            {!isSpecial && (
+              <div className="flex items-center justify-between bg-white border border-gray-300 rounded-lg px-4 py-3">
+                <div className="flex items-center gap-2">
+                  <span className="text-sm font-medium text-gray-700">
+                    {showAllRecipes ? '🌍 Showing all recipes' : `📌 Showing ${categoryName} recipes only`}
+                  </span>
+                  <span className="text-xs text-gray-500">
+                    ({filteredRecipes.length} recipe{filteredRecipes.length !== 1 ? 's' : ''})
+                  </span>
+                </div>
+                <button
+                  onClick={() => setShowAllRecipes(!showAllRecipes)}
+                  className={`px-4 py-2 rounded-lg font-semibold text-sm transition-all ${
+                    showAllRecipes 
+                      ? 'bg-purple-600 text-white hover:bg-purple-700' 
+                      : 'bg-gray-200 text-gray-700 hover:bg-gray-300'
+                  }`}
+                >
+                  {showAllRecipes ? 'Show Category Only' : 'Show All Recipes'}
+                </button>
+              </div>
+            )}
           </div>
 
           {/* Recipe Grid */}
@@ -716,10 +758,10 @@ const MealPlanner = () => {
   };
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-slate-900 via-gray-800 to-slate-900 pb-0">
-      {/* Simple Single Background Pattern */}
+    <div className="min-h-screen bg-gradient-to-b from-white via-blue-50 to-purple-50 pb-0">
+      {/* Simple Background Pattern */}
       <div
-        className="fixed inset-0 opacity-10"
+        className="fixed inset-0 opacity-30"
         style={{
           backgroundImage: `url(${Vegetables1})`,
           backgroundSize: 'cover',
@@ -730,23 +772,23 @@ const MealPlanner = () => {
       <div className="max-w-[1920px] mx-auto px-2 sm:px-3 md:px-4 lg:px-6 py-4 md:py-8 relative z-10">
         {/* Header */}
         <div className="text-center mb-4 md:mb-8">
-          <h1 className="text-3xl sm:text-4xl md:text-5xl lg:text-6xl font-extrabold mb-2 md:mb-3 text-white drop-shadow-2xl">
+          <h1 className="text-3xl sm:text-4xl md:text-5xl lg:text-6xl font-extrabold mb-2 md:mb-3 bg-gradient-to-r from-orange-600 to-purple-600 bg-clip-text text-transparent drop-shadow-sm">
             🍽️ Meal Planner
           </h1>
-          <p className="text-gray-200 text-sm sm:text-base md:text-lg font-semibold drop-shadow-md">Plan your delicious meals - Automatically saved!</p>
+          <p className="text-gray-700 text-sm sm:text-base md:text-lg font-semibold">Plan your delicious meals - Automatically saved!</p>
         </div>
 
         {/* Controls */}
-        <div className="bg-gradient-to-br from-slate-800 to-gray-900 backdrop-blur-xl rounded-xl md:rounded-2xl shadow-2xl p-4 md:p-6 mb-4 md:mb-8 border-2 border-orange-500/50">
+        <div className="bg-white/80 backdrop-blur-sm rounded-xl md:rounded-2xl shadow-lg p-4 md:p-6 mb-4 md:mb-8 border border-gray-200">
           <div className="flex flex-col md:flex-row items-center justify-between gap-3 md:gap-4">
             {/* View Mode Toggle */}
-            <div className="flex bg-slate-700 rounded-lg p-1 shadow-inner w-full md:w-auto">
+            <div className="flex bg-gray-100 rounded-lg p-1 shadow-sm w-full md:w-auto">
               <button
                 onClick={() => setViewMode('day')}
                 className={`flex-1 md:flex-none px-4 md:px-6 py-2 rounded-md text-sm md:text-base font-semibold transition-all duration-200 ${
                   viewMode === 'day'
-                    ? 'bg-gradient-to-r from-orange-600 to-amber-600 text-white shadow-lg'
-                    : 'text-gray-300 hover:text-white hover:bg-slate-600'
+                    ? 'bg-gradient-to-r from-orange-600 to-amber-600 text-white shadow-md'
+                    : 'text-gray-700 hover:text-gray-900 hover:bg-gray-200'
                 }`}
               >
                 📅 Day View
@@ -755,8 +797,8 @@ const MealPlanner = () => {
                 onClick={() => setViewMode('week')}
                 className={`flex-1 md:flex-none px-4 md:px-6 py-2 rounded-md text-sm md:text-base font-semibold transition-all duration-200 ${
                   viewMode === 'week'
-                    ? 'bg-gradient-to-r from-orange-600 to-amber-600 text-white shadow-lg'
-                    : 'text-gray-300 hover:text-white hover:bg-slate-600'
+                    ? 'bg-gradient-to-r from-orange-600 to-amber-600 text-white shadow-md'
+                    : 'text-gray-700 hover:text-gray-900 hover:bg-gray-200'
                 }`}
               >
                 📆 Week View
@@ -767,45 +809,48 @@ const MealPlanner = () => {
             <div className="flex items-center gap-2 md:gap-3 flex-wrap justify-center w-full md:w-auto">
               <button
                 onClick={viewMode === 'day' ? goToPreviousDay : goToPreviousWeek}
-                className="bg-slate-700 hover:bg-slate-600 text-white px-3 md:px-4 py-2 rounded-lg text-sm md:text-base font-semibold transition-colors shadow-sm"
+                className="bg-gray-100 hover:bg-gray-200 text-gray-700 px-3 md:px-4 py-2 rounded-lg text-sm md:text-base font-semibold transition-colors shadow-sm border border-gray-300"
               >
                 ← Previous
               </button>
 
               <button
                 onClick={goToToday}
-                className="bg-gradient-to-r from-green-600 to-emerald-600 text-white px-4 md:px-6 py-2 rounded-lg text-sm md:text-base font-semibold hover:shadow-lg transition-all"
+                className="bg-gradient-to-r from-green-600 to-emerald-600 text-white px-4 md:px-6 py-2 rounded-lg text-sm md:text-base font-semibold hover:shadow-md transition-all"
               >
                 Today
               </button>
 
               <button
                 onClick={() => setShowCalendarPicker(true)}
-                className="bg-gradient-to-r from-orange-600 to-amber-600 text-white px-4 md:px-6 py-2 rounded-lg text-sm md:text-base font-semibold hover:shadow-lg transition-all"
+                className="bg-gradient-to-r from-orange-600 to-amber-600 text-white px-4 md:px-6 py-2 rounded-lg text-sm md:text-base font-semibold hover:shadow-md transition-all"
               >
                 📅 Pick Date
               </button>
 
               <button
                 onClick={viewMode === 'day' ? goToNextDay : goToNextWeek}
-                className="bg-slate-700 hover:bg-slate-600 text-white px-3 md:px-4 py-2 rounded-lg text-sm md:text-base font-semibold transition-colors shadow-sm"
+                className="bg-gray-100 hover:bg-gray-200 text-gray-700 px-3 md:px-4 py-2 rounded-lg text-sm md:text-base font-semibold transition-colors shadow-sm border border-gray-300"
               >
                 Next →
               </button>
               
-              <button
-                onClick={handlePrintMealPlan}
-                className="bg-gradient-to-r from-blue-600 to-cyan-600 text-white px-4 md:px-6 py-2 rounded-lg text-sm md:text-base font-semibold hover:shadow-lg transition-all"
-                title={viewMode === 'day' ? "Print today's meal plan" : "Print this week's meal plan"}
-              >
-                🖨️ Print
-              </button>
+              {/* Only show Print button in Day View */}
+              {viewMode === 'day' && (
+                <button
+                  onClick={handlePrintMealPlan}
+                  className="bg-gradient-to-r from-blue-600 to-cyan-600 text-white px-4 md:px-6 py-2 rounded-lg text-sm md:text-base font-semibold hover:shadow-lg transition-all"
+                  title="Print today's meal plan"
+                >
+                  🖨️ Print
+                </button>
+              )}
             </div>
           </div>
         </div>
 
         {/* Main Content */}
-        <div className="bg-gradient-to-br from-slate-800 to-gray-900 backdrop-blur-xl rounded-xl md:rounded-2xl shadow-2xl p-4 md:p-6 border-2 border-orange-500/50">
+        <div className="bg-white/80 backdrop-blur-sm rounded-xl md:rounded-2xl shadow-lg p-4 md:p-6 border border-gray-200">
           {viewMode === 'day' ? renderDayView() : renderWeekView()}
         </div>
       </div>

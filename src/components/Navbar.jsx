@@ -22,9 +22,12 @@ const Navbar = () => {
   const handleLinkClick = (path) => {
     setIsMobileMenuOpen(false);
     
-    // If clicking on the current page, scroll to top
+    // If clicking on the current page, scroll to top and trigger refresh
     if (location.pathname === path) {
       window.scrollTo({ top: 0, behavior: 'smooth' });
+      
+      // Dispatch custom event for page refresh (for components like SurpriseMe)
+      window.dispatchEvent(new CustomEvent('page-refresh', { detail: { path } }));
     }
   };
 
