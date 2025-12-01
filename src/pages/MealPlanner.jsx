@@ -37,6 +37,7 @@ const MealPlanner = () => {
   const [recipeSearchQuery, setRecipeSearchQuery] = useState('');
   const [recipeCategoryFilter, setRecipeCategoryFilter] = useState('all');
   const [showAllRecipes, setShowAllRecipes] = useState(false);
+  const [selectorViewMode, setSelectorViewMode] = useState('grid'); // 'grid' or 'compact'
 
   // Calendar picker
   const [showCalendarPicker, setShowCalendarPicker] = useState(false);
@@ -567,6 +568,44 @@ const MealPlanner = () => {
               </select>
             </div>
             
+            {/* View Mode Toggle */}
+            <div className="flex items-center justify-between gap-4 mb-3">
+              <div className="flex items-center gap-2 bg-white border border-gray-300 rounded-lg px-3 py-2">
+                <span className="text-sm font-medium text-gray-700">View:</span>
+                <button
+                  onClick={() => setSelectorViewMode('grid')}
+                  className={`px-3 py-1.5 rounded-md text-sm font-semibold transition-all ${
+                    selectorViewMode === 'grid'
+                      ? 'bg-purple-600 text-white'
+                      : 'bg-gray-100 text-gray-600 hover:bg-gray-200'
+                  }`}
+                >
+                  🔲 Grid
+                </button>
+                <button
+                  onClick={() => setSelectorViewMode('compact')}
+                  className={`px-3 py-1.5 rounded-md text-sm font-semibold transition-all ${
+                    selectorViewMode === 'compact'
+                      ? 'bg-purple-600 text-white'
+                      : 'bg-gray-100 text-gray-600 hover:bg-gray-200'
+                  }`}
+                >
+                  📋 Compact
+                </button>
+              </div>
+
+              {/* Scroll to Top Button */}
+              <button
+                onClick={() => {
+                  const scrollContainer = document.getElementById('recipe-selector-scroll');
+                  if (scrollContainer) scrollContainer.scrollTo({ top: 0, behavior: 'smooth' });
+                }}
+                className="bg-purple-600 text-white px-4 py-2 rounded-lg text-sm font-semibold hover:bg-purple-700 transition-all flex items-center gap-2"
+              >
+                ↑ Scroll to Top
+              </button>
+            </div>
+            
             {/* Show All Recipes Toggle - only show for specific meal types */}
             {!isSpecial && (
               <div className="flex items-center justify-between bg-white border border-gray-300 rounded-lg px-4 py-3">
@@ -593,54 +632,101 @@ const MealPlanner = () => {
           </div>
 
           {/* Recipe Grid - Scrollable */}
-          <div className="flex-1 overflow-y-auto p-6">
-            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
-              {filteredRecipes.map(recipe => (
-                <div
-                  key={recipe.id}
-                  onClick={() => selectRecipe(recipe.id)}
-                  className="bg-white border-2 border-gray-200 rounded-xl overflow-hidden cursor-pointer hover:border-purple-500 hover:shadow-xl transition-all duration-300 transform hover:-translate-y-1"
-                >
-                  {/* Recipe Image */}
-                  <div className="h-48 overflow-hidden bg-gray-100">
-                    <img
-                      src={recipe.image || 'https://via.placeholder.com/400x300?text=No+Image'}
-                      alt={recipe.title}
-                      className="w-full h-full object-cover hover:scale-110 transition-transform duration-300"
-                      onError={(e) => {
-                        e.target.src = 'https://via.placeholder.com/400x300?text=No+Image';
-                      }}
-                    />
-                  </div>
+          <div id="recipe-selector-scroll" className="flex-1 overflow-y-auto p-6">
+            {/* Grid View */}
+            {selectorViewMode === 'grid' && (
+              <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+                {filteredRecipes.map(recipe => (
+                  <div
+                    key={recipe.id}
+                    onClick={() => selectRecipe(recipe.id)}
+                    className="bg-white border-2 border-gray-200 rounded-xl overflow-hidden cursor-pointer hover:border-purple-500 hover:shadow-xl transition-all duration-300 transform hover:-translate-y-1"
+                  >
+                    {/* Recipe Image */}
+                    <div className="h-48 overflow-hidden bg-gray-100">
+                      <img
+                        src={recipe.image || 'https://via.placeholder.com/400x300?text=No+Image'}
+                        alt={recipe.title}
+                        className="w-full h-full object-cover hover:scale-110 transition-transform duration-300"
+                        onError={(e) => {
+                          e.target.src = 'https://via.placeholder.com/400x300?text=No+Image';
+                        }}
+                      />
+                    </div>
 
-                  {/* Recipe Info */}
-                  <div className="p-4">
-                    <h3 className="font-bold text-gray-800 text-lg mb-2 line-clamp-1">
-                      {recipe.title}
-                    </h3>
-                    <div className="flex items-center gap-2 text-xs text-gray-600 mb-3">
-                      <span className="bg-gray-100 px-2 py-1 rounded">{recipe.category}</span>
-                      <span>•</span>
-                      <span>{recipe.prepTime + recipe.cookTime} min</span>
-                      <span>•</span>
-                      <span className={`px-2 py-1 rounded ${
-                        recipe.difficulty === 'Easy' ? 'bg-green-100 text-green-800' :
-                        recipe.difficulty === 'Medium' ? 'bg-yellow-100 text-yellow-800' :
-                        'bg-red-100 text-red-800'
+                    {/* Recipe Info */}
+                    <div className="p-4">
+                      <h3 className="font-bold text-gray-800 text-lg mb-2 line-clamp-2" title={recipe.title}>
+                        {recipe.title}
+                      </h3>
+                      <div className="flex items-center gap-2 text-xs text-gray-600 mb-3 flex-wrap">
+                        <span className="bg-gray-100 px-2 py-1 rounded">{recipe.category}</span>
+                        <span>•</span>
+                        <span>{recipe.prepTime + recipe.cookTime} min</span>
+                        <span>•</span>
+                        <span className={`px-2 py-1 rounded ${
+                          recipe.difficulty === 'Easy' ? 'bg-green-100 text-green-800' :
+                          recipe.difficulty === 'Medium' ? 'bg-yellow-100 text-yellow-800' :
+                          'bg-red-100 text-red-800'
+                        }`}>
+                          {recipe.difficulty}
+                        </span>
+                      </div>
+                      <p className="text-sm text-gray-600 line-clamp-2">{recipe.description}</p>
+
+                      {/* Add Button */}
+                      <button className={`mt-4 w-full bg-gradient-to-r ${selectedMealType?.color} text-white py-2 rounded-lg font-semibold hover:shadow-lg transition-all duration-200`}>
+                        Add to {selectedMealType?.label}
+                      </button>
+                    </div>
+                  </div>
+                ))}
+              </div>
+            )}
+
+            {/* Compact View */}
+            {selectorViewMode === 'compact' && (
+              <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 xl:grid-cols-6 gap-3">
+                {filteredRecipes.map(recipe => (
+                  <div
+                    key={recipe.id}
+                    onClick={() => selectRecipe(recipe.id)}
+                    className="bg-white border-2 border-gray-200 rounded-lg overflow-hidden cursor-pointer hover:border-purple-500 hover:shadow-lg transition-all duration-200 transform hover:-translate-y-1"
+                  >
+                    {/* Recipe Image */}
+                    <div className="h-28 overflow-hidden bg-gray-100 relative">
+                      <img
+                        src={recipe.image || 'https://via.placeholder.com/200x150?text=No+Image'}
+                        alt={recipe.title}
+                        className="w-full h-full object-cover"
+                        onError={(e) => {
+                          e.target.src = 'https://via.placeholder.com/200x150?text=No+Image';
+                        }}
+                      />
+                      {/* Difficulty Badge */}
+                      <span className={`absolute top-1 right-1 px-1.5 py-0.5 rounded text-[10px] font-bold ${
+                        recipe.difficulty === 'Easy' ? 'bg-green-600 text-white' :
+                        recipe.difficulty === 'Medium' ? 'bg-yellow-600 text-white' :
+                        'bg-red-600 text-white'
                       }`}>
                         {recipe.difficulty}
                       </span>
                     </div>
-                    <p className="text-sm text-gray-600 line-clamp-2">{recipe.description}</p>
 
-                    {/* Add Button */}
-                    <button className={`mt-4 w-full bg-gradient-to-r ${selectedMealType?.color} text-white py-2 rounded-lg font-semibold hover:shadow-lg transition-all duration-200`}>
-                      Add to {selectedMealType?.label}
-                    </button>
+                    {/* Recipe Info */}
+                    <div className="p-2">
+                      <h3 className="text-xs font-bold text-gray-900 line-clamp-2 mb-1" title={recipe.title}>
+                        {recipe.title}
+                      </h3>
+                      <div className="flex items-center justify-between text-[10px] text-gray-600">
+                        <span className="truncate">{recipe.category}</span>
+                        <span className="font-medium whitespace-nowrap">⏱️ {recipe.prepTime + recipe.cookTime}m</span>
+                      </div>
+                    </div>
                   </div>
-                </div>
-              ))}
-            </div>
+                ))}
+              </div>
+            )}
 
             {/* No Results */}
             {filteredRecipes.length === 0 && (

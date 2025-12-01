@@ -1,122 +1,95 @@
-# FlavorVault - Interactive Recipe Book
+# FlavorVault - Personal Recipe Management System
 
-A modern, full-featured web application for managing your personal recipe collection. Built with React, this app allows you to browse, search, filter, and organize your favorite recipes with an intuitive and beautiful user interface.
+A modern, feature-rich web application built with React for managing, organizing, and discovering recipes. FlavorVault provides an intuitive interface for home cooks to store their favorite recipes, plan meals, and explore new culinary ideas.
 
-## Features
+![React](https://img.shields.io/badge/React-18.3.1-blue)
+![Vite](https://img.shields.io/badge/Vite-5.4.10-purple)
+![Tailwind CSS](https://img.shields.io/badge/Tailwind-3.4.14-cyan)
+![License](https://img.shields.io/badge/License-MIT-green)
 
-- **Recipe Management**: Add, edit, and delete recipes with ease
-- **Smart Search**: Search recipes by name, ingredients, category, or tags
-- **Advanced Filtering**: Filter by category, difficulty level, and preparation time
-- **Favorites System**: Mark and save your favorite recipes for quick access
-- **Photo Support**: Add images to recipes via URL
-- **Responsive Design**: Fully responsive UI that works on all devices
-- **Data Persistence**: All data is saved locally using browser localStorage
-- **6 Distinct Pages**: Home, Browse Recipes, Recipe Detail, Add/Edit Recipe, Favorites, and About
+## 🌟 Features
 
-## Tech Stack
+### Recipe Management
+- **Browse & Search**: Filter recipes by category, difficulty, cooking time, and search by name or ingredients
+- **Recipe Details**: View comprehensive recipe information including ingredients, instructions, nutrition facts, and cooking tips
+- **Add/Edit Recipes**: Create and modify recipes with an intuitive form interface
+- **Favorites**: Mark recipes as favorites for quick access
+- **Print Recipes**: Print-friendly recipe view for kitchen use
 
-- **React 19** - Component-based UI library
-- **React Router v7** - Client-side routing
-- **React Context API** - Global state management
-- **Tailwind CSS v4** - Utility-first CSS framework
-- **Vite** - Fast build tool and development server
-- **localStorage** - Browser-based data persistence
+### Meal Planning
+- **Weekly Planner**: Drag-and-drop meal planning interface
+- **Multiple Meal Types**: Organize breakfast, lunch, dinner, and snacks
+- **Calendar View**: Day and week views for flexible planning
+- **Print Meal Plans**: Generate printable weekly meal plans
 
-## Project Structure
+### User Experience
+- **Responsive Design**: Optimized for mobile, tablet, and desktop devices
+- **Swipe Navigation**: Touch gestures for mobile recipe browsing
+- **Dark Mode Ready**: Clean, modern UI with gradient designs
+- **Local Storage**: All data saved locally for privacy and offline access
+- **Smart Scroll**: Returns to last viewed recipe when navigating back
+
+## 🛠️ Technologies Used
+
+### Core Technologies
+- **React 18.3.1**: Component-based UI with hooks and context
+- **Vite 5.4.10**: Fast build tool and development server
+- **React Router 6.27.0**: Client-side routing and navigation
+- **Tailwind CSS 3.4.14**: Utility-first CSS framework
+
+### Development Tools
+- **ESLint**: Code linting and quality checks
+- **PostCSS**: CSS processing with Autoprefixer
+- **React DnD**: Drag-and-drop functionality for meal planning
+
+## 📁 Project Structure
 
 ```
-flavorvault/
-├── public/
-│   └── _redirects              # Netlify redirect configuration
+g11-fp-yourflav/
 ├── src/
-│   ├── components/             # Reusable components
-│   │   ├── FilterPanel.jsx
-│   │   ├── Loading.jsx
-│   │   ├── Navbar.jsx
-│   │   ├── RecipeCard.jsx
-│   │   └── SearchBar.jsx
-│   ├── context/                # React Context
-│   │   └── AppContext.jsx
-│   ├── data/                   # Sample data
-│   │   └── sampleRecipes.js
-│   ├── pages/                  # Page components
-│   │   ├── About.jsx
-│   │   ├── AddEditRecipe.jsx
-│   │   ├── BrowseRecipes.jsx
-│   │   ├── Favorites.jsx
-│   │   ├── Home.jsx
-│   │   └── RecipeDetail.jsx
-│   ├── utils/                  # Utility functions
-│   │   └── localStorage.js
-│   ├── App.jsx                 # Main app component
-│   ├── index.css               # Global styles
-│   └── main.jsx                # App entry point
-├── .gitignore
-├── package.json
-├── README.md
-├── tailwind.config.js
-├── vercel.json                 # Vercel deployment config
-└── vite.config.js
+│   ├── components/          # Reusable UI components
+│   │   ├── Header.jsx       # Navigation bar
+│   │   ├── Footer.jsx       # Footer with links
+│   │   ├── RecipeCard.jsx   # Recipe card display
+│   │   └── ...
+│   ├── pages/               # Page components
+│   │   ├── Home.jsx         # Landing page
+│   │   ├── BrowseRecipes.jsx # Recipe browsing
+│   │   ├── RecipeDetail.jsx  # Recipe details
+│   │   ├── AddEditRecipe.jsx # Recipe form
+│   │   ├── Favorites.jsx     # Favorites list
+│   │   ├── About.jsx         # About page
+│   │   ├── MealPlanner.jsx   # Meal planning
+│   │   └── Print*.jsx        # Print views
+│   ├── context/
+│   │   └── AppContext.jsx   # Global state management
+│   ├── utils/
+│   │   ├── sampleData.js    # Sample recipes
+│   │   └── resetData.js     # Data reset utility
+│   ├── assets/              # Images and media
+│   ├── App.jsx              # Root component
+│   ├── main.jsx             # Entry point
+│   └── index.css            # Global styles
+├── public/                  # Static assets
+├── index.html               # HTML template
+├── package.json             # Dependencies
+├── vite.config.js           # Vite configuration
+├── tailwind.config.js       # Tailwind configuration
+└── README.md                # This file
 ```
 
-## Assignment Requirements Met
-
-### ✅ Minimum 5 Pages/Views
-1. **Home/Dashboard** - Welcome page with stats and featured recipes
-2. **Browse Recipes** - Main recipe listing with search and filters
-3. **Recipe Detail** - Individual recipe view
-4. **Add/Edit Recipe** - Form for creating and editing recipes
-5. **Favorites** - Collection of favorite recipes
-6. **About** - Application information (bonus 6th page)
-
-### ✅ React Context Management
-- `AppContext` manages global state for:
-  - Recipes collection
-  - Favorites list
-  - Application settings
-  - All CRUD operations
-
-### ✅ React Hooks Implementation
-- **useState**: Component state management throughout the app
-- **useEffect**: Side effects for data loading and filtering
-- **useContext**: Accessing global state via custom `useApp` hook
-- **useParams**: Route parameters for recipe detail/edit pages
-- **useNavigate**: Programmatic navigation
-
-### ✅ Data Persistence
-- **localStorage** implementation for all data:
-  - Recipes are saved and loaded automatically
-  - Favorites persist between sessions
-  - Sample data loaded on first visit
-  - All data remains private to the user's browser
-
-### ✅ Deployment Ready
-- Configured for **Vercel** (vercel.json)
-- Configured for **Netlify** (public/_redirects)
-- Also compatible with **GitHub Pages**
-
-### ✅ UX/UI Best Practices
-- Responsive design using Tailwind CSS
-- Mobile-friendly navigation
-- Intuitive user flows
-- Clear visual hierarchy
-- Accessible form validation
-- Loading states and error handling
-- Consistent design language
-
-## Getting Started
+## 🚀 Getting Started
 
 ### Prerequisites
-
-- Node.js (v18 or higher)
+- Node.js (v16 or higher)
 - npm or yarn
 
 ### Installation
 
 1. Clone the repository:
 ```bash
-git clone <your-repo-url>
-cd flavorvault
+git clone <repository-url>
+cd g11-fp-yourflav
 ```
 
 2. Install dependencies:
@@ -129,15 +102,18 @@ npm install
 npm run dev
 ```
 
-4. Open your browser and visit `http://localhost:5173`
+4. Open your browser and navigate to:
+```
+http://localhost:5173
+```
 
-### Building for Production
+### Build for Production
 
 ```bash
 npm run build
 ```
 
-The built files will be in the `dist` directory.
+The optimized production build will be in the `dist` folder.
 
 ### Preview Production Build
 
@@ -145,87 +121,228 @@ The built files will be in the `dist` directory.
 npm run preview
 ```
 
-## Deployment
+## 🎯 Key React Concepts Implementation
 
-### Vercel
+### Context API
+The application uses React Context for global state management:
 
-1. Install Vercel CLI: `npm i -g vercel`
-2. Run: `vercel`
-3. Follow the prompts
+**AppContext** (`src/context/AppContext.jsx`):
+- Centralized state for recipes, favorites, and meal plans
+- Provides functions for CRUD operations
+- Manages local storage synchronization
+- Used throughout the app to avoid prop drilling
 
-Or connect your GitHub repository to Vercel for automatic deployments.
+```javascript
+// Example usage
+const { recipes, addRecipe, toggleFavorite } = useApp();
+```
 
-### Netlify
+### React Hooks
 
-1. Install Netlify CLI: `npm i -g netlify-cli`
-2. Run: `netlify deploy`
-3. For production: `netlify deploy --prod`
+**useState**: Component-level state management
+- Form inputs in AddEditRecipe
+- Modal visibility states
+- Search and filter states
+- View mode toggles
 
-Or drag and drop the `dist` folder to Netlify's web interface.
+**useEffect**: Side effects and lifecycle management
+- Loading data from localStorage on mount
+- Saving data to localStorage on changes
+- Scroll position restoration
+- Event listener management
 
-### GitHub Pages
+**useCallback**: Performance optimization
+- Memoized navigation functions in RecipeDetail
+- Prevents unnecessary re-renders
+- Optimizes swipe gesture handlers
 
-1. Update `vite.config.js` to set the correct base path
-2. Build: `npm run build`
-3. Deploy the `dist` folder to GitHub Pages
+**useRef**: Direct DOM access and value persistence
+- Touch gesture coordinates
+- Scroll position tracking
+- Input focus management
 
-## Usage Guide
+**useNavigate**: Programmatic navigation
+- Route navigation after actions
+- Back button functionality
+- Context-aware routing (browse/favorites)
+
+**useParams**: Route parameter extraction
+- Recipe ID from URL
+- Dynamic recipe loading
+
+**useSearchParams**: URL query parameters
+- Category filtering from URL
+- Search state persistence
+
+### Custom Hook
+**useApp**: Custom hook wrapping AppContext
+- Simplifies context consumption
+- Provides type safety
+- Encapsulates context logic
+
+## 📱 Responsive Design
+
+The application is fully responsive with mobile-first design:
+
+### Breakpoints
+- **Mobile**: < 640px
+- **Small**: 640px - 767px
+- **Medium**: 768px - 1023px (Tablets)
+- **Large**: 1024px - 1279px
+- **XL**: 1280px+ (Desktops)
+
+### Mobile Features
+- Touch-friendly buttons (min 44x44px)
+- Swipe gestures for recipe navigation
+- Hamburger menu
+- Optimized card layouts
+- Stack navigation
+
+### Desktop Features
+- Multi-column grid layouts
+- Hover effects
+- Keyboard navigation
+- Previous/Next buttons
+
+## 💾 Data Persistence
+
+All data is stored in the browser's localStorage:
+
+**Storage Keys**:
+- `flavorVaultRecipes`: Recipe collection
+- `flavorVaultFavorites`: Favorite recipe IDs
+- `enhancedMealPlan`: Meal planning data
+- `lastViewedRecipeId`: Navigation state
+- `recipeSourcePage`: Context tracking
+
+**Benefits**:
+- No backend required
+- Works offline
+- Privacy-focused
+- Fast data access
+
+## 🎨 Design Features
+
+### UI/UX Highlights
+- Gradient backgrounds and buttons
+- Smooth animations and transitions
+- Card-based layouts
+- Color-coded categories
+- Visual feedback on interactions
+- Loading states and error handling
+
+### Accessibility
+- Semantic HTML
+- ARIA labels
+- Keyboard navigation
+- Touch-friendly targets
+- Readable font sizes
+- High contrast ratios
+
+## 📊 Sample Data
+
+The application comes with 24 pre-loaded sample recipes covering various categories:
+- Breakfast
+- Lunch
+- Dinner
+- Dessert
+- Snacks
+- Beverages
+
+Users can reset to sample data anytime from the About page.
+
+## 🔄 Key User Flows
 
 ### Adding a Recipe
+1. Navigate to Add Recipe
+2. Fill in recipe details (title, ingredients, instructions, etc.)
+3. Upload optional image
+4. Add tags and nutrition information
+5. Save recipe
 
-1. Navigate to "Add Recipe" page
-2. Fill in the recipe details:
-   - Title and description
-   - Prep time, cook time, and servings
-   - Category and difficulty
-   - Ingredients (add multiple)
-   - Step-by-step instructions
-   - Optional: Image URL and tags
-3. Click "Create Recipe"
+### Meal Planning
+1. Navigate to Meal Planner
+2. Select day view or week view
+3. Click "+" to add recipes to meal slots
+4. Search and select recipes from modal
+5. Drag to reorder (desktop)
+6. Print meal plan
 
-### Searching and Filtering
+### Recipe Navigation
+1. Browse recipes with filters
+2. Click recipe card to view details
+3. Use Previous/Next buttons (desktop) or swipe (mobile)
+4. Click "Back to Browse" to return to last position
 
-1. Go to "Browse Recipes"
-2. Use the search bar to find recipes by keywords
-3. Apply filters for category, difficulty, or prep time
-4. Click on any recipe card to view details
+## 🏆 Advanced Features
 
-### Managing Favorites
+### Smart Navigation
+- Context-aware back button (Browse/Favorites)
+- Scroll position preservation
+- Smooth scroll-to-recipe on return
 
-- Click the heart icon on any recipe card to add/remove from favorites
-- View all favorites on the "Favorites" page
+### Responsive Text Handling
+- Line clamping for long titles
+- Tooltips on hover for full text
+- Adaptive font sizes
 
-### Editing a Recipe
+### Touch Gestures
+- Swipe left for next recipe
+- Swipe right for previous recipe
+- Mobile-optimized interactions
 
-1. Open a recipe detail page
-2. Click "Edit Recipe"
-3. Make your changes
-4. Click "Update Recipe"
+### Print Views
+- Printer-friendly recipe layout
+- Formatted meal plan printing
+- Remove unnecessary UI elements
 
-## Key React Concepts Demonstrated
+## 🐛 Known Limitations
 
-1. **Component Composition**: Modular, reusable components
-2. **Props & State**: Proper data flow and state management
-3. **Context API**: Global state without prop drilling
-4. **React Hooks**: useState, useEffect, useContext, custom hooks
-5. **React Router**: Client-side routing with dynamic routes
-6. **Controlled Components**: Form handling with React state
-7. **Conditional Rendering**: Smart UI based on state
-8. **Event Handling**: User interactions and form submissions
+- Data is stored locally (not synchronized across devices)
+- Image uploads are stored as base64 (may impact storage)
+- No user authentication
+- No recipe sharing functionality
+- Limited to browser storage capacity
 
-## Browser Support
+## 🔮 Future Enhancements
 
-- Chrome (latest)
-- Firefox (latest)
-- Safari (latest)
-- Edge (latest)
+- Cloud synchronization
+- User accounts
+- Recipe sharing and social features
+- Shopping list generation
+- Nutritional analysis
+- Recipe import from URLs
+- Multi-language support
+- Recipe scaling calculator
 
-## License
+## 📝 Development
 
-This project was created as a learning exercise for a Front-End Web Development course.
+### Code Quality
+- ESLint configuration for code quality
+- Consistent coding style
+- Component-based architecture
+- Reusable utility functions
 
-## Acknowledgments
+### Performance
+- Lazy loading considered
+- Optimized re-renders with useCallback
+- Efficient state updates
+- Minimal dependencies
 
-- Sample recipe images from Unsplash
-- Icons: Emoji-based for simplicity and cross-platform compatibility
-- Built with modern web technologies and best practices
+## 📄 License
+
+This project is licensed under the MIT License.
+
+## 👥 Contributors
+
+- Group 11 - Fall 2025 Front-End Web Development
+
+## 🙏 Acknowledgments
+
+- Sample recipe data curated for demonstration
+- Images sourced from public domain
+- Built as a final project for Front-End Web Development course
+
+---
+
+**Made with ❤️ using React and Tailwind CSS**
