@@ -209,10 +209,11 @@ const MealPlanner = () => {
     setShowAllRecipes(false); // Reset to category-specific view
   };
 
-  // Select recipe from modal
+  // Select recipe from modal - Allow multiple selections
   const selectRecipe = (recipeId) => {
     addMealToPlan(selectorConfig.date, selectorConfig.mealType, recipeId);
-    setShowRecipeSelector(false);
+    // Don't close the modal - allow multiple selections
+    // User can click X or Done button to close
   };
 
   // Get filtered recipes for selector
@@ -505,60 +506,64 @@ const MealPlanner = () => {
     // Determine if we're showing all recipes or filtered
     const isSpecial = selectorConfig.mealType === 'special';
     const categoryName = selectedMealType?.label;
+    
+    // Get current meal plan for the selected date and meal type
+    const currentMeals = mealPlan[selectorConfig.date]?.[selectorConfig.mealType] || [];
+    const selectedCount = currentMeals.length;
 
     return (
       <div className="fixed inset-0 bg-black/60 backdrop-blur-sm flex items-center justify-center z-50 p-4 animate-fadeIn">
         <div className="bg-white rounded-2xl shadow-2xl max-w-6xl w-full max-h-[95vh] flex flex-col overflow-hidden">
-          {/* Modal Header */}
-          <div className={`bg-gradient-to-r ${selectedMealType?.color} text-white px-6 py-5 flex-shrink-0`}>
+          {/* Modal Header - Compact */}
+          <div className={`bg-gradient-to-r ${selectedMealType?.color} text-white px-4 py-3 flex-shrink-0`}>
             <div className="flex items-center justify-between">
-              <div className="flex items-center space-x-3">
-                <span className="text-3xl">{selectedMealType?.icon}</span>
+              <div className="flex items-center space-x-2">
+                <span className="text-2xl">{selectedMealType?.icon}</span>
                 <div>
-                  <h2 className="text-2xl font-bold">Select Recipe for {selectedMealType?.label}</h2>
-                  <p className="text-white/90 text-sm mt-1">
+                  <h2 className="text-lg md:text-xl font-bold flex items-center gap-2">
+                    Select Recipe for {selectedMealType?.label}
+                    {selectedCount > 0 && (
+                      <span className="text-xs bg-white/30 px-2 py-1 rounded-full">
+                        {selectedCount} selected
+                      </span>
+                    )}
+                  </h2>
+                  <p className="text-white/90 text-xs">
                     {new Date(selectorConfig.date).toLocaleDateString('en-US', { weekday: 'long', month: 'long', day: 'numeric' })}
                   </p>
-                  {!isSpecial && !showAllRecipes && (
-                    <p className="text-white/80 text-xs mt-1 italic">
-                      Showing {categoryName} recipes • Click "Show All Recipes" for more options
-                    </p>
-                  )}
-                  {!isSpecial && showAllRecipes && (
-                    <p className="text-white/80 text-xs mt-1 italic">
-                      Showing all recipes • {categoryName} recipes listed first
-                    </p>
-                  )}
-                  {isSpecial && (
-                    <p className="text-white/80 text-xs mt-1 italic">
-                      Showing all available recipes
-                    </p>
-                  )}
                 </div>
               </div>
-              <button
-                onClick={() => setShowRecipeSelector(false)}
-                className="text-white hover:bg-white/20 rounded-full p-2 transition-colors text-2xl w-10 h-10 flex items-center justify-center"
-              >
-                ×
-              </button>
+              <div className="flex items-center gap-2">
+                <button
+                  onClick={() => setShowRecipeSelector(false)}
+                  className="bg-white/20 hover:bg-white/30 px-3 py-1.5 rounded-lg text-xs font-bold transition-colors"
+                >
+                  Done
+                </button>
+                <button
+                  onClick={() => setShowRecipeSelector(false)}
+                  className="text-white hover:bg-white/20 rounded-full p-1 transition-colors text-2xl w-8 h-8 flex items-center justify-center shrink-0"
+                >
+                  ×
+                </button>
+              </div>
             </div>
           </div>
 
-          {/* Search and Filter */}
-          <div className="px-6 py-4 bg-gray-50 border-b border-gray-200 flex-shrink-0">
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mb-3">
+          {/* Search and Filter - Compact */}
+          <div className="px-4 py-3 bg-gray-50 border-b border-gray-200 flex-shrink-0">
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-2 mb-2">
               <input
                 type="text"
                 placeholder="Search recipes by name..."
                 value={recipeSearchQuery}
                 onChange={(e) => setRecipeSearchQuery(e.target.value)}
-                className="px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-purple-500 text-sm"
+                className="px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-purple-500 text-sm"
               />
               <select
                 value={recipeCategoryFilter}
                 onChange={(e) => setRecipeCategoryFilter(e.target.value)}
-                className="px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-purple-500 text-sm"
+                className="px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-purple-500 text-sm"
               >
                 {categories.map(cat => (
                   <option key={cat} value={cat}>
@@ -568,13 +573,13 @@ const MealPlanner = () => {
               </select>
             </div>
             
-            {/* View Mode Toggle */}
-            <div className="flex items-center justify-between gap-4 mb-3">
-              <div className="flex items-center gap-2 bg-white border border-gray-300 rounded-lg px-3 py-2">
-                <span className="text-sm font-medium text-gray-700">View:</span>
+            {/* View Mode and Scroll to Top - Compact */}
+            <div className="flex items-center justify-between gap-2 mb-2">
+              <div className="flex items-center gap-2 bg-white border border-gray-300 rounded-lg px-2 py-1.5">
+                <span className="text-xs font-medium text-gray-700">View:</span>
                 <button
                   onClick={() => setSelectorViewMode('grid')}
-                  className={`px-3 py-1.5 rounded-md text-sm font-semibold transition-all ${
+                  className={`px-2 py-1 rounded text-xs font-semibold transition-all ${
                     selectorViewMode === 'grid'
                       ? 'bg-purple-600 text-white'
                       : 'bg-gray-100 text-gray-600 hover:bg-gray-200'
@@ -584,7 +589,7 @@ const MealPlanner = () => {
                 </button>
                 <button
                   onClick={() => setSelectorViewMode('compact')}
-                  className={`px-3 py-1.5 rounded-md text-sm font-semibold transition-all ${
+                  className={`px-2 py-1 rounded text-xs font-semibold transition-all ${
                     selectorViewMode === 'compact'
                       ? 'bg-purple-600 text-white'
                       : 'bg-gray-100 text-gray-600 hover:bg-gray-200'
@@ -600,131 +605,152 @@ const MealPlanner = () => {
                   const scrollContainer = document.getElementById('recipe-selector-scroll');
                   if (scrollContainer) scrollContainer.scrollTo({ top: 0, behavior: 'smooth' });
                 }}
-                className="bg-purple-600 text-white px-4 py-2 rounded-lg text-sm font-semibold hover:bg-purple-700 transition-all flex items-center gap-2"
+                className="bg-purple-600 text-white px-3 py-1.5 rounded-lg text-xs font-semibold hover:bg-purple-700 transition-all flex items-center gap-1"
               >
                 ↑ Scroll to Top
               </button>
             </div>
             
-            {/* Show All Recipes Toggle - only show for specific meal types */}
+            {/* Show All Recipes Toggle - Improved Format */}
             {!isSpecial && (
-              <div className="flex items-center justify-between bg-white border border-gray-300 rounded-lg px-4 py-3">
-                <div className="flex items-center gap-2">
-                  <span className="text-sm font-medium text-gray-700">
-                    {showAllRecipes ? '🌍 Showing all recipes' : `📌 Showing ${categoryName} recipes only`}
+              <div className="flex items-center gap-2 bg-white border border-gray-300 rounded-lg px-3 py-2">
+                <div className="flex-1 flex items-center gap-2">
+                  <span className={`text-xs font-medium ${showAllRecipes ? 'text-purple-700' : 'text-gray-700'}`}>
+                    {showAllRecipes ? '🌍 Showing all recipes' : `📌 ${categoryName} recipes only`}
                   </span>
-                  <span className="text-xs text-gray-500">
-                    ({filteredRecipes.length} recipe{filteredRecipes.length !== 1 ? 's' : ''})
+                  <span className="text-[10px] text-gray-500 bg-gray-100 px-2 py-0.5 rounded-full">
+                    {filteredRecipes.length}
                   </span>
                 </div>
                 <button
                   onClick={() => setShowAllRecipes(!showAllRecipes)}
-                  className={`px-4 py-2 rounded-lg font-semibold text-sm transition-all ${
+                  className={`px-3 py-1.5 rounded-lg font-semibold text-xs transition-all whitespace-nowrap ${
                     showAllRecipes 
-                      ? 'bg-purple-600 text-white hover:bg-purple-700' 
-                      : 'bg-gray-200 text-gray-700 hover:bg-gray-300'
+                      ? 'bg-gray-200 text-gray-700 hover:bg-gray-300' 
+                      : 'bg-purple-600 text-white hover:bg-purple-700'
                   }`}
                 >
-                  {showAllRecipes ? 'Show Category Only' : 'Show All Recipes'}
+                  {showAllRecipes ? '← Category Only' : 'Show All Recipes →'}
                 </button>
               </div>
             )}
           </div>
 
           {/* Recipe Grid - Scrollable */}
-          <div id="recipe-selector-scroll" className="flex-1 overflow-y-auto p-6">
+          <div id="recipe-selector-scroll" className="flex-1 overflow-y-auto p-4">
             {/* Grid View */}
             {selectorViewMode === 'grid' && (
               <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
-                {filteredRecipes.map(recipe => (
-                  <div
-                    key={recipe.id}
-                    onClick={() => selectRecipe(recipe.id)}
-                    className="bg-white border-2 border-gray-200 rounded-xl overflow-hidden cursor-pointer hover:border-purple-500 hover:shadow-xl transition-all duration-300 transform hover:-translate-y-1"
-                  >
-                    {/* Recipe Image */}
-                    <div className="h-48 overflow-hidden bg-gray-100">
-                      <img
-                        src={recipe.image || 'https://via.placeholder.com/400x300?text=No+Image'}
-                        alt={recipe.title}
-                        className="w-full h-full object-cover hover:scale-110 transition-transform duration-300"
-                        onError={(e) => {
-                          e.target.src = 'https://via.placeholder.com/400x300?text=No+Image';
-                        }}
-                      />
-                    </div>
-
-                    {/* Recipe Info */}
-                    <div className="p-4">
-                      <h3 className="font-bold text-gray-800 text-lg mb-2 line-clamp-2" title={recipe.title}>
-                        {recipe.title}
-                      </h3>
-                      <div className="flex items-center gap-2 text-xs text-gray-600 mb-3 flex-wrap">
-                        <span className="bg-gray-100 px-2 py-1 rounded">{recipe.category}</span>
-                        <span>•</span>
-                        <span>{recipe.prepTime + recipe.cookTime} min</span>
-                        <span>•</span>
-                        <span className={`px-2 py-1 rounded ${
-                          recipe.difficulty === 'Easy' ? 'bg-green-100 text-green-800' :
-                          recipe.difficulty === 'Medium' ? 'bg-yellow-100 text-yellow-800' :
-                          'bg-red-100 text-red-800'
-                        }`}>
-                          {recipe.difficulty}
-                        </span>
+                {filteredRecipes.map(recipe => {
+                  const isAdded = currentMeals.some(meal => meal.recipeId === recipe.id);
+                  return (
+                    <div
+                      key={recipe.id}
+                      onClick={() => selectRecipe(recipe.id)}
+                      className={`bg-white border-2 rounded-xl overflow-hidden cursor-pointer hover:shadow-xl transition-all duration-300 transform hover:-translate-y-1 ${
+                        isAdded ? 'border-green-500 bg-green-50' : 'border-gray-200 hover:border-purple-500'
+                      }`}
+                    >
+                      {/* Recipe Image */}
+                      <div className="h-40 overflow-hidden bg-gray-100 relative">
+                        <img
+                          src={recipe.image || 'https://via.placeholder.com/400x300?text=No+Image'}
+                          alt={recipe.title}
+                          className="w-full h-full object-cover hover:scale-110 transition-transform duration-300"
+                          onError={(e) => {
+                            e.target.src = 'https://via.placeholder.com/400x300?text=No+Image';
+                          }}
+                        />
+                        {isAdded && (
+                          <div className="absolute top-2 right-2 bg-green-600 text-white px-2 py-1 rounded-full text-xs font-bold flex items-center gap-1">
+                            ✓ Added
+                          </div>
+                        )}
                       </div>
-                      <p className="text-sm text-gray-600 line-clamp-2">{recipe.description}</p>
 
-                      {/* Add Button */}
-                      <button className={`mt-4 w-full bg-gradient-to-r ${selectedMealType?.color} text-white py-2 rounded-lg font-semibold hover:shadow-lg transition-all duration-200`}>
-                        Add to {selectedMealType?.label}
-                      </button>
+                      {/* Recipe Info */}
+                      <div className="p-3">
+                        <h3 className="font-bold text-gray-800 text-base mb-2 line-clamp-2" title={recipe.title}>
+                          {recipe.title}
+                        </h3>
+                        <div className="flex items-center gap-2 text-xs text-gray-600 mb-2 flex-wrap">
+                          <span className="bg-gray-100 px-2 py-0.5 rounded">{recipe.category}</span>
+                          <span>•</span>
+                          <span>{recipe.prepTime + recipe.cookTime} min</span>
+                          <span>•</span>
+                          <span className={`px-2 py-0.5 rounded ${
+                            recipe.difficulty === 'Easy' ? 'bg-green-100 text-green-800' :
+                            recipe.difficulty === 'Medium' ? 'bg-yellow-100 text-yellow-800' :
+                            'bg-red-100 text-red-800'
+                          }`}>
+                            {recipe.difficulty}
+                          </span>
+                        </div>
+                        <p className="text-xs text-gray-600 line-clamp-2">{recipe.description}</p>
+
+                        {/* Add Button */}
+                        <button className={`mt-3 w-full ${isAdded ? 'bg-green-600' : `bg-gradient-to-r ${selectedMealType?.color}`} text-white py-2 rounded-lg font-semibold hover:shadow-lg transition-all duration-200 text-sm`}>
+                          {isAdded ? '✓ Added - Click to Add Again' : `Add to ${selectedMealType?.label}`}
+                        </button>
+                      </div>
                     </div>
-                  </div>
-                ))}
+                  );
+                })}
               </div>
             )}
 
             {/* Compact View */}
             {selectorViewMode === 'compact' && (
-              <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 xl:grid-cols-6 gap-3">
-                {filteredRecipes.map(recipe => (
-                  <div
-                    key={recipe.id}
-                    onClick={() => selectRecipe(recipe.id)}
-                    className="bg-white border-2 border-gray-200 rounded-lg overflow-hidden cursor-pointer hover:border-purple-500 hover:shadow-lg transition-all duration-200 transform hover:-translate-y-1"
-                  >
-                    {/* Recipe Image */}
-                    <div className="h-28 overflow-hidden bg-gray-100 relative">
-                      <img
-                        src={recipe.image || 'https://via.placeholder.com/200x150?text=No+Image'}
-                        alt={recipe.title}
-                        className="w-full h-full object-cover"
-                        onError={(e) => {
-                          e.target.src = 'https://via.placeholder.com/200x150?text=No+Image';
-                        }}
-                      />
-                      {/* Difficulty Badge */}
-                      <span className={`absolute top-1 right-1 px-1.5 py-0.5 rounded text-[10px] font-bold ${
-                        recipe.difficulty === 'Easy' ? 'bg-green-600 text-white' :
-                        recipe.difficulty === 'Medium' ? 'bg-yellow-600 text-white' :
-                        'bg-red-600 text-white'
-                      }`}>
-                        {recipe.difficulty}
-                      </span>
-                    </div>
+              <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 xl:grid-cols-6 gap-2">
+                {filteredRecipes.map(recipe => {
+                  const isAdded = currentMeals.some(meal => meal.recipeId === recipe.id);
+                  return (
+                    <div
+                      key={recipe.id}
+                      onClick={() => selectRecipe(recipe.id)}
+                      className={`bg-white border-2 rounded-lg overflow-hidden cursor-pointer hover:shadow-lg transition-all duration-200 transform hover:-translate-y-1 ${
+                        isAdded ? 'border-green-500 bg-green-50' : 'border-gray-200 hover:border-purple-500'
+                      }`}
+                    >
+                      {/* Recipe Image */}
+                      <div className="h-24 overflow-hidden bg-gray-100 relative">
+                        <img
+                          src={recipe.image || 'https://via.placeholder.com/200x150?text=No+Image'}
+                          alt={recipe.title}
+                          className="w-full h-full object-cover"
+                          onError={(e) => {
+                            e.target.src = 'https://via.placeholder.com/200x150?text=No+Image';
+                          }}
+                        />
+                        {/* Status Badge */}
+                        {isAdded ? (
+                          <span className="absolute top-1 right-1 bg-green-600 text-white px-1.5 py-0.5 rounded text-[10px] font-bold">
+                            ✓
+                          </span>
+                        ) : (
+                          <span className={`absolute top-1 right-1 px-1.5 py-0.5 rounded text-[10px] font-bold ${
+                            recipe.difficulty === 'Easy' ? 'bg-green-600 text-white' :
+                            recipe.difficulty === 'Medium' ? 'bg-yellow-600 text-white' :
+                            'bg-red-600 text-white'
+                          }`}>
+                            {recipe.difficulty}
+                          </span>
+                        )}
+                      </div>
 
-                    {/* Recipe Info */}
-                    <div className="p-2">
-                      <h3 className="text-xs font-bold text-gray-900 line-clamp-2 mb-1" title={recipe.title}>
-                        {recipe.title}
-                      </h3>
-                      <div className="flex items-center justify-between text-[10px] text-gray-600">
-                        <span className="truncate">{recipe.category}</span>
-                        <span className="font-medium whitespace-nowrap">⏱️ {recipe.prepTime + recipe.cookTime}m</span>
+                      {/* Recipe Info */}
+                      <div className="p-2">
+                        <h3 className="text-xs font-bold text-gray-900 line-clamp-2 mb-1" title={recipe.title}>
+                          {recipe.title}
+                        </h3>
+                        <div className="flex items-center justify-between text-[10px] text-gray-600">
+                          <span className="truncate">{recipe.category}</span>
+                          <span className="font-medium whitespace-nowrap">⏱️ {recipe.prepTime + recipe.cookTime}m</span>
+                        </div>
                       </div>
                     </div>
-                  </div>
-                ))}
+                  );
+                })}
               </div>
             )}
 
