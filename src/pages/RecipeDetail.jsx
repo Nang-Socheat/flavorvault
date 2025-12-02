@@ -39,6 +39,7 @@ const RecipeDetail = () => {
   // Swipe detection
   const touchStartX = useRef(0);
   const touchEndX = useRef(0);
+  const touchStartElement = useRef(null);
   const MIN_SWIPE_DISTANCE = 50;
 
   const handleBack = () => {
@@ -76,6 +77,7 @@ const RecipeDetail = () => {
   useEffect(() => {
     const handleTouchStart = (e) => {
       touchStartX.current = e.touches[0].clientX;
+      touchStartElement.current = e.target;
     };
 
     const handleTouchMove = (e) => {
@@ -83,6 +85,16 @@ const RecipeDetail = () => {
     };
 
     const handleTouchEnd = () => {
+      // Check if touch started on an interactive element (button, link, input, etc.)
+      const element = touchStartElement.current;
+      if (element) {
+        const isInteractive = element.closest('button, a, input, select, textarea, [role="button"]');
+        if (isInteractive) {
+          // Don't swipe if user was trying to interact with a button/link
+          return;
+        }
+      }
+
       const swipeDistance = touchStartX.current - touchEndX.current;
       
       // Swipe left (next recipe)
@@ -146,7 +158,9 @@ const RecipeDetail = () => {
   };
 
   // Cooking mode functions
-  const toggleCookingMode = () => {
+  const toggleCookingMode = (e) => {
+    e.preventDefault();
+    e.stopPropagation();
     setCookingMode(!cookingMode);
     setCurrentStep(0);
     if (!cookingMode) {

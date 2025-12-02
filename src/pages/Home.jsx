@@ -164,65 +164,100 @@ const Home = () => {
 
       {/* Main Content Container with max-width */}
       <div className="max-w-[1920px] mx-auto px-2 sm:px-3 md:px-4 lg:px-6 py-6 md:py-8">
-        {/* Stats Section */}
+        {/* Stats Section - Enhanced */}
         <div className="grid grid-cols-2 lg:grid-cols-4 gap-4 md:gap-6 mb-12 md:mb-16">
-          <div className="bg-white rounded-2xl shadow-lg p-6 md:p-8 text-center transform hover:-translate-y-2 transition-all duration-300 hover:shadow-2xl border border-gray-100">
-            <div className="text-4xl md:text-5xl mb-3">📚</div>
-            <div className="text-3xl md:text-4xl font-bold text-blue-600 mb-1">{totalRecipes}</div>
-            <div className="text-sm md:text-base text-gray-600 font-medium">Total Recipes</div>
+          {/* Total Recipes Card */}
+          <div className="group relative bg-gradient-to-br from-blue-50 via-blue-100 to-cyan-100 rounded-2xl shadow-lg p-6 md:p-8 text-center transform hover:-translate-y-3 transition-all duration-300 hover:shadow-2xl border-2 border-blue-200 overflow-hidden">
+            <div className="absolute inset-0 bg-gradient-to-br from-blue-400/0 to-blue-600/0 group-hover:from-blue-400/10 group-hover:to-blue-600/10 transition-all duration-300"></div>
+            <div className="relative">
+              <div className="inline-flex items-center justify-center w-16 h-16 md:w-20 md:h-20 bg-gradient-to-br from-blue-500 to-blue-700 rounded-2xl shadow-lg mb-4 group-hover:scale-110 group-hover:rotate-3 transition-all duration-300">
+                <span className="text-3xl md:text-4xl">📚</span>
+              </div>
+              <div className="text-4xl md:text-5xl font-black text-blue-700 mb-2 group-hover:scale-110 transition-transform">{totalRecipes}</div>
+              <div className="text-sm md:text-base text-blue-800 font-bold uppercase tracking-wide">Total Recipes</div>
+            </div>
           </div>
-          <div className="bg-white rounded-2xl shadow-lg p-6 md:p-8 text-center transform hover:-translate-y-2 transition-all duration-300 hover:shadow-2xl border border-gray-100">
-            <div className="text-4xl md:text-5xl mb-3">❤️</div>
-            <div className="text-3xl md:text-4xl font-bold text-rose-600 mb-1">{totalFavorites}</div>
-            <div className="text-sm md:text-base text-gray-600 font-medium">Favorites</div>
+
+          {/* Favorites Card */}
+          <div className="group relative bg-gradient-to-br from-rose-50 via-pink-100 to-red-100 rounded-2xl shadow-lg p-6 md:p-8 text-center transform hover:-translate-y-3 transition-all duration-300 hover:shadow-2xl border-2 border-rose-200 overflow-hidden">
+            <div className="absolute inset-0 bg-gradient-to-br from-rose-400/0 to-red-600/0 group-hover:from-rose-400/10 group-hover:to-red-600/10 transition-all duration-300"></div>
+            <div className="relative">
+              <div className="inline-flex items-center justify-center w-16 h-16 md:w-20 md:h-20 bg-gradient-to-br from-rose-500 to-red-700 rounded-2xl shadow-lg mb-4 group-hover:scale-110 group-hover:rotate-3 transition-all duration-300">
+                <span className="text-3xl md:text-4xl">❤️</span>
+              </div>
+              <div className="text-4xl md:text-5xl font-black text-rose-700 mb-2 group-hover:scale-110 transition-transform">{totalFavorites}</div>
+              <div className="text-sm md:text-base text-rose-800 font-bold uppercase tracking-wide">Favorites</div>
+            </div>
           </div>
-          <div className="bg-white rounded-2xl shadow-lg p-6 md:p-8 text-center transform hover:-translate-y-2 transition-all duration-300 hover:shadow-2xl border border-gray-100">
-            <div className="text-4xl md:text-5xl mb-3">🏷️</div>
-            <div className="text-3xl md:text-4xl font-bold text-purple-600 mb-1">{categoriesCount}</div>
-            <div className="text-sm md:text-base text-gray-600 font-medium">Categories</div>
+
+          {/* Categories Card */}
+          <div className="group relative bg-gradient-to-br from-purple-50 via-purple-100 to-violet-100 rounded-2xl shadow-lg p-6 md:p-8 text-center transform hover:-translate-y-3 transition-all duration-300 hover:shadow-2xl border-2 border-purple-200 overflow-hidden">
+            <div className="absolute inset-0 bg-gradient-to-br from-purple-400/0 to-violet-600/0 group-hover:from-purple-400/10 group-hover:to-violet-600/10 transition-all duration-300"></div>
+            <div className="relative">
+              <div className="inline-flex items-center justify-center w-16 h-16 md:w-20 md:h-20 bg-gradient-to-br from-purple-500 to-violet-700 rounded-2xl shadow-lg mb-4 group-hover:scale-110 group-hover:rotate-3 transition-all duration-300">
+                <span className="text-3xl md:text-4xl">🏷️</span>
+              </div>
+              <div className="text-4xl md:text-5xl font-black text-purple-700 mb-2 group-hover:scale-110 transition-transform">{categoriesCount}</div>
+              <div className="text-sm md:text-base text-purple-800 font-bold uppercase tracking-wide">Categories</div>
+            </div>
           </div>
-          <div className="bg-white rounded-2xl shadow-lg p-6 md:p-8 text-center transform hover:-translate-y-2 transition-all duration-300 hover:shadow-2xl border border-gray-100">
-            <div className="text-4xl md:text-5xl mb-3">⏱️</div>
-            <div className="text-3xl md:text-4xl font-bold text-orange-600 mb-1">{avgPrepTime}</div>
-            <div className="text-sm md:text-base text-gray-600 font-medium">Avg. Time (min)</div>
+
+          {/* Average Time Card */}
+          <div className="group relative bg-gradient-to-br from-orange-50 via-amber-100 to-yellow-100 rounded-2xl shadow-lg p-6 md:p-8 text-center transform hover:-translate-y-3 transition-all duration-300 hover:shadow-2xl border-2 border-orange-200 overflow-hidden">
+            <div className="absolute inset-0 bg-gradient-to-br from-orange-400/0 to-amber-600/0 group-hover:from-orange-400/10 group-hover:to-amber-600/10 transition-all duration-300"></div>
+            <div className="relative">
+              <div className="inline-flex items-center justify-center w-16 h-16 md:w-20 md:h-20 bg-gradient-to-br from-orange-500 to-amber-700 rounded-2xl shadow-lg mb-4 group-hover:scale-110 group-hover:rotate-3 transition-all duration-300">
+                <span className="text-3xl md:text-4xl">⏱️</span>
+              </div>
+              <div className="text-4xl md:text-5xl font-black text-orange-700 mb-2 group-hover:scale-110 transition-transform">{avgPrepTime}</div>
+              <div className="text-sm md:text-base text-orange-800 font-bold uppercase tracking-wide">Avg. Time (min)</div>
+            </div>
           </div>
         </div>
 
         {/* Today's Meal Plan Section - Enhanced with Recipe Cards */}
         <div className="mb-12 md:mb-16">
-          <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between mb-6">
-            <div className="flex items-center gap-3">
-              <span className="text-3xl md:text-4xl">📅</span>
-              <div>
-                <h2 className="text-2xl md:text-3xl font-bold text-violet-700">Today's Meal Plan</h2>
-                <p className="text-sm md:text-base text-gray-600">
-                  {new Date().toLocaleDateString('en-US', { weekday: 'long', month: 'long', day: 'numeric' })}
-                </p>
+          <div className="bg-white rounded-2xl shadow-lg p-4 md:p-6 border-2 border-violet-200">
+            <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between mb-6">
+              <div className="flex items-center gap-4">
+                <div className="bg-gradient-to-br from-violet-500 to-purple-600 text-white rounded-2xl p-3 md:p-4 shadow-lg">
+                  <span className="text-3xl md:text-4xl">📅</span>
+                </div>
+                <div>
+                  <h2 className="text-2xl md:text-3xl font-bold bg-gradient-to-r from-violet-700 to-purple-700 bg-clip-text text-transparent">
+                    Today's Meal Plan
+                  </h2>
+                  <p className="text-sm md:text-base text-gray-600 font-medium">
+                    {new Date().toLocaleDateString('en-US', { weekday: 'long', month: 'long', day: 'numeric' })}
+                  </p>
+                </div>
               </div>
+              <Link
+                to="/meal-planner"
+                className="mt-4 sm:mt-0 inline-flex items-center justify-center gap-2 bg-gradient-to-r from-violet-600 to-purple-600 text-white px-5 md:px-7 py-3 md:py-3.5 rounded-xl font-bold hover:from-violet-700 hover:to-purple-700 transition-all shadow-lg hover:shadow-xl transform hover:scale-105"
+              >
+                <span>📋</span>
+                <span>View Planner</span>
+              </Link>
             </div>
-            <Link
-              to="/meal-planner"
-              className="mt-4 sm:mt-0 hidden sm:inline-flex items-center justify-center bg-gradient-to-r from-violet-600 to-purple-600 text-white px-4 md:px-6 py-2 md:py-3 rounded-lg font-semibold hover:from-violet-700 hover:to-purple-700 transition-all shadow-md hover:shadow-lg transform hover:scale-105"
-            >
-              View Full Planner
-            </Link>
-          </div>
 
           {hasMealsPlanned ? (
             <>
-              <div className="grid grid-cols-1 lg:grid-cols-3 gap-4 md:gap-6 mb-6">
+              <div className="grid grid-cols-1 lg:grid-cols-3 gap-5 md:gap-6">
                 {/* Breakfast */}
-                <div className="bg-gradient-to-br from-orange-50 to-amber-50 rounded-xl p-4 md:p-5 border-2 border-orange-200 shadow-md">
-                  <div className="flex items-center justify-between mb-4">
-                    <div className="flex items-center gap-2">
-                      <span className="text-3xl">🌅</span>
+                <div className="group bg-gradient-to-br from-orange-50 via-amber-50 to-orange-50 rounded-2xl p-5 md:p-6 border-2 border-orange-300 shadow-md hover:shadow-xl transition-all duration-300 hover:-translate-y-1">
+                  <div className="flex items-center justify-between mb-5">
+                    <div className="flex items-center gap-3">
+                      <div className="bg-gradient-to-br from-orange-400 to-amber-500 rounded-xl p-2.5 shadow-md group-hover:scale-110 transition-transform">
+                        <span className="text-3xl">🌅</span>
+                      </div>
                       <div>
-                        <h3 className="text-lg md:text-xl font-bold text-orange-700">Breakfast</h3>
-                        <p className="text-xs text-orange-600">Morning fuel</p>
+                        <h3 className="text-xl md:text-2xl font-bold text-orange-800">Breakfast</h3>
+                        <p className="text-sm text-orange-600 font-medium">Morning fuel</p>
                       </div>
                     </div>
                     {todayMeals.breakfast?.length > 0 && (
-                      <span className="bg-orange-600 text-white text-xs font-bold px-2.5 py-1 rounded-full">
+                      <span className="bg-gradient-to-r from-orange-600 to-orange-700 text-white text-sm font-bold px-3 py-1.5 rounded-full shadow-md">
                         {todayMeals.breakfast.length}
                       </span>
                     )}
@@ -236,29 +271,39 @@ const Home = () => {
                           <Link
                             key={recipeId}
                             to={`/recipe/${recipeId}`}
-                            className="block bg-white rounded-lg overflow-hidden shadow-sm hover:shadow-md transition-all group"
+                            onClick={() => {
+                              sessionStorage.setItem('lastViewedRecipeId', recipeId);
+                              sessionStorage.setItem('recipeSourcePage', 'home');
+                            }}
+                            className="block bg-white rounded-xl overflow-hidden shadow-md hover:shadow-xl transition-all group/card border border-orange-200 hover:border-orange-400"
                           >
                             <div className="flex gap-3">
                               {recipe.image && (
-                                <div className="w-20 h-20 flex-shrink-0">
+                                <div className="w-24 h-24 flex-shrink-0 overflow-hidden">
                                   <img
                                     src={recipe.image}
                                     alt={recipe.title}
-                                    className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-300"
+                                    className="w-full h-full object-cover group-hover/card:scale-110 transition-transform duration-500"
                                   />
                                 </div>
                               )}
-                              <div className="flex-1 py-2 pr-2 min-w-0">
-                                <h4 className="font-semibold text-gray-800 text-sm mb-1 truncate">{recipe.title}</h4>
-                                <div className="flex flex-wrap items-center gap-2 text-xs text-gray-500">
-                                  <span className="flex items-center">
-                                    <svg className="w-3 h-3 mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                              <div className="flex-1 py-3 pr-3 min-w-0">
+                                <h4 className="font-bold text-gray-900 text-base mb-2 line-clamp-2 group-hover/card:text-orange-700 transition-colors">
+                                  {recipe.title}
+                                </h4>
+                                <div className="flex flex-wrap items-center gap-2 text-xs">
+                                  <span className="flex items-center gap-1 text-gray-600 bg-gray-100 px-2 py-1 rounded-md font-medium">
+                                    <svg className="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                       <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z" />
                                     </svg>
                                     {recipe.prepTime + recipe.cookTime} min
                                   </span>
                                   {recipe.difficulty && (
-                                    <span className="px-2 py-0.5 bg-orange-100 text-orange-700 rounded-full font-medium">
+                                    <span className={`px-2.5 py-1 rounded-md font-bold ${
+                                      recipe.difficulty === 'Easy' ? 'bg-green-100 text-green-700' :
+                                      recipe.difficulty === 'Medium' ? 'bg-yellow-100 text-yellow-700' :
+                                      'bg-red-100 text-red-700'
+                                    }`}>
                                       {recipe.difficulty}
                                     </span>
                                   )}
@@ -271,34 +316,42 @@ const Home = () => {
                       {todayMeals.breakfast.length > 2 && (
                         <Link
                           to="/meal-planner"
-                          className="block text-center text-sm text-orange-600 hover:text-orange-700 font-semibold py-2"
+                          className="flex items-center justify-center gap-2 text-center text-base text-orange-700 hover:text-orange-800 font-bold py-3 bg-orange-100 rounded-xl hover:bg-orange-200 transition-all"
                         >
-                          +{todayMeals.breakfast.length - 2} more →
+                          <span>+{todayMeals.breakfast.length - 2} more</span>
+                          <span>→</span>
                         </Link>
                       )}
                     </div>
                   ) : (
-                    <div className="text-center py-8 text-gray-400">
-                      <p className="text-sm mb-2">No breakfast planned</p>
-                      <Link to="/meal-planner" className="text-xs text-orange-600 hover:text-orange-700 font-medium">
-                        Add recipes
+                    <div className="text-center py-10 text-gray-500 bg-white rounded-xl border-2 border-dashed border-orange-300">
+                      <div className="text-4xl mb-3">🍳</div>
+                      <p className="text-sm font-semibold mb-3">No breakfast planned</p>
+                      <Link 
+                        to="/meal-planner" 
+                        className="inline-flex items-center gap-2 text-sm text-orange-700 hover:text-orange-800 font-bold bg-orange-100 px-4 py-2 rounded-lg hover:bg-orange-200 transition-all"
+                      >
+                        <span>+</span>
+                        <span>Add recipes</span>
                       </Link>
                     </div>
                   )}
                 </div>
 
                 {/* Lunch */}
-                <div className="bg-gradient-to-br from-blue-50 to-cyan-50 rounded-xl p-4 md:p-5 border-2 border-blue-200 shadow-md">
-                  <div className="flex items-center justify-between mb-4">
-                    <div className="flex items-center gap-2">
-                      <span className="text-3xl">☀️</span>
+                <div className="group bg-gradient-to-br from-blue-50 via-cyan-50 to-blue-50 rounded-2xl p-5 md:p-6 border-2 border-blue-300 shadow-md hover:shadow-xl transition-all duration-300 hover:-translate-y-1">
+                  <div className="flex items-center justify-between mb-5">
+                    <div className="flex items-center gap-3">
+                      <div className="bg-gradient-to-br from-blue-400 to-cyan-500 rounded-xl p-2.5 shadow-md group-hover:scale-110 transition-transform">
+                        <span className="text-3xl">☀️</span>
+                      </div>
                       <div>
-                        <h3 className="text-lg md:text-xl font-bold text-blue-700">Lunch</h3>
-                        <p className="text-xs text-blue-600">Midday energy</p>
+                        <h3 className="text-xl md:text-2xl font-bold text-blue-800">Lunch</h3>
+                        <p className="text-sm text-blue-600 font-medium">Midday energy</p>
                       </div>
                     </div>
                     {todayMeals.lunch?.length > 0 && (
-                      <span className="bg-blue-600 text-white text-xs font-bold px-2.5 py-1 rounded-full">
+                      <span className="bg-gradient-to-r from-blue-600 to-blue-700 text-white text-sm font-bold px-3 py-1.5 rounded-full shadow-md">
                         {todayMeals.lunch.length}
                       </span>
                     )}
@@ -312,29 +365,39 @@ const Home = () => {
                           <Link
                             key={recipeId}
                             to={`/recipe/${recipeId}`}
-                            className="block bg-white rounded-lg overflow-hidden shadow-sm hover:shadow-md transition-all group"
+                            onClick={() => {
+                              sessionStorage.setItem('lastViewedRecipeId', recipeId);
+                              sessionStorage.setItem('recipeSourcePage', 'home');
+                            }}
+                            className="block bg-white rounded-xl overflow-hidden shadow-md hover:shadow-xl transition-all group/card border border-blue-200 hover:border-blue-400"
                           >
                             <div className="flex gap-3">
                               {recipe.image && (
-                                <div className="w-20 h-20 flex-shrink-0">
+                                <div className="w-24 h-24 flex-shrink-0 overflow-hidden">
                                   <img
                                     src={recipe.image}
                                     alt={recipe.title}
-                                    className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-300"
+                                    className="w-full h-full object-cover group-hover/card:scale-110 transition-transform duration-500"
                                   />
                                 </div>
                               )}
-                              <div className="flex-1 py-2 pr-2 min-w-0">
-                                <h4 className="font-semibold text-gray-800 text-sm mb-1 truncate">{recipe.title}</h4>
-                                <div className="flex flex-wrap items-center gap-2 text-xs text-gray-500">
-                                  <span className="flex items-center">
-                                    <svg className="w-3 h-3 mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                              <div className="flex-1 py-3 pr-3 min-w-0">
+                                <h4 className="font-bold text-gray-900 text-base mb-2 line-clamp-2 group-hover/card:text-blue-700 transition-colors">
+                                  {recipe.title}
+                                </h4>
+                                <div className="flex flex-wrap items-center gap-2 text-xs">
+                                  <span className="flex items-center gap-1 text-gray-600 bg-gray-100 px-2 py-1 rounded-md font-medium">
+                                    <svg className="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                       <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z" />
                                     </svg>
                                     {recipe.prepTime + recipe.cookTime} min
                                   </span>
                                   {recipe.difficulty && (
-                                    <span className="px-2 py-0.5 bg-blue-100 text-blue-700 rounded-full font-medium">
+                                    <span className={`px-2.5 py-1 rounded-md font-bold ${
+                                      recipe.difficulty === 'Easy' ? 'bg-green-100 text-green-700' :
+                                      recipe.difficulty === 'Medium' ? 'bg-yellow-100 text-yellow-700' :
+                                      'bg-red-100 text-red-700'
+                                    }`}>
                                       {recipe.difficulty}
                                     </span>
                                   )}
@@ -347,34 +410,42 @@ const Home = () => {
                       {todayMeals.lunch.length > 2 && (
                         <Link
                           to="/meal-planner"
-                          className="block text-center text-sm text-blue-600 hover:text-blue-700 font-semibold py-2"
+                          className="flex items-center justify-center gap-2 text-center text-base text-blue-700 hover:text-blue-800 font-bold py-3 bg-blue-100 rounded-xl hover:bg-blue-200 transition-all"
                         >
-                          +{todayMeals.lunch.length - 2} more →
+                          <span>+{todayMeals.lunch.length - 2} more</span>
+                          <span>→</span>
                         </Link>
                       )}
                     </div>
                   ) : (
-                    <div className="text-center py-8 text-gray-400">
-                      <p className="text-sm mb-2">No lunch planned</p>
-                      <Link to="/meal-planner" className="text-xs text-blue-600 hover:text-blue-700 font-medium">
-                        Add recipes
+                    <div className="text-center py-10 text-gray-500 bg-white rounded-xl border-2 border-dashed border-blue-300">
+                      <div className="text-4xl mb-3">🥗</div>
+                      <p className="text-sm font-semibold mb-3">No lunch planned</p>
+                      <Link 
+                        to="/meal-planner" 
+                        className="inline-flex items-center gap-2 text-sm text-blue-700 hover:text-blue-800 font-bold bg-blue-100 px-4 py-2 rounded-lg hover:bg-blue-200 transition-all"
+                      >
+                        <span>+</span>
+                        <span>Add recipes</span>
                       </Link>
                     </div>
                   )}
                 </div>
 
                 {/* Dinner */}
-                <div className="bg-gradient-to-br from-purple-50 to-indigo-50 rounded-xl p-4 md:p-5 border-2 border-purple-200 shadow-md">
-                  <div className="flex items-center justify-between mb-4">
-                    <div className="flex items-center gap-2">
-                      <span className="text-3xl">🌙</span>
+                <div className="group bg-gradient-to-br from-purple-50 via-indigo-50 to-purple-50 rounded-2xl p-5 md:p-6 border-2 border-purple-300 shadow-md hover:shadow-xl transition-all duration-300 hover:-translate-y-1">
+                  <div className="flex items-center justify-between mb-5">
+                    <div className="flex items-center gap-3">
+                      <div className="bg-gradient-to-br from-purple-400 to-indigo-500 rounded-xl p-2.5 shadow-md group-hover:scale-110 transition-transform">
+                        <span className="text-3xl">🌙</span>
+                      </div>
                       <div>
-                        <h3 className="text-lg md:text-xl font-bold text-purple-700">Dinner</h3>
-                        <p className="text-xs text-purple-600">Evening feast</p>
+                        <h3 className="text-xl md:text-2xl font-bold text-purple-800">Dinner</h3>
+                        <p className="text-sm text-purple-600 font-medium">Evening feast</p>
                       </div>
                     </div>
                     {todayMeals.dinner?.length > 0 && (
-                      <span className="bg-purple-600 text-white text-xs font-bold px-2.5 py-1 rounded-full">
+                      <span className="bg-gradient-to-r from-purple-600 to-purple-700 text-white text-sm font-bold px-3 py-1.5 rounded-full shadow-md">
                         {todayMeals.dinner.length}
                       </span>
                     )}
@@ -388,29 +459,39 @@ const Home = () => {
                           <Link
                             key={recipeId}
                             to={`/recipe/${recipeId}`}
-                            className="block bg-white rounded-lg overflow-hidden shadow-sm hover:shadow-md transition-all group"
+                            onClick={() => {
+                              sessionStorage.setItem('lastViewedRecipeId', recipeId);
+                              sessionStorage.setItem('recipeSourcePage', 'home');
+                            }}
+                            className="block bg-white rounded-xl overflow-hidden shadow-md hover:shadow-xl transition-all group/card border border-purple-200 hover:border-purple-400"
                           >
                             <div className="flex gap-3">
                               {recipe.image && (
-                                <div className="w-20 h-20 flex-shrink-0">
+                                <div className="w-24 h-24 flex-shrink-0 overflow-hidden">
                                   <img
                                     src={recipe.image}
                                     alt={recipe.title}
-                                    className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-300"
+                                    className="w-full h-full object-cover group-hover/card:scale-110 transition-transform duration-500"
                                   />
                                 </div>
                               )}
-                              <div className="flex-1 py-2 pr-2 min-w-0">
-                                <h4 className="font-semibold text-gray-800 text-sm mb-1 truncate">{recipe.title}</h4>
-                                <div className="flex flex-wrap items-center gap-2 text-xs text-gray-500">
-                                  <span className="flex items-center">
-                                    <svg className="w-3 h-3 mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                              <div className="flex-1 py-3 pr-3 min-w-0">
+                                <h4 className="font-bold text-gray-900 text-base mb-2 line-clamp-2 group-hover/card:text-purple-700 transition-colors">
+                                  {recipe.title}
+                                </h4>
+                                <div className="flex flex-wrap items-center gap-2 text-xs">
+                                  <span className="flex items-center gap-1 text-gray-600 bg-gray-100 px-2 py-1 rounded-md font-medium">
+                                    <svg className="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                       <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z" />
                                     </svg>
                                     {recipe.prepTime + recipe.cookTime} min
                                   </span>
                                   {recipe.difficulty && (
-                                    <span className="px-2 py-0.5 bg-purple-100 text-purple-700 rounded-full font-medium">
+                                    <span className={`px-2.5 py-1 rounded-md font-bold ${
+                                      recipe.difficulty === 'Easy' ? 'bg-green-100 text-green-700' :
+                                      recipe.difficulty === 'Medium' ? 'bg-yellow-100 text-yellow-700' :
+                                      'bg-red-100 text-red-700'
+                                    }`}>
                                       {recipe.difficulty}
                                     </span>
                                   )}
@@ -423,83 +504,96 @@ const Home = () => {
                       {todayMeals.dinner.length > 2 && (
                         <Link
                           to="/meal-planner"
-                          className="block text-center text-sm text-purple-600 hover:text-purple-700 font-semibold py-2"
+                          className="flex items-center justify-center gap-2 text-center text-base text-purple-700 hover:text-purple-800 font-bold py-3 bg-purple-100 rounded-xl hover:bg-purple-200 transition-all"
                         >
-                          +{todayMeals.dinner.length - 2} more →
+                          <span>+{todayMeals.dinner.length - 2} more</span>
+                          <span>→</span>
                         </Link>
                       )}
                     </div>
                   ) : (
-                    <div className="text-center py-8 text-gray-400">
-                      <p className="text-sm mb-2">No dinner planned</p>
-                      <Link to="/meal-planner" className="text-xs text-purple-600 hover:text-purple-700 font-medium">
-                        Add recipes
+                    <div className="text-center py-10 text-gray-500 bg-white rounded-xl border-2 border-dashed border-purple-300">
+                      <div className="text-4xl mb-3">🍽️</div>
+                      <p className="text-sm font-semibold mb-3">No dinner planned</p>
+                      <Link 
+                        to="/meal-planner" 
+                        className="inline-flex items-center gap-2 text-sm text-purple-700 hover:text-purple-800 font-bold bg-purple-100 px-4 py-2 rounded-lg hover:bg-purple-200 transition-all"
+                      >
+                        <span>+</span>
+                        <span>Add recipes</span>
                       </Link>
                     </div>
                   )}
                 </div>
               </div>
-              
-              {/* Mobile View Full Planner Button */}
-              <div className="sm:hidden">
-                <Link
-                  to="/meal-planner"
-                  className="flex items-center justify-center bg-gradient-to-r from-violet-600 to-purple-600 text-white px-4 py-3 rounded-lg font-semibold hover:from-violet-700 hover:to-purple-700 transition-all shadow-md hover:shadow-lg w-full"
-                >
-                  View Full Planner
-                </Link>
-              </div>
             </>
           ) : (
-            <div className="bg-gradient-to-br from-gray-50 to-gray-100 rounded-xl p-8 md:p-12 text-center border-2 border-dashed border-gray-300">
-              <span className="text-5xl md:text-6xl mb-4 block">📝</span>
-              <h3 className="text-xl md:text-2xl font-bold text-gray-700 mb-3">No Meals Planned for Today</h3>
-              <p className="text-gray-600 mb-6 max-w-md mx-auto">
-                Start planning your meals to stay organized, save time, and eat healthier. It only takes a few minutes!
-              </p>
-              <div className="flex flex-col sm:flex-row gap-3 justify-center">
-                <Link
-                  to="/meal-planner"
-                  className="inline-flex items-center justify-center bg-gradient-to-r from-violet-600 to-purple-600 text-white px-6 py-3 rounded-lg font-semibold hover:from-violet-700 hover:to-purple-700 transition-all shadow-md hover:shadow-lg transform hover:scale-105"
-                >
-                  <span className="mr-2">📆</span>
-                  Start Planning
-                </Link>
-                <Link
-                  to="/recipes"
-                  className="inline-flex items-center justify-center bg-white text-gray-700 px-6 py-3 rounded-lg font-semibold hover:bg-gray-50 transition-all border-2 border-gray-300 hover:border-gray-400"
-                >
-                  <span className="mr-2">🔍</span>
-                  Browse Recipes
-                </Link>
-              </div>
-              
-              {/* Benefits */}
-              <div className="grid grid-cols-1 sm:grid-cols-3 gap-4 mt-8 text-left">
-                <div className="flex items-start gap-3">
-                  <span className="text-2xl flex-shrink-0">💡</span>
-                  <div>
-                    <h4 className="font-semibold text-gray-800 text-sm mb-1">Save Time</h4>
-                    <p className="text-xs text-gray-600">Plan ahead and reduce daily cooking stress</p>
-                  </div>
+            <div className="bg-gradient-to-br from-violet-50 via-purple-50 to-pink-50 rounded-2xl p-8 md:p-12 text-center border-2 border-dashed border-violet-300 shadow-inner">
+              <div className="bg-white/70 backdrop-blur-sm rounded-xl p-8 md:p-10">
+                <span className="text-6xl md:text-7xl mb-5 block animate-bounce">📝</span>
+                <h3 className="text-2xl md:text-3xl font-bold bg-gradient-to-r from-violet-700 to-purple-700 bg-clip-text text-transparent mb-4">
+                  No Meals Planned for Today
+                </h3>
+                <p className="text-gray-700 text-base md:text-lg mb-8 max-w-2xl mx-auto font-medium">
+                  Start planning your meals to stay organized, save time, and eat healthier. Create your perfect meal plan in just a few clicks!
+                </p>
+                <div className="flex flex-col sm:flex-row gap-4 justify-center mb-10">
+                  <Link
+                    to="/meal-planner"
+                    className="inline-flex items-center justify-center gap-2 bg-gradient-to-r from-violet-600 to-purple-600 text-white px-8 py-4 rounded-xl font-bold text-lg hover:from-violet-700 hover:to-purple-700 transition-all shadow-lg hover:shadow-xl transform hover:scale-105"
+                  >
+                    <span className="text-2xl">📆</span>
+                    <span>Start Planning</span>
+                  </Link>
+                  <Link
+                    to="/recipes"
+                    className="inline-flex items-center justify-center gap-2 bg-white text-gray-700 px-8 py-4 rounded-xl font-bold text-lg hover:bg-gray-50 transition-all border-2 border-violet-300 hover:border-violet-400 shadow-md hover:shadow-lg"
+                  >
+                    <span className="text-2xl">🔍</span>
+                    <span>Browse Recipes</span>
+                  </Link>
                 </div>
-                <div className="flex items-start gap-3">
-                  <span className="text-2xl flex-shrink-0">🥗</span>
-                  <div>
-                    <h4 className="font-semibold text-gray-800 text-sm mb-1">Eat Better</h4>
-                    <p className="text-xs text-gray-600">Balance your nutrition throughout the week</p>
+                
+                {/* Benefits */}
+                <div className="grid grid-cols-1 sm:grid-cols-3 gap-6 text-left">
+                  <div className="bg-gradient-to-br from-blue-50 to-cyan-50 rounded-xl p-5 border border-blue-200 shadow-sm">
+                    <div className="flex items-start gap-3">
+                      <div className="bg-blue-100 rounded-lg p-2">
+                        <span className="text-3xl">💡</span>
+                      </div>
+                      <div>
+                        <h4 className="font-bold text-gray-900 text-base mb-1">Save Time</h4>
+                        <p className="text-sm text-gray-600">Plan ahead and reduce daily cooking stress</p>
+                      </div>
+                    </div>
                   </div>
-                </div>
-                <div className="flex items-start gap-3">
-                  <span className="text-2xl flex-shrink-0">💰</span>
-                  <div>
-                    <h4 className="font-semibold text-gray-800 text-sm mb-1">Reduce Waste</h4>
-                    <p className="text-xs text-gray-600">Shop smarter with a clear meal plan</p>
+                  <div className="bg-gradient-to-br from-green-50 to-emerald-50 rounded-xl p-5 border border-green-200 shadow-sm">
+                    <div className="flex items-start gap-3">
+                      <div className="bg-green-100 rounded-lg p-2">
+                        <span className="text-3xl">🥗</span>
+                      </div>
+                      <div>
+                        <h4 className="font-bold text-gray-900 text-base mb-1">Eat Better</h4>
+                        <p className="text-sm text-gray-600">Balance your nutrition throughout the week</p>
+                      </div>
+                    </div>
+                  </div>
+                  <div className="bg-gradient-to-br from-amber-50 to-yellow-50 rounded-xl p-5 border border-amber-200 shadow-sm">
+                    <div className="flex items-start gap-3">
+                      <div className="bg-amber-100 rounded-lg p-2">
+                        <span className="text-3xl">💰</span>
+                      </div>
+                      <div>
+                        <h4 className="font-bold text-gray-900 text-base mb-1">Reduce Waste</h4>
+                        <p className="text-sm text-gray-600">Shop smarter with a clear meal plan</p>
+                      </div>
+                    </div>
                   </div>
                 </div>
               </div>
             </div>
           )}
+          </div>
         </div>
 
         {/* Popular Categories with Feature Images */}

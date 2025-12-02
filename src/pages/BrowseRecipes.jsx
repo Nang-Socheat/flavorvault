@@ -1,5 +1,5 @@
-import { useState, useMemo, useEffect, useRef } from 'react';
-import { useSearchParams, useLocation } from 'react-router-dom';
+import { useState, useMemo, useEffect } from 'react';
+import { useSearchParams } from 'react-router-dom';
 import { useApp } from '../context/AppContext';
 import RecipeCard from '../components/RecipeCard';
 import SurpriseMe from '../components/SurpriseMe';
@@ -7,8 +7,7 @@ import Ingredients3 from '../assets/Ingredients3.jpg';
 
 const BrowseRecipes = () => {
   const { searchRecipes, recipes } = useApp();
-  const [searchParams, setSearchParams] = useSearchParams();
-  const location = useLocation();
+  const [searchParams] = useSearchParams();
   const [searchQuery, setSearchQuery] = useState('');
   const [filters, setFilters] = useState({
     category: 'all',
