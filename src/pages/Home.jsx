@@ -324,12 +324,11 @@ const Home = () => {
                       )}
                     </div>
                   ) : (
-                    <div className="text-center py-10 text-gray-500 bg-white rounded-xl border-2 border-dashed border-orange-300">
-                      <div className="text-4xl mb-3">🍳</div>
-                      <p className="text-sm font-semibold mb-3">No breakfast planned</p>
+                    <div className="text-center py-4 px-3 text-gray-600 bg-white rounded-xl border-2 border-dashed border-orange-300">
+                      <p className="text-sm mb-3">No breakfast planned</p>
                       <Link 
                         to="/meal-planner" 
-                        className="inline-flex items-center gap-2 text-sm text-orange-700 hover:text-orange-800 font-bold bg-orange-100 px-4 py-2 rounded-lg hover:bg-orange-200 transition-all"
+                        className="inline-flex items-center gap-1.5 text-xs text-orange-700 hover:text-orange-800 font-bold bg-orange-100 px-3 py-1.5 rounded-lg hover:bg-orange-200 transition-all"
                       >
                         <span>+</span>
                         <span>Add recipes</span>
@@ -418,12 +417,11 @@ const Home = () => {
                       )}
                     </div>
                   ) : (
-                    <div className="text-center py-10 text-gray-500 bg-white rounded-xl border-2 border-dashed border-blue-300">
-                      <div className="text-4xl mb-3">🥗</div>
-                      <p className="text-sm font-semibold mb-3">No lunch planned</p>
+                    <div className="text-center py-4 px-3 text-gray-600 bg-white rounded-xl border-2 border-dashed border-blue-300">
+                      <p className="text-sm mb-3">No lunch planned</p>
                       <Link 
                         to="/meal-planner" 
-                        className="inline-flex items-center gap-2 text-sm text-blue-700 hover:text-blue-800 font-bold bg-blue-100 px-4 py-2 rounded-lg hover:bg-blue-200 transition-all"
+                        className="inline-flex items-center gap-1.5 text-xs text-blue-700 hover:text-blue-800 font-bold bg-blue-100 px-3 py-1.5 rounded-lg hover:bg-blue-200 transition-all"
                       >
                         <span>+</span>
                         <span>Add recipes</span>
@@ -512,12 +510,11 @@ const Home = () => {
                       )}
                     </div>
                   ) : (
-                    <div className="text-center py-10 text-gray-500 bg-white rounded-xl border-2 border-dashed border-purple-300">
-                      <div className="text-4xl mb-3">🍽️</div>
-                      <p className="text-sm font-semibold mb-3">No dinner planned</p>
+                    <div className="text-center py-4 px-3 text-gray-600 bg-white rounded-xl border-2 border-dashed border-purple-300">
+                      <p className="text-sm mb-3">No dinner planned</p>
                       <Link 
                         to="/meal-planner" 
-                        className="inline-flex items-center gap-2 text-sm text-purple-700 hover:text-purple-800 font-bold bg-purple-100 px-4 py-2 rounded-lg hover:bg-purple-200 transition-all"
+                        className="inline-flex items-center gap-1.5 text-xs text-purple-700 hover:text-purple-800 font-bold bg-purple-100 px-3 py-1.5 rounded-lg hover:bg-purple-200 transition-all"
                       >
                         <span>+</span>
                         <span>Add recipes</span>
